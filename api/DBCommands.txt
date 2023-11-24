@@ -1,0 +1,2 @@
+1 ) add-migration DBCreation -Context Bookshop.Persistence.Context.BookshopDbContext -Project Bookshop.Persistence -StartupProject Bookshop.Api
+2 ) update-database -Context Bookshop.Persistence.Context.BookshopDbContext -Project Bookshop.Persistence -StartupProject Bookshop.Api
