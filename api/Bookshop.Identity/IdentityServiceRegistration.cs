@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using static Bookshop.Domain.Entities.Customer;
 
 namespace Bookshop.Identity
 {
@@ -18,7 +19,7 @@ namespace Bookshop.Identity
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
             
 
-            services.AddIdentity<Customer, IdentityRole>( config =>
+            services.AddIdentity<IdentityUserData, IdentityRole>( config =>
             {
                 config.Password.RequiredLength = 4;
                 config.Password.RequireDigit = false;

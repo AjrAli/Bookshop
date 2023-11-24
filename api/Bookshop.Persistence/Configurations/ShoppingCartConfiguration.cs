@@ -19,7 +19,7 @@ namespace Bookshop.Persistence.Configurations
             builder.HasMany(e => e.CartItems).WithOne(e => e.ShoppingCart)
                 .HasForeignKey(e => e.ShoppingCartId).IsRequired();
             builder.HasOne(e => e.Customer).WithOne(e => e.ShoppingCart)
-                .HasForeignKey<Customer>(e => e.ShoppingCartId).IsRequired();
+                .HasForeignKey<Customer>(e => e.ShoppingCartId).IsRequired(false);
 
         }
     }

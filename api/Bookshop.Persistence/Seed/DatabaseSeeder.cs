@@ -17,8 +17,8 @@ namespace Bookshop.Persistence.Seed
             {
                 var addresses = new List<Address>
                 {
-                    new Address("street1","city1","postalCode1","country1","state1"),
-                    new Address("street2","city2","postalCode2","country2","state2")
+                    new Address("street1","city1","Code1","country1","state1"),
+                    new Address("street2","city2","Code2","country2","state2")
                 };
 
                 await context.Addresses.AddRangeAsync(addresses);

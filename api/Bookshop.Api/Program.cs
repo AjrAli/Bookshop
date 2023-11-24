@@ -36,8 +36,8 @@ namespace Bookshop.Api
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     await CreateRoles.SeedAsync(roleManager);
                     var userManager = services.GetRequiredService<UserManager<IdentityUserData>>();
-                    await CreateFirstUser.SeedAsync(userManager);
                     var dbContext = services.GetRequiredService<BookshopDbContext>();
+                    await CreateFirstUser.SeedAsync(userManager, dbContext);
                     await DatabaseSeeder.SeedAsync(dbContext);
                     Log.Information("Starting web host");
                 }

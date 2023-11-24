@@ -7,8 +7,6 @@ namespace Bookshop.Domain.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Address ShippingAddress { get; set; } 
-        public Address BillingAddress { get; set; }
         private Customer() { }
 
         // Constructor that initializes required fields
@@ -36,13 +34,13 @@ namespace Bookshop.Domain.Entities
             {
                 EmailConfirmed = true;
             }
-
-            // Relationships
-            public long CustomerId { get; set; }
-            public Customer? Customer { get; set; }
         }
         // Relationships
-        public string IdentityUserDataId { get; set; }
+        public long? ShippingAddressId { get; set; }
+        public Address? ShippingAddress { get; set; }
+        public long? BillingAddressId { get; set; }
+        public Address? BillingAddress { get; set; }
+        public string? IdentityUserDataId { get; set; }
         public IdentityUserData IdentityData { get; set; } = new IdentityUserData();
         public long? ShoppingCartId { get; set; }
         public ShoppingCart? ShoppingCart { get; set; }
