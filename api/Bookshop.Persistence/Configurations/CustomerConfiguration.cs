@@ -28,10 +28,12 @@ namespace Bookshop.Persistence.Configurations
             builder.HasOne(e => e.IdentityData)
                    .WithOne()
                    .HasForeignKey<Customer>(e => e.IdentityUserDataId).IsRequired();
-            builder.HasOne(e => e.ShoppingCart).WithOne(e => e.Customer)
-                .HasForeignKey<ShoppingCart>(e => e.CustomerId).IsRequired(false);
+            builder.HasOne(e => e.ShoppingCart)
+                   .WithOne()
+                   .HasForeignKey<Customer>(e => e.ShoppingCartId)
+                   .OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(e => e.Orders).WithOne(e => e.Customer)
-                .HasForeignKey(e => e.CustomerId).IsRequired();
+                   .HasForeignKey(e => e.CustomerId).IsRequired();
 
         }
     }

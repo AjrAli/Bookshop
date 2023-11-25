@@ -25,18 +25,18 @@ namespace Bookshop.Persistence.Context
         {
             _loggedInUserService = loggedInUserService;
         }
-        public DbSet<Address>? Addresses { get; set; }
-        public DbSet<Author>? Authors { get; set; }
+        public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<Author> Authors => Set<Author>();
 
-        public DbSet<Book>? Books { get; set; }
-        public DbSet<BookOrder>? BookOrders { get; set; }
+        public DbSet<Book> Books => Set<Book>();
+        public DbSet<BookOrder> BookOrders => Set<BookOrder>();
 
-        public DbSet<CartItem>? CartItems { get; set; }
-        public DbSet<Category>? Categories { get; set; }
+        public DbSet<CartItem> CartItems => Set<CartItem>();
+        public DbSet<Category> Categories => Set<Category>();
 
-        public DbSet<Customer>? Customers { get; set; }
-        public DbSet<Order>? Orders { get; set; }
-        public DbSet<ShoppingCart>? ShoppingCarts { get; set; }
+        public DbSet<Customer> Customers => Set<Customer>();
+        public DbSet<Order> Orders => Set<Order>();
+        public DbSet<ShoppingCart> ShoppingCarts => Set<ShoppingCart>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -56,7 +56,6 @@ namespace Bookshop.Persistence.Context
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new ShoppingCartConfiguration());
-
         }
 
         public override int SaveChanges()

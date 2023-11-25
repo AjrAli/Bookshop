@@ -8,15 +8,13 @@ namespace Bookshop.Domain.Entities
 
         private ShoppingCart() { }
 
-        public ShoppingCart(decimal total,
-                     long customerId)
+        public ShoppingCart(decimal total)
         {
             Total = total;
-            CustomerId = customerId;
         }
 
         // Relationships
-        public long CustomerId { get; set; }
+        public long? CustomerId { get; set; }
         public Customer? Customer { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
     }

@@ -6,17 +6,15 @@ namespace Bookshop.Domain.Entities
     {
         public int QuantityOrder { get; set; }
         private BookOrder() { }
-        public BookOrder(int quantityOrder, long orderId, long bookId)
+        public BookOrder(int quantityOrder)
         {
             QuantityOrder = quantityOrder;
-            OrderId = orderId;
-            BookId = bookId;
         }
 
 
 
         // Relationships
-        public long OrderId { get; set; }
+        public long? OrderId { get; set; }
         public Order? Order { get; set; }
         public long BookId { get; set; }
         public Book? Book { get; set; }

@@ -21,8 +21,7 @@ namespace Bookshop.Domain.Entities
                      decimal total,
                      CreditCards creditCard,
                      DateTime dateOrder,
-                     Status statusOrder,
-                     long customerId)
+                     Status statusOrder)
         {
             SalesTax = salesTax;
             ShippingFee = shippingFee;
@@ -30,7 +29,6 @@ namespace Bookshop.Domain.Entities
             MethodOfPayment = creditCard;
             DateOrder = dateOrder;
             StatusOrder = statusOrder;
-            CustomerId = customerId;
         }
 
         public enum CreditCards
@@ -51,7 +49,7 @@ namespace Bookshop.Domain.Entities
         }
 
         // Relationships
-        public long CustomerId { get; set; }
+        public long? CustomerId { get; set; }
         public Customer? Customer { get; set; }
         public ICollection<BookOrder> BookOrders { get; set; } = new List<BookOrder>();
     }

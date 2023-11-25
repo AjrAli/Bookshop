@@ -29,9 +29,7 @@ namespace Bookshop.Domain.Entities
                     int pageCount, 
                     string dimensions, 
                     Languages language, 
-                    DateTime publishDate,
-                    long authorId,
-                    long categoryId)
+                    DateTime publishDate)
         {
             Title = title;
             Description = description;
@@ -43,8 +41,6 @@ namespace Bookshop.Domain.Entities
             Dimensions = dimensions;
             Language = language;
             PublishDate = publishDate;
-            AuthorId = authorId;
-            CategoryId = categoryId;
         }
         public enum Languages
         {
@@ -55,7 +51,7 @@ namespace Bookshop.Domain.Entities
         }
 
         // Relationships
-        public long AuthorId { get; set; }
+        public long? AuthorId { get; set; }
         public Author? Author { get; set; }
         public long CategoryId { get; set; }
         public Category? Category { get; set; }
