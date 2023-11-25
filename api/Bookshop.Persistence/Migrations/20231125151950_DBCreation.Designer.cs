@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookshop.Persistence.Migrations
 {
     [DbContext(typeof(BookshopDbContext))]
-    [Migration("20231124230738_DBCreation")]
+    [Migration("20231125151950_DBCreation")]
     partial class DBCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

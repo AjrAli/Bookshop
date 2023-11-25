@@ -8,7 +8,7 @@ namespace Bookshop.Identity.Seed
 {
     public static class CreateFirstUser
     {
-        public async static Task SeedAsync(UserManager<IdentityUserData> userManager, BookshopDbContext context)
+        public static async Task SeedAsync(UserManager<IdentityUserData> userManager, BookshopDbContext context)
         {
             var newAddress = new Address("streetOfUser1", "cityOfUser1", "CodeUser1", "countryOfUser1", "stateOfUser1");
             var newCustomer = new Customer("firstName","lastName", newAddress, newAddress);
@@ -27,7 +27,7 @@ namespace Bookshop.Identity.Seed
                 {
                     await userManager.AddToRoleAsync(user, RoleNames.Administrator);
                 }
-                await context.SaveChangesAsync();
+                context.SaveChanges();
             }
         }
     }

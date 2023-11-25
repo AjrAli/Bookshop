@@ -38,7 +38,7 @@ namespace Bookshop.Api
                     var userManager = services.GetRequiredService<UserManager<IdentityUserData>>();
                     var dbContext = services.GetRequiredService<BookshopDbContext>();
                     await CreateFirstUser.SeedAsync(userManager, dbContext);
-                    await DatabaseSeeder.SeedAsync(dbContext);
+                    DatabaseSeeder.Seed(dbContext);
                     Log.Information("Starting web host");
                 }
                 catch (Exception ex)
