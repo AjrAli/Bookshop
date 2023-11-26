@@ -40,7 +40,7 @@ namespace Bookshop.Persistence.Seed
                     };
                     shoppingCart.CalculateTotal();
                     customer.ShoppingCart = shoppingCart;
-                    var order1 = new Order(21m, 10m, Order.CreditCards.Visa, DateTime.Now, Order.Status.Pending)
+                    var order1 = new Order(21m, 10m, Order.CreditCards.Visa, Order.Status.Pending)
                     {
                         Customer = customer,
                         LineItems = lineItems

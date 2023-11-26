@@ -19,13 +19,11 @@ namespace Bookshop.Domain.Entities
         public Order(decimal salesTax,
                      decimal shippingFee,
                      CreditCards creditCard,
-                     DateTime dateOrder,
                      Status statusOrder)
         {
             SalesTax = salesTax;
             ShippingFee = shippingFee;
             MethodOfPayment = creditCard;
-            DateOrder = dateOrder;
             StatusOrder = statusOrder;
             DateOrder = DateTime.Now;
         }
