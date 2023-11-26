@@ -238,7 +238,7 @@ namespace Bookshop.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
-                    table.CheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100");
+                    table.CheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 1000");
                     table.ForeignKey(
                         name: "FK_Books_Authors_AuthorId",
                         column: x => x.AuthorId,
@@ -251,57 +251,6 @@ namespace Bookshop.Persistence.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookOrders",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    QuantityOrder = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<long>(type: "bigint", nullable: false),
-                    BookId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookOrders", x => x.Id);
-                    table.CheckConstraint("CK_QuantityOrder_MaxValue", "[QuantityOrder] <= 100");
-                    table.ForeignKey(
-                        name: "FK_BookOrders_Books_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CartItems",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    BookId = table.Column<long>(type: "bigint", nullable: true),
-                    ShoppingCartId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CartItems", x => x.Id);
-                    table.CheckConstraint("CK_QuantityItem_MaxValue", "[Quantity] <= 100");
-                    table.ForeignKey(
-                        name: "FK_CartItems_Books_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Books",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -394,6 +343,44 @@ namespace Bookshop.Persistence.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LineItems",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OrderId = table.Column<long>(type: "bigint", nullable: true),
+                    BookId = table.Column<long>(type: "bigint", nullable: false),
+                    ShoppingCartId = table.Column<long>(type: "bigint", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LineItems", x => x.Id);
+                    table.CheckConstraint("CK_Quantity_MaxValue1", "[Quantity] <= 100");
+                    table.ForeignKey(
+                        name: "FK_LineItems_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LineItems_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_LineItems_ShoppingCarts_ShoppingCartId",
+                        column: x => x.ShoppingCartId,
+                        principalTable: "ShoppingCarts",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -434,16 +421,6 @@ namespace Bookshop.Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookOrders_BookId",
-                table: "BookOrders",
-                column: "BookId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookOrders_OrderId",
-                table: "BookOrders",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Books_AuthorId",
                 table: "Books",
                 column: "AuthorId");
@@ -452,16 +429,6 @@ namespace Bookshop.Persistence.Migrations
                 name: "IX_Books_CategoryId",
                 table: "Books",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CartItems_BookId",
-                table: "CartItems",
-                column: "BookId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CartItems_ShoppingCartId",
-                table: "CartItems",
-                column: "ShoppingCartId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_BillingAddressId",
@@ -487,6 +454,21 @@ namespace Bookshop.Persistence.Migrations
                 filter: "[ShoppingCartId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LineItems_BookId",
+                table: "LineItems",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LineItems_OrderId",
+                table: "LineItems",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LineItems_ShoppingCartId",
+                table: "LineItems",
+                column: "ShoppingCartId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerId",
                 table: "Orders",
                 column: "CustomerId");
@@ -497,22 +479,6 @@ namespace Bookshop.Persistence.Migrations
                 column: "CustomerId",
                 unique: true,
                 filter: "[CustomerId] IS NOT NULL");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_BookOrders_Orders_OrderId",
-                table: "BookOrders",
-                column: "OrderId",
-                principalTable: "Orders",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_CartItems_ShoppingCarts_ShoppingCartId",
-                table: "CartItems",
-                column: "ShoppingCartId",
-                principalTable: "ShoppingCarts",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Customers_ShoppingCarts_ShoppingCartId",
@@ -526,6 +492,14 @@ namespace Bookshop.Persistence.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Customers_AspNetUsers_IdentityUserDataId",
+                table: "Customers");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Customers_Addresses_BillingAddressId",
+                table: "Customers");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Customers_Addresses_ShippingAddressId",
                 table: "Customers");
 
             migrationBuilder.DropForeignKey(
@@ -548,19 +522,16 @@ namespace Bookshop.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BookOrders");
-
-            migrationBuilder.DropTable(
-                name: "CartItems");
+                name: "LineItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Books");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Authors");
@@ -572,13 +543,13 @@ namespace Bookshop.Persistence.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Addresses");
+
+            migrationBuilder.DropTable(
                 name: "ShoppingCarts");
 
             migrationBuilder.DropTable(
                 name: "Customers");
-
-            migrationBuilder.DropTable(
-                name: "Addresses");
         }
     }
 }

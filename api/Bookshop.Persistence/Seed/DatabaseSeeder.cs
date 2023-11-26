@@ -28,25 +28,24 @@ namespace Bookshop.Persistence.Seed
                     book.Category = category1;
                     book2.Author = author2;
                     book2.Category = category2;
-                    var shoppingCart = new ShoppingCart(175m)
+                    var lineItems = new List<LineItem>()
+                        {
+                            new LineItem(10) { Book = book },
+                            new LineItem(15) { Book = book2 }
+                        };
+                    var shoppingCart = new ShoppingCart()
                     {
                         Customer = customer,
-                        CartItems = new List<CartItem>()
-                        {
-                            new CartItem(10) { Book = book },
-                            new CartItem(15) { Book = book2 }
-                        }
+                        LineItems = lineItems
                     };
+                    shoppingCart.CalculateTotal();
                     customer.ShoppingCart = shoppingCart;
-                    var order1 = new Order(21m, 10m, 200m, Order.CreditCards.Visa, DateTime.Now, Order.Status.Pending)
+                    var order1 = new Order(21m, 10m, Order.CreditCards.Visa, DateTime.Now, Order.Status.Pending)
                     {
                         Customer = customer,
-                        BookOrders = new List<BookOrder>
-                        {
-                            new BookOrder(10) { Book = book },
-                            new BookOrder(15) { Book = book2 }
-                        }
+                        LineItems = lineItems
                     };
+                    order1.CalculateTotal();
                     customer.Orders.Add(order1);
                     context.Customers.Update(customer);
                     await context.SaveChangesAsync();

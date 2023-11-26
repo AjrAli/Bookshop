@@ -24,7 +24,7 @@ namespace Bookshop.Persistence.Configurations
             builder.Property(e => e.PublishDate).IsRequired().HasColumnType("datetime2");
 
             // Add check constraint using raw SQL
-            builder.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100");
+            builder.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 1000");
         }
     }
 }

@@ -207,105 +207,7 @@ namespace Bookshop.Persistence.Migrations
 
                     b.ToTable("Books", (string)null);
 
-                    b.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100");
-                });
-
-            modelBuilder.Entity("Bookshop.Domain.Entities.BookOrder", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<long>("BookId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
-
-                    b.Property<long?>("OrderId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("QuantityOrder")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("BookOrders", (string)null);
-
-                    b.HasCheckConstraint("CK_QuantityOrder_MaxValue", "[QuantityOrder] <= 100");
-                });
-
-            modelBuilder.Entity("Bookshop.Domain.Entities.CartItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<long?>("BookId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("ShoppingCartId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("ShoppingCartId");
-
-                    b.ToTable("CartItems", (string)null);
-
-                    b.HasCheckConstraint("CK_QuantityItem_MaxValue", "[Quantity] <= 100");
+                    b.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 1000");
                 });
 
             modelBuilder.Entity("Bookshop.Domain.Entities.Category", b =>
@@ -486,6 +388,62 @@ namespace Bookshop.Persistence.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Bookshop.Domain.Entities.LineItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<long>("BookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+                    b.Property<string>("LastModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("LastModifiedDate")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+                    b.Property<long?>("OrderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("ShoppingCartId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ShoppingCartId");
+
+                    b.ToTable("LineItems", (string)null);
+
+                    b.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100", c => c.HasName("CK_Quantity_MaxValue1"));
                 });
 
             modelBuilder.Entity("Bookshop.Domain.Entities.Order", b =>
@@ -742,42 +700,6 @@ namespace Bookshop.Persistence.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Bookshop.Domain.Entities.BookOrder", b =>
-                {
-                    b.HasOne("Bookshop.Domain.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bookshop.Domain.Entities.Order", "Order")
-                        .WithMany("BookOrders")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("Bookshop.Domain.Entities.CartItem", b =>
-                {
-                    b.HasOne("Bookshop.Domain.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId");
-
-                    b.HasOne("Bookshop.Domain.Entities.ShoppingCart", "ShoppingCart")
-                        .WithMany("CartItems")
-                        .HasForeignKey("ShoppingCartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("ShoppingCart");
-                });
-
             modelBuilder.Entity("Bookshop.Domain.Entities.Customer", b =>
                 {
                     b.HasOne("Bookshop.Domain.Entities.Address", "BillingAddress")
@@ -806,6 +728,29 @@ namespace Bookshop.Persistence.Migrations
                     b.Navigation("IdentityData");
 
                     b.Navigation("ShippingAddress");
+
+                    b.Navigation("ShoppingCart");
+                });
+
+            modelBuilder.Entity("Bookshop.Domain.Entities.LineItem", b =>
+                {
+                    b.HasOne("Bookshop.Domain.Entities.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bookshop.Domain.Entities.Order", "Order")
+                        .WithMany("LineItems")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("Bookshop.Domain.Entities.ShoppingCart", "ShoppingCart")
+                        .WithMany("LineItems")
+                        .HasForeignKey("ShoppingCartId");
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Order");
 
                     b.Navigation("ShoppingCart");
                 });
@@ -899,12 +844,12 @@ namespace Bookshop.Persistence.Migrations
 
             modelBuilder.Entity("Bookshop.Domain.Entities.Order", b =>
                 {
-                    b.Navigation("BookOrders");
+                    b.Navigation("LineItems");
                 });
 
             modelBuilder.Entity("Bookshop.Domain.Entities.ShoppingCart", b =>
                 {
-                    b.Navigation("CartItems");
+                    b.Navigation("LineItems");
                 });
 #pragma warning restore 612, 618
         }

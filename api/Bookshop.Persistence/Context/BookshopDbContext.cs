@@ -27,13 +27,9 @@ namespace Bookshop.Persistence.Context
         }
         public DbSet<Address> Addresses => Set<Address>();
         public DbSet<Author> Authors => Set<Author>();
-
         public DbSet<Book> Books => Set<Book>();
-        public DbSet<BookOrder> BookOrders => Set<BookOrder>();
-
-        public DbSet<CartItem> CartItems => Set<CartItem>();
+        public DbSet<LineItem> LineItems => Set<LineItem>();
         public DbSet<Category> Categories => Set<Category>();
-
         public DbSet<Customer> Customers => Set<Customer>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<ShoppingCart> ShoppingCarts => Set<ShoppingCart>();
@@ -50,8 +46,7 @@ namespace Bookshop.Persistence.Context
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
             modelBuilder.ApplyConfiguration(new AuthorConfiguration());
             modelBuilder.ApplyConfiguration(new BookConfiguration());
-            modelBuilder.ApplyConfiguration(new BookOrderConfiguration());
-            modelBuilder.ApplyConfiguration(new CartItemConfiguration());
+            modelBuilder.ApplyConfiguration(new LineItemConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
@@ -90,10 +85,10 @@ namespace Bookshop.Persistence.Context
 
     public static class BookshopDbContextExtension
     {
-        public static async Task<Order> GetOrderByIdIncludeBookOrdersAsync(this BookshopDbContext context,
+        public static async Task<Order> GetOrderByIdIncludeLineItemsAsync(this BookshopDbContext context,
             long orderId)
         {
-            return await context.Orders.Include(x => x.BookOrders).FirstOrDefaultAsync(x => x.Id == orderId);
+            return await context.Orders.Include(x => x.LineItems).FirstOrDefaultAsync(x => x.Id == orderId);
         }
     }
 }

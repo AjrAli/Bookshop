@@ -21,8 +21,8 @@ namespace Bookshop.Persistence.Configurations
 
 
             // Relationships
-            builder.HasMany(e => e.BookOrders).WithOne(e => e.Order)
-                .HasForeignKey(e => e.OrderId).IsRequired();
+            builder.HasMany(e => e.LineItems).WithOne(e => e.Order)
+                .HasForeignKey(e => e.OrderId);
 
         }
     }

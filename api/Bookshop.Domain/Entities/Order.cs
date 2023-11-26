@@ -7,10 +7,10 @@ namespace Bookshop.Domain.Entities
     {
         public decimal SalesTax { get; set; }
         public decimal ShippingFee { get; set; }
-        public decimal Total { get; set; }
+        public decimal Total { get; private set; }
         [EnumDataType(typeof(CreditCards))]
         public CreditCards MethodOfPayment { get; set; }
-        public DateTime DateOrder { get; set; }
+        public DateTime DateOrder { get;}
         [EnumDataType(typeof(Status))]
         public Status StatusOrder { get; set; }
         
@@ -18,17 +18,16 @@ namespace Bookshop.Domain.Entities
 
         public Order(decimal salesTax,
                      decimal shippingFee,
-                     decimal total,
                      CreditCards creditCard,
                      DateTime dateOrder,
                      Status statusOrder)
         {
             SalesTax = salesTax;
             ShippingFee = shippingFee;
-            Total = total;
             MethodOfPayment = creditCard;
             DateOrder = dateOrder;
             StatusOrder = statusOrder;
+            DateOrder = DateTime.Now;
         }
 
         public enum CreditCards
@@ -51,7 +50,16 @@ namespace Bookshop.Domain.Entities
         // Relationships
         public long? CustomerId { get; set; }
         public Customer? Customer { get; set; }
-        public ICollection<BookOrder> BookOrders { get; set; } = new List<BookOrder>();
+        public ICollection<LineItem> LineItems { get; set; } = new List<LineItem>();
+        public void CalculateTotal()
+        {
+            Total = 0;
+            if (LineItems != null && LineItems.Count > 0)
+            {
+                var totalWithoutTaxes = LineItems.Sum(x => x.Price);
+                Total = totalWithoutTaxes + ((totalWithoutTaxes / 100) * SalesTax) + ShippingFee;
+            }
+        }
     }
 
 }
