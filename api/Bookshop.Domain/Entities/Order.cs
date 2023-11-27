@@ -28,6 +28,16 @@ namespace Bookshop.Domain.Entities
             DateOrder = DateTime.Now;
         }
 
+        public void CalculateTotalOrder()
+        {
+            Total = 0;
+            if (LineItems != null && LineItems.Count > 0)
+            {
+                var totalWithoutTaxes = LineItems.Sum(x => x.Price);
+                Total = totalWithoutTaxes + ((totalWithoutTaxes / 100) * SalesTax) + ShippingFee;
+            }
+        }
+
         public enum CreditCards
         {
             AmericanExpress,
@@ -49,15 +59,6 @@ namespace Bookshop.Domain.Entities
         public long? CustomerId { get; set; }
         public Customer? Customer { get; set; }
         public ICollection<LineItem> LineItems { get; set; } = new List<LineItem>();
-        public void CalculateTotal()
-        {
-            Total = 0;
-            if (LineItems != null && LineItems.Count > 0)
-            {
-                var totalWithoutTaxes = LineItems.Sum(x => x.Price);
-                Total = totalWithoutTaxes + ((totalWithoutTaxes / 100) * SalesTax) + ShippingFee;
-            }
-        }
     }
 
 }

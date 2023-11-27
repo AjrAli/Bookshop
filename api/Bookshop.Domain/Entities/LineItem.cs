@@ -4,40 +4,41 @@ namespace Bookshop.Domain.Entities
 {
     public class LineItem : AuditableEntity
     {
-        public int Quantity { get; set; }
+        private int _quantity;
+        public int Quantity 
+        {
+            get
+            {
+                return _quantity;
+            }
+            set
+            {
+                _quantity = value;
+                CalculatePrice();
+            }
+        }
         public decimal Price { get; private set; }
         private LineItem() { }
-        public LineItem(int quantity)
+        public LineItem(Book book, int quantity)
         {
+            Book = book;
             Quantity = quantity;
         }
 
+        private void CalculatePrice()
+        {
+            Price = 0;
+            // Calculate the Price based on the Quantity and Book's Price.
+            Price = (Book != null) ? Book.Price * _quantity : 0;
+        }
 
 
         // Relationships
         public long? OrderId { get; set; }
         public Order? Order { get; set; }
         public long BookId { get; set; }
-        private Book? _book;
-        public Book? Book
-        {
-            get { return _book; }
-            set
-            {
-                if (value != null)
-                {
-                    _book = value;
-                    CalculatePrice();
-                }
-            }
-        }
+        public Book? Book { get; set; }
         public long? ShoppingCartId { get; set; }
         public ShoppingCart? ShoppingCart { get; set; }
-        private void CalculatePrice()
-        {
-            Price = 0;
-            // Calculate the Price based on the Quantity and Book's Price.
-            Price = (_book != null) ? _book.Price * Quantity : 0;
-        }
     }
 }
