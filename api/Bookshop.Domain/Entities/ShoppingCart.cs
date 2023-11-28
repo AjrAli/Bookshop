@@ -4,10 +4,19 @@ namespace Bookshop.Domain.Entities
 {
     public class ShoppingCart : AuditableEntity
     {
-        public decimal Total { get; private set; }
-       
-
-
+        private decimal _total;
+        public decimal Total 
+        {
+            get
+            {
+                return CalculateTotalWithoutTaxes();
+            }
+            set
+            {
+                _total = value;
+            }
+        
+        }
         public void AddItem(Book book, int quantity)
         {
             if (book != null && quantity > 0)
@@ -47,15 +56,23 @@ namespace Bookshop.Domain.Entities
                     LineItems.Remove(item);
             }
         }
-        public void CalculateTotalWithoutTaxes()
+        public decimal CalculateTotalWithoutTaxes()
         {
-            Total = 0;
+            decimal? total = null;
             if (LineItems != null && LineItems.Count > 0)
             {
-                Total = LineItems.Sum(x => x.Price);
+                total = LineItems.Sum(x => x.Price);
+                if (total != null)
+                {
+                    _total = (decimal)total;
+                }
             }
+            return _total;
         }
-
+        public int TotalItems()
+        {
+            return LineItems?.Sum(x => x.Quantity) ?? 0;
+        }
         // Relationships
         public long? CustomerId { get; set; }
         public Customer? Customer { get; set; }

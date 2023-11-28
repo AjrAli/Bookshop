@@ -22,12 +22,8 @@ namespace Bookshop.Persistence.Seed
                     var author2 = new Author("Steven Jones", "Best author!");
                     var category1 = new Category("category1", "best category");
                     var category2 = new Category("category2", "special category");
-                    var book = new Book("book1", "description1", "publisher1", "isbn1", 12.3m, 100, 354, "5.3 X 8.2 X 1.0 inches | 0.7 pounds", Book.Languages.English, new DateTime(2008, 3, 1, 7, 0, 0));
-                    var book2 = new Book("book2", "description2", "publisher2", "isbn2", 89.5m, 100, 244, "9.3 X 4.2 X 2.0 inches | 0.9 pounds", Book.Languages.French, new DateTime(2012, 6, 4, 12, 0, 0));
-                    book.Author = author1;
-                    book.Category = category1;
-                    book2.Author = author2;
-                    book2.Category = category2;
+                    var book = new Book("book1", "description1", "publisher1", "isbn1", 12.3m, 100, 354, "5.3 X 8.2 X 1.0 inches | 0.7 pounds", Book.Languages.English, new DateTime(2008, 3, 1, 7, 0, 0), author1, category1);
+                    var book2 = new Book("book2", "description2", "publisher2", "isbn2", 89.5m, 100, 244, "9.3 X 4.2 X 2.0 inches | 0.9 pounds", Book.Languages.French, new DateTime(2012, 6, 4, 12, 0, 0), author2, category2);
                     var lineItems = new List<LineItem>()
                         {
                             new LineItem(book, 10),

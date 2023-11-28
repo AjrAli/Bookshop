@@ -1,4 +1,5 @@
 ﻿using Bookshop.Domain.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Bookshop.Domain.Entities
@@ -7,7 +8,18 @@ namespace Bookshop.Domain.Entities
     {
         public decimal SalesTax { get; set; }
         public decimal ShippingFee { get; set; }
-        public decimal Total { get; private set; }
+        private decimal _total;
+        public decimal Total 
+        {
+            get
+            {
+                return CalculateTotalOrder();
+            }
+            set
+            {
+                _total = value;
+            } 
+        }
         [EnumDataType(typeof(CreditCards))]
         public CreditCards MethodOfPayment { get; set; }
         public DateTime DateOrder { get;}
@@ -28,16 +40,34 @@ namespace Bookshop.Domain.Entities
             DateOrder = DateTime.Now;
         }
 
-        public void CalculateTotalOrder()
+        public decimal CalculateTotalOrder()
         {
-            Total = 0;
+            decimal? total = null;
             if (LineItems != null && LineItems.Count > 0)
             {
                 var totalWithoutTaxes = LineItems.Sum(x => x.Price);
-                Total = totalWithoutTaxes + ((totalWithoutTaxes / 100) * SalesTax) + ShippingFee;
+                total = totalWithoutTaxes + ((totalWithoutTaxes / 100) * SalesTax) + ShippingFee;
+                if (total != null)
+                {
+                    _total = (decimal)total;
+                }
+            }
+            return _total;
+        }
+        public void UpdateStockQuantities()
+        {
+            foreach (var lineItem in LineItems)
+            {
+                if (lineItem.Book != null)
+                {
+                    if ((lineItem.Book.Quantity - lineItem.Quantity) < 0)
+                        throw new Exception("Insufficiant quantity!");
+                    else
+                        lineItem.Book.Quantity -= lineItem.Quantity;
+
+                }
             }
         }
-
         public enum CreditCards
         {
             AmericanExpress,

@@ -29,7 +29,9 @@ namespace Bookshop.Domain.Entities
                     int pageCount, 
                     string dimensions, 
                     Languages language, 
-                    DateTime publishDate)
+                    DateTime publishDate,
+                    Author author,
+                    Category category)
         {
             Title = title;
             Description = description;
@@ -41,6 +43,8 @@ namespace Bookshop.Domain.Entities
             Dimensions = dimensions;
             Language = language;
             PublishDate = publishDate;
+            Author = author;
+            Category = category;
         }
         public enum Languages
         {

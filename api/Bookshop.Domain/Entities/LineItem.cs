@@ -13,7 +13,10 @@ namespace Bookshop.Domain.Entities
             }
             set
             {
-                _quantity = value;
+                if (value > Book?.Quantity)
+                    _quantity = Book.Quantity;
+                else
+                    _quantity = value;
                 CalculatePrice();
             }
         }
