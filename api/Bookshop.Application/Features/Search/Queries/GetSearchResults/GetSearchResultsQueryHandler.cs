@@ -2,6 +2,7 @@
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using static Bookshop.Domain.Entities.Book;
 
 namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 {
@@ -22,9 +23,9 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 
             foreach (var keyword in keywords)
             {
-                // Search for addresses
-                var addresResults = await SearchAddresses(keyword, cancellationToken);
-                allSearchResults.UnionWith(addresResults);
+                // Search for books
+                var booksResults = await SearchBooks(keyword, cancellationToken);
+                allSearchResults.UnionWith(booksResults);
             }
 
             // Filter results if multiple keywords were provided
@@ -46,22 +47,32 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             };
         }
 
-        private async Task<IEnumerable<GetSearchResultsDto>> SearchAddresses(string keyword, CancellationToken cancellationToken)
+        private async Task<IEnumerable<GetSearchResultsDto>> SearchBooks(string keyword, CancellationToken cancellationToken)
         {
-            var results = await _dbContext.Addresses
-                .Where(x => x.Id.ToString().Contains(keyword) ||
-                            x.City.Contains(keyword) ||
-                            x.Country.Contains(keyword) ||
-                            x.PostalCode.Contains(keyword) ||
-                            x.State.Contains(keyword) ||
-                            x.Street.Contains(keyword))
+            Languages parsedLanguageKeywordCheck;
+            Enum.TryParse(Enum.GetNames(typeof(Languages)).FirstOrDefault(x => x.Contains(keyword, StringComparison.OrdinalIgnoreCase)), out parsedLanguageKeywordCheck);
+            var results = await _dbContext.Books
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .Where(x => x.Title.Contains(keyword) ||
+                            x.Description.Contains(keyword) ||
+                            x.Publisher.Contains(keyword) ||
+                            x.Isbn.Contains(keyword) ||
+                            x.Price.ToString().Contains(keyword) ||
+                            x.Language == parsedLanguageKeywordCheck ||
+                            x.PublishDate.ToString().Contains(keyword) ||
+                            x.Author.Name.Contains(keyword) ||
+                            x.Category.Title.Contains(keyword))
                 .Select(x => new GetSearchResultsDto
                 {
                     Id = x.Id,
-                    Type = "addresses",
-                    Title = x.City,
-                    Subtitle = $"{x.Street} - {x.PostalCode} - {x.State}",
-                    Description = x.Country
+                    Title = x.Title,
+                    Description = x.Description.Substring(0,50),
+                    Details = $"{x.Publisher} - {x.Isbn} - {x.PublishDate.ToShortDateString()}",
+                    Price = x.Price.ToString(),
+                    AuthorName =  x.Author.Name,
+                    CategoryTitle = x.Category.Title,
+                    Language = x.Language.ToString()
                 })
                 .ToListAsync(cancellationToken);
 
@@ -71,9 +82,13 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
         {
             foreach (var keyword in keywords)
             {
-                if (result.Title?.ToUpper().Contains(keyword.ToUpper()) == true) continue;
-                if (result.Subtitle?.ToUpper().Contains(keyword.ToUpper()) == true) continue;
-                if (result.Description?.ToUpper().Contains(keyword.ToUpper()) == true) continue;
+                if (result.Title?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
+                if (result.Description?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
+                if (result.Details?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
+                if (result.Price?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
+                if (result.AuthorName?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
+                if (result.CategoryTitle?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
+                if (result.Language?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
                 return false;
             }
 
@@ -90,9 +105,17 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 
                 if (result.Title?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     match = true;
-                else if (result.Subtitle?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
-                    match = true;
                 else if (result.Description?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                    match = true;
+                else if (result.Details?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                    match = true;
+                else if (result.Price?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                    match = true;
+                else if (result.AuthorName?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                    match = true;
+                else if (result.CategoryTitle?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                    match = true;
+                else if (result.Language?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     match = true;
 
                 if (match)
@@ -113,7 +136,7 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             if (x == null || y == null)
                 return false;
 
-            return x.Id == y.Id && x.Type == y.Type;
+            return x.Id == y.Id;
         }
 
         public int GetHashCode(GetSearchResultsDto obj)
@@ -122,7 +145,6 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             {
                 int hash = 17;
                 hash = hash * 23 + obj.Id.GetHashCode();
-                hash = hash * 23 + (obj.Type != null ? obj.Type.GetHashCode() : 0);
                 return hash;
             }
         }

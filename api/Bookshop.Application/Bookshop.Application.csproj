@@ -20,5 +20,10 @@
     <ProjectReference Include="..\Bookshop.Domain\Bookshop.Domain.csproj" />
     <ProjectReference Include="..\Bookshop.Persistence\Bookshop.Persistence.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Category\Queries\" />
+    <Folder Include="Features\Common\Commands\" />
+  </ItemGroup>
   
 </Project>
