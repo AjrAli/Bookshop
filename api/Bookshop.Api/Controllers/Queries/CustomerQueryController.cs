@@ -3,6 +3,7 @@ using Bookshop.Application.Features.Common.Queries.GetById;
 using Bookshop.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace Bookshop.Api.Controllers.Queries
 {
@@ -24,17 +25,38 @@ namespace Bookshop.Api.Controllers.Queries
         [Route("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
-            GetByIdQueryResponse<Customer>? dataReponse = await _mediator.Send(new GetByIdQuery<Customer>
+            var queryConfig = BuildCustomerQueryConfiguration();
+            var dataReponse = await _mediator.Send(new GetByIdQuery<Customer>
             {
-                Id = id
+                Id = id,
+                NavigationPropertyConfigurations = queryConfig
             });
             return Ok(dataReponse);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            GetAllQueryResponse<Customer>? dataReponse = await _mediator.Send(new GetAllQuery<Customer>());
+            var queryConfig = BuildCustomerQueryConfiguration();
+            var dataReponse = await _mediator.Send(new GetAllQuery<Customer>()
+            {
+                NavigationPropertyConfigurations = queryConfig
+            });
             return Ok(dataReponse);
+        }
+        private Dictionary<Expression<Func<Customer, object>>, List<Expression<Func<object, object>>>> BuildCustomerQueryConfiguration()
+        {
+            return new Dictionary<Expression<Func<Customer, object>>, List<Expression<Func<object, object>>>>
+            {
+                { x => x.ShippingAddress, null },
+                { x => x.BillingAddress, null },
+                { x => x.ShoppingCart, new List<Expression<Func<object, object>>>
+                    {
+                        y => (y as ShoppingCart).LineItems,
+                        z => (z as LineItem).Book,
+                        w => (w as Book).Author,
+                    }
+                }
+            };
         }
     }
 }

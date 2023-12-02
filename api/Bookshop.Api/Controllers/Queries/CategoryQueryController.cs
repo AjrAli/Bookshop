@@ -24,7 +24,7 @@ namespace Bookshop.Api.Controllers.Queries
         [Route("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
-            GetByIdQueryResponse<Category>? dataReponse = await _mediator.Send(new GetByIdQuery<Category>
+            var dataReponse = await _mediator.Send(new GetByIdQuery<Category>
             {
                 Id = id
             });
@@ -33,7 +33,7 @@ namespace Bookshop.Api.Controllers.Queries
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            GetAllQueryResponse<Category>? dataReponse = await _mediator.Send(new GetAllQuery<Category>());
+            var dataReponse = await _mediator.Send(new GetAllQuery<Category>());
             return Ok(dataReponse);
         }
     }

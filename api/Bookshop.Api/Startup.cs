@@ -10,6 +10,7 @@ using Bookshop.Persistence;
 using Bookshop.Persistence.Contracts;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Text.Json.Serialization;
 
 namespace Bookshop.Api
 {
@@ -31,7 +32,10 @@ namespace Bookshop.Api
             services.AddIdentityServices(Configuration);
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ILoggedInUserService, LoggedInUserService>();
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
             services.AddCors(options =>
             {
