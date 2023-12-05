@@ -2,10 +2,8 @@ using Bookshop.Api.Middleware;
 using Bookshop.Api.Services;
 using Bookshop.Api.Utility;
 using Bookshop.Application;
-using Bookshop.Application.Contracts.Identity;
+using Bookshop.Application.Settings;
 using Bookshop.Identity;
-using Bookshop.Identity.JwtModel;
-using Bookshop.Identity.Services;
 using Bookshop.Persistence;
 using Bookshop.Persistence.Contracts;
 using Microsoft.OpenApi.Models;
@@ -30,7 +28,6 @@ namespace Bookshop.Api
             services.AddApplicationServices();
             services.AddPersistenceServices(Configuration);
             services.AddIdentityServices(Configuration);
-            services.AddTransient<IIdentityUserService, IdentityUserService>();
             services.AddScoped<ILoggedInUserService, LoggedInUserService>();
             services.AddControllers().AddJsonOptions(options =>
             {

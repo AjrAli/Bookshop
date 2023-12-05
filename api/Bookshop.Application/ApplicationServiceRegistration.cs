@@ -19,15 +19,19 @@ namespace Bookshop.Application
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            //services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(GetAllQueryHandler<Category>).Assembly));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             RegisterGenericGetAllQueryHandlers(services);
             RegisterGenericGetByIdQueryHandlers(services);
+            RegisterPipelineBehaviors(services);
+            return services;
+        }
+
+        private static void RegisterPipelineBehaviors(IServiceCollection services)
+        {
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
             services.AddTransient(typeof(IResponseFactory<>), typeof(ResponseFactory<>));
-            return services;
         }
 
         private static void RegisterGenericGetAllQueryHandlers(IServiceCollection services)

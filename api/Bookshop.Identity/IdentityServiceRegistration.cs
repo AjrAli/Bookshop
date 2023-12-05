@@ -1,5 +1,4 @@
-﻿using Bookshop.Domain.Entities;
-using Bookshop.Identity.JwtModel;
+﻿using Bookshop.Application.Settings;
 using Bookshop.Persistence.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -17,9 +16,8 @@ namespace Bookshop.Identity
         public static void AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
-            
 
-            services.AddIdentity<IdentityUserData, IdentityRole>( config =>
+            services.AddIdentity<IdentityUserData, IdentityRole>(config =>
             {
                 config.Password.RequiredLength = 4;
                 config.Password.RequireDigit = false;

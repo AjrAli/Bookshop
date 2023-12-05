@@ -1,5 +1,5 @@
-﻿using Bookshop.Domain.Entities;
-using Bookshop.Identity.Roles;
+﻿using Bookshop.Application.Configuration;
+using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.AspNetCore.Identity;
 using static Bookshop.Domain.Entities.Customer;
@@ -11,11 +11,11 @@ namespace Bookshop.Identity.Seed
         public static async Task SeedAsync(UserManager<IdentityUserData> userManager, BookshopDbContext context)
         {
             var newAddress = new Address("streetOfUser1", "cityOfUser1", "CodeUser1", "countryOfUser1", "stateOfUser1");
-            var newCustomer = new Customer("firstName","lastName", newAddress, newAddress);
+            var newCustomer = new Customer("firstName", "lastName", newAddress, newAddress);
             newCustomer.IdentityData.UserName = "admin";
             newCustomer.IdentityData.Email = "ali@gmail.com";
             var user = await userManager.FindByNameAsync(newCustomer?.IdentityData?.UserName);
-            if (context.Customers != null && !context.Customers.Any()  && newCustomer != null)
+            if (context.Customers != null && !context.Customers.Any() && newCustomer != null)
             {
                 await context.Customers.AddAsync(newCustomer);
                 if (user == null)

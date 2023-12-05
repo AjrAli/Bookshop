@@ -1,4 +1,4 @@
-﻿using Bookshop.Identity.Roles;
+﻿using Bookshop.Application.Configuration;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bookshop.Identity.Seed

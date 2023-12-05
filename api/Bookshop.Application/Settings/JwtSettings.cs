@@ -1,4 +1,4 @@
-﻿namespace Bookshop.Identity.JwtModel
+﻿namespace Bookshop.Application.Settings
 {
     public class JwtSettings
     {

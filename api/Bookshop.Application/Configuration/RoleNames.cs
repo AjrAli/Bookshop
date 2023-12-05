@@ -1,4 +1,4 @@
-﻿namespace Bookshop.Identity.Roles
+﻿namespace Bookshop.Application.Configuration
 {
     public static class RoleNames
     {
