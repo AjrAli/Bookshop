@@ -30,7 +30,6 @@
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
     <ItemGroup>
-    <Folder Include="Controllers\Commands\" />
     <Folder Include="Logs\" />
     <Folder Include="logs\" />
     <Folder Include="wwwroot\" />

@@ -1,5 +1,6 @@
 ﻿using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
+using Bookshop.Application.Features.Customer.Queries.Authenticate;
 using Bookshop.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,12 @@ namespace Bookshop.Api.Controllers.Queries
             {
                 NavigationPropertyConfigurations = queryConfig
             });
+            return Ok(dataReponse);
+        }
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody] AuthenticateQuery request)
+        {
+            var dataReponse = await _mediator.Send(request);
             return Ok(dataReponse);
         }
         private Dictionary<Expression<Func<Customer, object>>, List<Expression<Func<object, object>>>> BuildCustomerQueryConfiguration()

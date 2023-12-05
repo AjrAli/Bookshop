@@ -25,9 +25,11 @@ namespace Bookshop.Api.Controllers.Queries
         [Route("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
+            var queryConfig = BuildAuthorQueryConfiguration();
             var dataReponse = await _mediator.Send(new GetByIdQuery<Author>
             {
-                Id = id
+                Id = id,
+                NavigationPropertyConfigurations = queryConfig
             });
             return Ok(dataReponse);
         }

@@ -3,6 +3,7 @@ using Bookshop.Application.Features.Common.Queries.GetById;
 using Bookshop.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace Bookshop.Api.Controllers.Queries
 {
@@ -24,17 +25,31 @@ namespace Bookshop.Api.Controllers.Queries
         [Route("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
+            var queryConfig = BuildBookQueryConfiguration();
             var dataReponse = await _mediator.Send(new GetByIdQuery<Book>
             {
-                Id = id
+                Id = id,
+                NavigationPropertyConfigurations =queryConfig
             });
             return Ok(dataReponse);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var dataReponse = await _mediator.Send(new GetAllQuery<Book>());
+            var queryConfig = BuildBookQueryConfiguration();
+            var dataReponse = await _mediator.Send(new GetAllQuery<Book>
+            {
+                NavigationPropertyConfigurations = queryConfig
+            });
             return Ok(dataReponse);
+        }
+        private Dictionary<Expression<Func<Book, object>>, List<Expression<Func<object, object>>>> BuildBookQueryConfiguration()
+        {
+            return new Dictionary<Expression<Func<Book, object>>, List<Expression<Func<object, object>>>>
+            {
+                {x => x.Author, null },
+                {x => x.Category, null }
+            };
         }
     }
 }

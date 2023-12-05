@@ -1,9 +1,15 @@
-﻿using Bookshop.Application.Contracts.Identity;
+﻿using AutoMapper;
+using Bookshop.Application.Contracts.Identity;
 using Bookshop.Application.Exceptions;
-using Bookshop.Application.Features.Response;
+using Bookshop.Application.Features.Customer;
+using Bookshop.Application.Features.Customer.Commands;
+using Bookshop.Application.Features.Customer.Queries.Authenticate;
 using Bookshop.Domain.Entities;
 using Bookshop.Identity.JwtModel;
+using Bookshop.Identity.Roles;
+using Bookshop.Persistence.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,18 +21,22 @@ namespace Bookshop.Identity.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
+        private readonly BookshopDbContext _dbContext;
         private readonly UserManager<IdentityUserData> _userManager;
         private readonly JwtSettings _jwtSettings;
         private readonly JwtSecurityTokenHandler _jwtTokenHandler = new JwtSecurityTokenHandler();
+        private readonly IMapper _mapper;
 
-        public AuthenticationService(UserManager<IdentityUserData> userManager,
-            IOptions<JwtSettings> jwtSettings)
+        public AuthenticationService(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
+            IOptions<JwtSettings> jwtSettings, IMapper mapper)
         {
+            _dbContext = dbContext;
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
+            _mapper = mapper;
         }
 
-        public async Task<LoginResponse> AuthenticateAsync(string username, string password)
+        public async Task<AuthenticateQueryResponse> Authenticate(string username, string password)
         {
             var user = await _userManager.FindByNameAsync(username);
 
@@ -40,51 +50,74 @@ namespace Bookshop.Identity.Services
             {
                 throw new ValidationException($"Credentials for '{username} aren't valid'.");
             }
-
-            /********TODO For email validation in a real application ********/
-            /*
-                    var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, lockoutOnFailure: false);
-                    if (!result.Succeeded)
-                    {
-                        throw new ValidationException($"Credentials for '{username} aren't valid'.");
-                    }
-            */
             var userRoles = await _userManager.GetRolesAsync(user); // Get the roles of the user
             JwtSecurityToken? jwtSecurityToken = await GenerateToken(user, userRoles);
-
-            return new LoginResponse
+            var customer = _mapper.Map<CustomerDto>(_dbContext.Customers.Include(x => x.IdentityData).FirstOrDefault(x => x.IdentityUserDataId == user.Id));
+            return new AuthenticateQueryResponse
             {
-                Id = user.Id,
+                Customer = customer,
                 Token = _jwtTokenHandler.WriteToken(jwtSecurityToken)
             };
         }
 
-        //public async Task<LoginResponse> CreateSimpleUserAsync(CreateSimpleUserCommand request)
-        //{
-        //    var newUser = new Customer()
-        //    {
-        //        FirstName = request.Account.FirstName,
-        //        LastName = request.Account.LastName,
-        //        Email = request.Account.Email,
-        //        UserName = request.Account.Username,
-        //        EmailConfirmed = true //For test app only
-        //    };
-        //    var resultUser = await _userManager.CreateAsync(newUser, request.Account.Password);
-        //    if (!resultUser.Succeeded)
-        //        throw new BadRequestException($"Failed to create user {newUser?.UserName}", resultUser.Errors.ToList().Select(x => x.Description).ToList());
-        //    var resultRole = await _userManager.AddToRoleAsync(newUser, RoleNames.User);
-        //    if (!resultRole.Succeeded)
-        //        throw new BadRequestException($"Failed to create user {newUser?.UserName}", resultRole.Errors.ToList().Select(x => x.Description).ToList());
+        public async Task<CreateCustomerCommandResponse> CreateCustomer(CreateCustomerCommand request, CancellationToken cancellationToken)
+        {
+            // Input validation
+            if (request.Customer == null)
+                throw new BadRequestException($"{nameof(request.Customer)}, Customer information is required");
+            
 
-        //    var user = await _userManager.FindByNameAsync(newUser.UserName);
-        //    var userRoles = await _userManager.GetRolesAsync(user); // Get the roles of the user
-        //    JwtSecurityToken? jwtSecurityToken = await GenerateToken(user, userRoles);
-        //    return new LoginResponse
-        //    {
-        //        Id = user.Id,
-        //        Token = _jwtTokenHandler.WriteToken(jwtSecurityToken)
-        //    };
-        //}
+            var newUser = CreateNewCustomer(request.Customer);
+
+            await CreateUserAndRole(newUser, request.Customer?.Password);
+
+            var user = await _userManager.FindByNameAsync(newUser?.IdentityData.UserName);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            JwtSecurityToken? jwtSecurityToken = await GenerateToken(user, userRoles);
+
+            await _dbContext.Customers.AddAsync(newUser, cancellationToken);
+
+            return new CreateCustomerCommandResponse
+            {
+                Id = user.Id,
+                Token = _jwtTokenHandler.WriteToken(jwtSecurityToken),
+                Message = $"Customer {request.Customer?.FirstName} successfully created"
+            };
+        }
+
+        private Customer CreateNewCustomer(CustomerDto customerDto)
+        {
+            var shippingAddress = new Address(customerDto?.ShippingAddress.Street, customerDto?.ShippingAddress.City, customerDto?.ShippingAddress.PostalCode, customerDto?.ShippingAddress.Country, customerDto?.ShippingAddress.State);
+            var billingAddress = new Address(customerDto?.BillingAddress.Street, customerDto?.BillingAddress.City, customerDto?.BillingAddress.PostalCode, customerDto?.BillingAddress.Country, customerDto?.BillingAddress.State);
+
+            return new Customer(customerDto.FirstName, customerDto.LastName, shippingAddress, billingAddress)
+            {
+                IdentityData = new IdentityUserData
+                {
+                    UserName = customerDto.Username,
+                    Email = customerDto.Email,
+                    EmailConfirmed = customerDto.EmailConfirmed
+                }
+            };
+        }
+
+        private async Task CreateUserAndRole(Customer newUser, string password)
+        {
+            var resultUser = await _userManager.CreateAsync(newUser.IdentityData, password);
+            if (!resultUser.Succeeded)
+            {
+                var errors = resultUser.Errors.ToList().Select(x => x.Description).ToList();
+                throw new BadRequestException($"Failed to create user {newUser?.IdentityData.UserName}", errors);
+            }
+
+            var resultRole = await _userManager.AddToRoleAsync(newUser.IdentityData, RoleNames.Customer);
+            if (!resultRole.Succeeded)
+            {
+                var errors = resultRole.Errors.ToList().Select(x => x.Description).ToList();
+                throw new BadRequestException($"Failed to create user's role {newUser?.IdentityData.UserName}", errors);
+            }
+        }
+
 
         private async Task<JwtSecurityToken?> GenerateToken(IdentityUserData user, IList<string> userRoles)
         {
