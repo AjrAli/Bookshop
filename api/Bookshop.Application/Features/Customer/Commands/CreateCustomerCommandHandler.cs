@@ -5,16 +5,16 @@ namespace Bookshop.Application.Features.Customer.Commands
 {
     public class CreateCustomerCommandHandler : ICommandHandler<CreateCustomerCommand, CreateCustomerCommandResponse>
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IIdentityUserService _identityUserService;
 
-        public CreateCustomerCommandHandler(IAuthenticationService authenticationService)
+        public CreateCustomerCommandHandler(IIdentityUserService identityUserService)
         {
-            _authenticationService = authenticationService;
+            _identityUserService = identityUserService;
         }
 
         public async Task<CreateCustomerCommandResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var response = await _authenticationService.CreateCustomer(request, cancellationToken);
+            var response = await _identityUserService.CreateCustomer(request, cancellationToken);
             return response;
         }
     }

@@ -30,7 +30,7 @@ namespace Bookshop.Api
             services.AddApplicationServices();
             services.AddPersistenceServices(Configuration);
             services.AddIdentityServices(Configuration);
-            services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IIdentityUserService, IdentityUserService>();
             services.AddScoped<ILoggedInUserService, LoggedInUserService>();
             services.AddControllers().AddJsonOptions(options =>
             {

@@ -19,7 +19,7 @@ using static Bookshop.Domain.Entities.Customer;
 
 namespace Bookshop.Identity.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class IdentityUserService : IIdentityUserService
     {
         private readonly BookshopDbContext _dbContext;
         private readonly UserManager<IdentityUserData> _userManager;
@@ -27,7 +27,7 @@ namespace Bookshop.Identity.Services
         private readonly JwtSecurityTokenHandler _jwtTokenHandler = new JwtSecurityTokenHandler();
         private readonly IMapper _mapper;
 
-        public AuthenticationService(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
+        public IdentityUserService(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
             IOptions<JwtSettings> jwtSettings, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -64,10 +64,10 @@ namespace Bookshop.Identity.Services
         {
             // Input validation
             if (request.Customer == null)
-                throw new BadRequestException($"{nameof(request.Customer)}, Customer information is required");
+                throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
             
 
-            var newUser = CreateNewCustomer(request.Customer);
+            var newUser = CreateNewCustomerFromDto(request.Customer);
 
             await CreateUserAndRole(newUser, request.Customer?.Password);
 
@@ -85,7 +85,7 @@ namespace Bookshop.Identity.Services
             };
         }
 
-        private Customer CreateNewCustomer(CustomerDto customerDto)
+        private Customer CreateNewCustomerFromDto(CustomerDto customerDto)
         {
             var shippingAddress = new Address(customerDto?.ShippingAddress.Street, customerDto?.ShippingAddress.City, customerDto?.ShippingAddress.PostalCode, customerDto?.ShippingAddress.Country, customerDto?.ShippingAddress.State);
             var billingAddress = new Address(customerDto?.BillingAddress.Street, customerDto?.BillingAddress.City, customerDto?.BillingAddress.PostalCode, customerDto?.BillingAddress.Country, customerDto?.BillingAddress.State);
