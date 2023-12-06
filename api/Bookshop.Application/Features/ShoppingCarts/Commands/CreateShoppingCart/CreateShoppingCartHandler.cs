@@ -37,30 +37,42 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
         }
         private async Task<ShoppingCart> CreateNewShoppingCartFromDto(ShoppingCartDto shoppingCartDto)
         {
-            var shoppingCart = new ShoppingCart {CustomerId = shoppingCartDto.CustomerId};
+            var shoppingCart = new ShoppingCart { CustomerId = shoppingCartDto.CustomerId };
+
             foreach (var item in shoppingCartDto.Items)
             {
-                var book = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == item.BookId);
+                var book = await _dbContext.Books
+                    .FirstOrDefaultAsync(x => x.Id == item.BookId)
+                    ?? throw new ValidationException($"BookId: {item.BookId} not found in the database.");
+
                 shoppingCart.AddItem(book, item.Quantity);
             }
+
             return shoppingCart;
         }
         private async Task ValidateRequest(CreateShoppingCart request)
         {
             if (request.ShoppingCart == null)
-                throw new ValidationException($"{nameof(request.ShoppingCart)}, ShoppingCart information is required");
-            if (request.ShoppingCart.Items == null)
-                throw new ValidationException($"No items are listed in the ShoppingCart");
-            if (request.ShoppingCart.CustomerId == null)
-                throw new ValidationException($"Customer undefined for the ShoppingCart");
-            if (await _dbContext.ShoppingCarts.AnyAsync(x => x.CustomerId == request.ShoppingCart.CustomerId))
-                throw new ValidationException($"Customer {request.ShoppingCart.CustomerId} has already a ShoppingCart, not possible to create mutliples ShoppingCart for same customer");
-            foreach (var item in request.ShoppingCart.Items)
+                throw new ValidationException($"{nameof(request.ShoppingCart)} is required.");
+
+            var shoppingCart = request.ShoppingCart;
+
+            if (shoppingCart.Items == null || !shoppingCart.Items.Any())
+                throw new ValidationException("No items are listed in the ShoppingCart.");
+
+            if (shoppingCart.CustomerId == null)
+                throw new ValidationException("Customer undefined for the ShoppingCart.");
+
+            if (await _dbContext.ShoppingCarts.AnyAsync(x => x.CustomerId == shoppingCart.CustomerId))
+                throw new ValidationException($"Customer {shoppingCart.CustomerId} already has a ShoppingCart.");
+
+            foreach (var item in shoppingCart.Items)
             {
                 if (!await _dbContext.Books.AnyAsync(x => x.Id == item.BookId))
-                    throw new ValidationException($"BookId : {item.BookId}, not found in DB which invalid the ShoppingCart");
+                    throw new ValidationException($"BookId: {item.BookId} not found in the database.");
+
                 if (item.Quantity <= 0)
-                    throw new ValidationException($"Quantity : {item.Quantity} of the bookId {item.BookId}, not valid which invalid the ShoppingCart");
+                    throw new ValidationException($"Invalid quantity: {item.Quantity} for BookId: {item.BookId}.");
             }
         }
     }
