@@ -1,5 +1,5 @@
-﻿using Bookshop.Application.Features.Customer;
-using Bookshop.Application.Features.Customer.Commands;
+﻿using Bookshop.Application.Features.Customers;
+using Bookshop.Application.Features.Customers.Commands.CreateCustomer;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,7 @@ namespace Bookshop.Api.Controllers.Commands
         [HttpPost("create-customer")]
         public async Task<IActionResult> CreateCustomer([FromBody] CustomerDto customerDto)
         {
-            var dataCommandReponse = await _mediator.Send(new CreateCustomerCommand
+            var dataCommandReponse = await _mediator.Send(new CreateCustomer
             {
                 Customer = customerDto
             });

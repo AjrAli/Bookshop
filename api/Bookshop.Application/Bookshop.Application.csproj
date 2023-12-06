@@ -23,9 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Category\Commands\" />
-    <Folder Include="Features\Category\Queries\" />
+    <Folder Include="Features\Categories\Commands\" />
+    <Folder Include="Features\Categories\Queries\" />
     <Folder Include="Features\Common\Commands\" />
+    <Folder Include="Features\Orders\Commands\" />
+    <Folder Include="Features\Orders\Queries\" />
+    <Folder Include="Features\ShoppingCarts\Queries\" />
   </ItemGroup>
   
 </Project>

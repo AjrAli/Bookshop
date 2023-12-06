@@ -2,10 +2,10 @@
 
 namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 {
-    public class GetSearchResultsQueryResponse : BaseResponse
+    public class GetSearchResultsResponse : BaseResponse
     {
         public List<GetSearchResultsDto>? SearchResultsDto { get; set; }
-        public GetSearchResultsQueryResponse() : base()
+        public GetSearchResultsResponse() : base()
         {
 
         }

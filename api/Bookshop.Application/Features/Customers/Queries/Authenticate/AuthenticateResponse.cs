@@ -1,10 +1,10 @@
 ﻿using Bookshop.Application.Features.Response;
 
-namespace Bookshop.Application.Features.Customer.Queries.Authenticate
+namespace Bookshop.Application.Features.Customers.Queries.Authenticate
 {
-    public class AuthenticateQueryResponse : BaseResponse
+    public class AuthenticateResponse : BaseResponse
     {
-        public AuthenticateQueryResponse() : base()
+        public AuthenticateResponse() : base()
         {
 
         }

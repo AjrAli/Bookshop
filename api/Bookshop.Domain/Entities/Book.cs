@@ -48,6 +48,7 @@ namespace Bookshop.Domain.Entities
         }
         public enum Languages
         {
+            UnexpectedChoice,
             English,
             French,
             Dutch,

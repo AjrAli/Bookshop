@@ -1,7 +1,7 @@
 ﻿using Bookshop.Application.Features.Dto;
 using Bookshop.Domain.Entities;
 
-namespace Bookshop.Application.Features.Customer
+namespace Bookshop.Application.Features.Customers
 {
     public class CustomerDto : IBaseDto
     {

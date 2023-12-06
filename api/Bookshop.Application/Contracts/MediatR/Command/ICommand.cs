@@ -4,5 +4,5 @@ namespace Bookshop.Application.Contracts.MediatR.Command;
 
 public interface ICommand<out TResponse> : IRequest<TResponse>
 {
-    
+    bool IsSaveChangesAsyncCalled { get; set; }
 }

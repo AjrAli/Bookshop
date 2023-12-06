@@ -7,18 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookshop.Application.Features.Common.Queries.GetById
 {
-    public class GetByIdQueryHandler<T> : IQueryHandler<GetByIdQuery<T>, GetByIdQueryResponse<T>> where T : class
+    public class GetByIdHandler<T> : IQueryHandler<GetById<T>, GetByIdResponse<T>> where T : class
     {
         private readonly BookshopDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetByIdQueryHandler(IMapper mapper, BookshopDbContext dbContext)
+        public GetByIdHandler(IMapper mapper, BookshopDbContext dbContext)
         {
             _mapper = mapper;
             _dbContext = dbContext;
         }
 
-        public async Task<GetByIdQueryResponse<T>> Handle(GetByIdQuery<T> request, CancellationToken cancellationToken)
+        public async Task<GetByIdResponse<T>> Handle(GetById<T> request, CancellationToken cancellationToken)
         {
             var query = _dbContext.Set<T>().AsQueryable();
             query = (request.NavigationPropertyConfigurations != null) ?
@@ -31,7 +31,7 @@ namespace Bookshop.Application.Features.Common.Queries.GetById
 
             var dto = _mapper.Map<T>(entity);
 
-            return new GetByIdQueryResponse<T>
+            return new GetByIdResponse<T>
             {
                 Dto = dto
             };

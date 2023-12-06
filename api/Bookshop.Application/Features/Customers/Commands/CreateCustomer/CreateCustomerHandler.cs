@@ -7,13 +7,14 @@ using Bookshop.Application.Settings;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using static Bookshop.Domain.Entities.Customer;
 
-namespace Bookshop.Application.Features.Customer.Commands
+namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 {
-    public class CreateCustomerCommandHandler : ICommandHandler<CreateCustomerCommand, CreateCustomerCommandResponse>
+    public class CreateCustomerHandler : ICommandHandler<CreateCustomer, CreateCustomerResponse>
     {
         private readonly BookshopDbContext _dbContext;
         private readonly UserManager<IdentityUserData> _userManager;
@@ -21,7 +22,7 @@ namespace Bookshop.Application.Features.Customer.Commands
         private readonly JwtSecurityTokenHandler _jwtTokenHandler = new JwtSecurityTokenHandler();
         private readonly IMapper _mapper;
 
-        public CreateCustomerCommandHandler(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
+        public CreateCustomerHandler(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
             IOptions<JwtSettings> jwtSettings, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -30,22 +31,30 @@ namespace Bookshop.Application.Features.Customer.Commands
             _mapper = mapper;
         }
 
-        public async Task<CreateCustomerCommandResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<CreateCustomerResponse> Handle(CreateCustomer request, CancellationToken cancellationToken)
         {
             ValidateRequest(request);
-
             var newUser = CreateNewCustomerFromDto(request.Customer);
             await CreateUserAndRole(newUser, request.Customer?.Password);
-
             var user = await _userManager.FindByNameAsync(newUser?.IdentityData.UserName);
             var jwtSecurityToken = GenerateJwtToken(user);
-
-            await _dbContext.Customers.AddAsync(newUser, cancellationToken);
-
-            return CreateResponse(user, jwtSecurityToken, request.Customer?.FirstName);
+            await StoreCustomerInDatabase(request, newUser, cancellationToken);
+            var customerCreated = _mapper.Map<CustomerDto>(_dbContext.Customers.Include(x => x.IdentityData).FirstOrDefault(x => x.IdentityUserDataId == user.Id));
+            return new()
+            {
+                Customer = customerCreated,
+                Token = _jwtTokenHandler.WriteToken(jwtSecurityToken),
+                Message = $"Customer {customerCreated.FirstName} successfully created"
+            };
         }
 
-        private void ValidateRequest(CreateCustomerCommand request)
+        private async Task StoreCustomerInDatabase(CreateCustomer request, Customer customer, CancellationToken cancellationToken)
+        {
+            await _dbContext.Customers.AddAsync(customer, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            request.IsSaveChangesAsyncCalled = true;
+        }
+        private void ValidateRequest(CreateCustomer request)
         {
             if (request.Customer == null)
                 throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
@@ -58,17 +67,7 @@ namespace Bookshop.Application.Features.Customer.Commands
             return JwtHelper.GenerateToken(user, userClaims, userRoles, _jwtSettings);
         }
 
-        private CreateCustomerCommandResponse CreateResponse(IdentityUserData user, JwtSecurityToken jwtSecurityToken, string firstName)
-        {
-            return new CreateCustomerCommandResponse
-            {
-                Id = user.Id,
-                Token = _jwtTokenHandler.WriteToken(jwtSecurityToken),
-                Message = $"Customer {firstName} successfully created"
-            };
-        }
-
-        private Domain.Entities.Customer CreateNewCustomerFromDto(CustomerDto customerDto)
+        private Customer CreateNewCustomerFromDto(CustomerDto customerDto)
         {
             var shippingAddress = new Address(
                 customerDto?.ShippingAddress.Street,
@@ -86,7 +85,7 @@ namespace Bookshop.Application.Features.Customer.Commands
                 customerDto?.BillingAddress.State
             );
 
-            return new Domain.Entities.Customer(
+            return new Customer(
                 customerDto.FirstName,
                 customerDto.LastName,
                 shippingAddress,
@@ -102,7 +101,7 @@ namespace Bookshop.Application.Features.Customer.Commands
             };
         }
 
-        private async Task CreateUserAndRole(Domain.Entities.Customer newUser, string password)
+        private async Task CreateUserAndRole(Customer newUser, string password)
         {
             var resultUser = await _userManager.CreateAsync(newUser.IdentityData, password);
 

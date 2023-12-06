@@ -1,6 +1,6 @@
 ﻿using Bookshop.Application.Features.Dto;
 
-namespace Bookshop.Application.Features.Customer
+namespace Bookshop.Application.Features.Customers
 {
     public class AddressDto : IBaseDto
     {

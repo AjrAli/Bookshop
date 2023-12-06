@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Bookshop.Application.Features.Category;
-using Bookshop.Application.Features.Common.Queries;
+using Bookshop.Application.Features.Categories;
 using Bookshop.Domain.Entities;
 
 namespace Bookshop.Application.Profiles.Categories

@@ -26,7 +26,7 @@ namespace Bookshop.Api.Controllers.Queries
         public async Task<IActionResult> GetById(long? id)
         {
             var queryConfig = BuildAuthorQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetByIdQuery<Author>
+            var dataReponse = await _mediator.Send(new GetById<Author>
             {
                 Id = id,
                 NavigationPropertyConfigurations = queryConfig
@@ -37,7 +37,7 @@ namespace Bookshop.Api.Controllers.Queries
         public async Task<IActionResult> GetAll()
         {
             var queryConfig = BuildAuthorQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetAllQuery<Author>()
+            var dataReponse = await _mediator.Send(new GetAll<Author>()
             {
                 NavigationPropertyConfigurations = queryConfig
             });

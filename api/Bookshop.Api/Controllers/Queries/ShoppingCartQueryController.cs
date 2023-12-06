@@ -26,7 +26,7 @@ namespace Bookshop.Api.Controllers.Queries
         public async Task<IActionResult> GetById(long? id)
         {
             var queryConfig = BuildShoppingCartQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetByIdQuery<ShoppingCart>
+            var dataReponse = await _mediator.Send(new GetById<ShoppingCart>
             {
                 Id = id,
                 NavigationPropertyConfigurations = queryConfig
@@ -37,7 +37,7 @@ namespace Bookshop.Api.Controllers.Queries
         public async Task<IActionResult> GetAll()
         {
             var queryConfig = BuildShoppingCartQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetAllQuery<ShoppingCart>
+            var dataReponse = await _mediator.Send(new GetAll<ShoppingCart>
             {
                 NavigationPropertyConfigurations = queryConfig
             });

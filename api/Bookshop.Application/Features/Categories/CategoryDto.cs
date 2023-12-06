@@ -1,6 +1,6 @@
 ﻿using Bookshop.Application.Features.Dto;
 
-namespace Bookshop.Application.Features.Category
+namespace Bookshop.Application.Features.Categories
 {
     public record CategoryDto : IBaseDto
     {

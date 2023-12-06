@@ -2,7 +2,7 @@
 
 namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 {
-    public class GetSearchResultsQuery : IQuery<GetSearchResultsQueryResponse>
+    public class GetSearchResults : IQuery<GetSearchResultsResponse>
     {
         public string Keyword { get; set; }
     }

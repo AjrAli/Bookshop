@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace Bookshop.Application.Features.Customer.Commands
+namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 {
-    public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
+    public class CreateCustomerValidator : AbstractValidator<CreateCustomer>
     {
-        public CreateCustomerCommandValidator()
+        public CreateCustomerValidator()
         {
             // Customer
             RuleFor(p => p.Customer.FirstName)

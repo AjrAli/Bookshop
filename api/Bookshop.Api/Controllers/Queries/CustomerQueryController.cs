@@ -1,6 +1,6 @@
 ﻿using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
-using Bookshop.Application.Features.Customer.Queries.Authenticate;
+using Bookshop.Application.Features.Customers.Queries.Authenticate;
 using Bookshop.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,7 @@ namespace Bookshop.Api.Controllers.Queries
         public async Task<IActionResult> GetById(long? id)
         {
             var queryConfig = BuildCustomerQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetByIdQuery<Customer>
+            var dataReponse = await _mediator.Send(new GetById<Customer>
             {
                 Id = id,
                 NavigationPropertyConfigurations = queryConfig
@@ -38,14 +38,14 @@ namespace Bookshop.Api.Controllers.Queries
         public async Task<IActionResult> GetAll()
         {
             var queryConfig = BuildCustomerQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetAllQuery<Customer>()
+            var dataReponse = await _mediator.Send(new GetAll<Customer>()
             {
                 NavigationPropertyConfigurations = queryConfig
             });
             return Ok(dataReponse);
         }
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] AuthenticateQuery request)
+        public async Task<IActionResult> Authenticate([FromBody] Authenticate request)
         {
             var dataReponse = await _mediator.Send(request);
             return Ok(dataReponse);

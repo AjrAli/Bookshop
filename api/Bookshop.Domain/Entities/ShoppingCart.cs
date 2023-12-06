@@ -31,6 +31,7 @@ namespace Bookshop.Domain.Entities
                     item = new LineItem(book, quantity);
                     LineItems.Add(item);
                 }
+                CalculateTotalWithoutTaxes();
             }
         }
         public void RemoveItem(Book book, int quantity)
@@ -45,6 +46,7 @@ namespace Bookshop.Domain.Entities
                     if (item.Quantity <= 0)
                         DeleteItem(book);
                 }
+                CalculateTotalWithoutTaxes();
             }
         }
         public void DeleteItem(Book book)
@@ -54,6 +56,7 @@ namespace Bookshop.Domain.Entities
                 var item = LineItems.FirstOrDefault(x => x.BookId == book.Id);
                 if (item != null)
                     LineItems.Remove(item);
+                CalculateTotalWithoutTaxes();
             }
         }
         public decimal CalculateTotalWithoutTaxes()
@@ -67,6 +70,8 @@ namespace Bookshop.Domain.Entities
                     _total = (decimal)total;
                 }
             }
+            else    
+                _total = 0;
             return _total;
         }
         public int TotalItems()

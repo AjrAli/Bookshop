@@ -23,7 +23,7 @@ namespace Bookshop.Api.Controllers.Queries
         [Route("{keyword?}")]
         public async Task<IActionResult> GetSearchResults(string keyword)
         {
-            var dataReponse = await _mediator.Send(new GetSearchResultsQuery
+            var dataReponse = await _mediator.Send(new GetSearchResults
             {
                 Keyword = keyword
             });

@@ -10,9 +10,9 @@ using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using static Bookshop.Domain.Entities.Customer;
 
-namespace Bookshop.Application.Features.Customer.Queries.Authenticate
+namespace Bookshop.Application.Features.Customers.Queries.Authenticate
 {
-    public class AuthenticateQueryHandler : IQueryHandler<AuthenticateQuery, AuthenticateQueryResponse>
+    public class AuthenticateHandler : IQueryHandler<Authenticate, AuthenticateResponse>
     {
         private readonly BookshopDbContext _dbContext;
         private readonly UserManager<IdentityUserData> _userManager;
@@ -20,7 +20,7 @@ namespace Bookshop.Application.Features.Customer.Queries.Authenticate
         private readonly JwtSecurityTokenHandler _jwtTokenHandler = new JwtSecurityTokenHandler();
         private readonly IMapper _mapper;
 
-        public AuthenticateQueryHandler(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
+        public AuthenticateHandler(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
             IOptions<JwtSettings> jwtSettings, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -29,7 +29,7 @@ namespace Bookshop.Application.Features.Customer.Queries.Authenticate
             _mapper = mapper;
         }
 
-        public async Task<AuthenticateQueryResponse> Handle(AuthenticateQuery request, CancellationToken cancellationToken)
+        public async Task<AuthenticateResponse> Handle(Authenticate request, CancellationToken cancellationToken)
         {
             if (request?.Username == null || request?.Password == null)
                 throw new BadRequestException($"One of the credentials given is empty");
@@ -49,7 +49,7 @@ namespace Bookshop.Application.Features.Customer.Queries.Authenticate
             var userClaims = await _userManager.GetClaimsAsync(user);
             var jwtSecurityToken = JwtHelper.GenerateToken(user, userClaims, userRoles, _jwtSettings);
             var customer = _mapper.Map<CustomerDto>(_dbContext.Customers.Include(x => x.IdentityData).FirstOrDefault(x => x.IdentityUserDataId == user.Id));
-            return new AuthenticateQueryResponse
+            return new AuthenticateResponse
             {
                 Message = $"User {request?.Username} successfully connected",
                 Customer = customer,

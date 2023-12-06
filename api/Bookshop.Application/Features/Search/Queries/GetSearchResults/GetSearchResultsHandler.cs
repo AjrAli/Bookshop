@@ -6,16 +6,16 @@ using static Bookshop.Domain.Entities.Book;
 
 namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 {
-    public class GetSearchResultsQueryHandler : IQueryHandler<GetSearchResultsQuery, GetSearchResultsQueryResponse>
+    public class GetSearchResultsHandler : IQueryHandler<GetSearchResults, GetSearchResultsResponse>
     {
         private readonly BookshopDbContext _dbContext;
 
-        public GetSearchResultsQueryHandler(BookshopDbContext dbContext)
+        public GetSearchResultsHandler(BookshopDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<GetSearchResultsQueryResponse> Handle(GetSearchResultsQuery request, CancellationToken cancellationToken)
+        public async Task<GetSearchResultsResponse> Handle(GetSearchResults request, CancellationToken cancellationToken)
         {
             var stringWithoutExtraSpaces = Regex.Replace(request.Keyword, @"\s{2,}", " ");
             var keywords = stringWithoutExtraSpaces.Trim().Split();
@@ -37,7 +37,7 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             }
             // Order results by the number of keyword matches
 
-            return new GetSearchResultsQueryResponse
+            return new GetSearchResultsResponse
             {
                 SearchResultsDto = allSearchResults
                 .OrderByDescending(x => NumberOfMatches(x, keywords))
