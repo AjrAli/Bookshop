@@ -8,6 +8,6 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
         {
 
         }
-        public ShoppingCartDto? ShoppingCart { get; set; }
+        public ShoppingCartResponseDto? ShoppingCart { get; set; }
     }
 }

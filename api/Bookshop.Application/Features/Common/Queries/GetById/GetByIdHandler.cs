@@ -23,7 +23,7 @@ namespace Bookshop.Application.Features.Common.Queries.GetById
             var query = _dbContext.Set<T>().AsQueryable();
             query = (request.NavigationPropertyConfigurations != null) ?
                 query.ApplyIncludesAndThenIncludes(request.NavigationPropertyConfigurations) : query;
-            var entity = await query.FirstOrDefaultAsync(x => EF.Property<long>(x, "Id") == request.Id, cancellationToken);
+            var entity = await query.FirstOrDefaultAsync(x => EF.Property<object>(x, "Id") == request.Id, cancellationToken);
             if (entity == null)
             {
                 throw new NotFoundException($"No {typeof(T)} with Id : {request.Id} not found");

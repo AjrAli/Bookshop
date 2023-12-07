@@ -17,7 +17,7 @@ namespace Bookshop.Api.Controllers.Commands
         }
 
         [HttpPost("create-shoppingcart")]
-        public async Task<IActionResult> CreateShoppingCart([FromBody] ShoppingCartDto shoppingCartDto)
+        public async Task<IActionResult> CreateShoppingCart([FromBody] ShoppingCartRequestDto shoppingCartDto)
         {
             var dataCommandReponse = await _mediator.Send(new CreateShoppingCart
             {

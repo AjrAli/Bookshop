@@ -22,23 +22,47 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
             await ValidateRequest(request);
             var newShoppingCart = await CreateNewShoppingCartFromDto(request.ShoppingCart);
             await StoreShoppingCartInDatabase(request, newShoppingCart, cancellationToken);
-            var shoppingCartCreated = _mapper.Map<ShoppingCartDto>(_dbContext.ShoppingCarts.Include(x => x.LineItems).FirstOrDefault(x => x.CustomerId == request.ShoppingCart.CustomerId));
+            var shoppingCartCreated = await GetMappedShoppingCart(request.ShoppingCart.CustomerId);
             return new()
             {
                 ShoppingCart = shoppingCartCreated,
                 Message = $"ShoppingCart successfully created"
             };
         }
+
+        private async Task<ShoppingCartResponseDto?> GetMappedShoppingCart(long? customerId)
+        {
+            return await _dbContext.ShoppingCarts
+                .Include(x => x.LineItems)
+                .ThenInclude(x => x.Book)
+                .ThenInclude(x => x.Author)
+                .Include(x => x.LineItems)
+                .ThenInclude(x => x.Book)
+                .ThenInclude(x => x.Category)
+                .Where(x => x.CustomerId == customerId)
+                .Select(x => _mapper.Map<ShoppingCartResponseDto>(x))
+                .FirstOrDefaultAsync();
+        }
         private async Task StoreShoppingCartInDatabase(CreateShoppingCart request, ShoppingCart shoppingCart, CancellationToken cancellationToken)
         {
+            var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == shoppingCart.CustomerId);
+            customer.ShoppingCart = shoppingCart;
             await _dbContext.ShoppingCarts.AddAsync(shoppingCart, cancellationToken);
+            _dbContext.Customers.Update(customer);
             await _dbContext.SaveChangesAsync(cancellationToken);
             request.IsSaveChangesAsyncCalled = true;
         }
-        private async Task<ShoppingCart> CreateNewShoppingCartFromDto(ShoppingCartDto shoppingCartDto)
+        private async Task<ShoppingCart> CreateNewShoppingCartFromDto(ShoppingCartRequestDto shoppingCartDto)
         {
             var shoppingCart = new ShoppingCart { CustomerId = shoppingCartDto.CustomerId };
-
+            // Group if same book in multiple items of ShoppingCartDto
+            shoppingCartDto.Items = shoppingCartDto.Items?.GroupBy(x => new { x.BookId, x.Id })
+                                                         .Select(item => new ShopItemRequestDto
+                                                         {
+                                                             BookId = item.Key.BookId,
+                                                             Id = item.Key.Id,
+                                                             Quantity = item.Sum(x => x.Quantity)
+                                                         }).Distinct().ToList();
             foreach (var item in shoppingCartDto.Items)
             {
                 var book = await _dbContext.Books
@@ -60,10 +84,11 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
             if (shoppingCart.Items == null || !shoppingCart.Items.Any())
                 throw new ValidationException("No items are listed in the ShoppingCart.");
 
-            if (shoppingCart.CustomerId == null)
+            if (shoppingCart.CustomerId == null || shoppingCart.CustomerId == 0)
                 throw new ValidationException("Customer undefined for the ShoppingCart.");
 
-            if (await _dbContext.ShoppingCarts.AnyAsync(x => x.CustomerId == shoppingCart.CustomerId))
+            if (await _dbContext.ShoppingCarts.AnyAsync(x => x.CustomerId == shoppingCart.CustomerId) ||
+                await _dbContext.Customers.AnyAsync(x => x.ShoppingCartId == shoppingCart.Id))
                 throw new ValidationException($"Customer {shoppingCart.CustomerId} already has a ShoppingCart.");
 
             foreach (var item in shoppingCart.Items)
