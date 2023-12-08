@@ -33,7 +33,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 
         public async Task<CreateCustomerResponse> Handle(CreateCustomer request, CancellationToken cancellationToken)
         {
-            ValidateRequest(request);
+            await ValidateRequest(request);
             var newUser = CreateNewCustomerFromDto(request.Customer);
             await CreateUserAndRole(newUser, request.Customer?.Password);
             var user = await _userManager.FindByNameAsync(newUser?.IdentityData.UserName);
@@ -54,10 +54,10 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             await _dbContext.SaveChangesAsync(cancellationToken);
             request.IsSaveChangesAsyncCalled = true;
         }
-        private void ValidateRequest(CreateCustomer request)
+        public Task ValidateRequest(CreateCustomer request)
         {
-            if (request.Customer == null)
-                throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
+            _ = request.Customer ?? throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
+            return Task.CompletedTask;
         }
 
         private JwtSecurityToken GenerateJwtToken(IdentityUserData user)

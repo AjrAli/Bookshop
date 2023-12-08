@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
+using Bookshop.Application.Features.ShoppingCarts.Helpers;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -56,17 +57,8 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
         {
             if (shoppingCart.LineItems.Count == 0)
             {
-                RemoveShoppingCartFromCustomer(shoppingCart);
+                shoppingCart.RemoveShoppingCartFromCustomer(_dbContext);
                 _dbContext.ShoppingCarts.Remove(shoppingCart);
-            }
-        }
-        private void RemoveShoppingCartFromCustomer(ShoppingCart shoppingCart)
-        {
-            var customer = _dbContext.Customers.FirstOrDefault(x => x.Id == shoppingCart.CustomerId);
-            if (customer != null)
-            {
-                customer.ShoppingCartId = null;
-                _dbContext.Customers.Update(customer);
             }
         }
         private void UpdateShoppingCartInDatabase(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
@@ -105,7 +97,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
             }
             return shoppingCartExisting;
         }
-        private async Task ValidateRequest(UpdateShoppingCart request)
+        public async Task ValidateRequest(UpdateShoppingCart request)
         {
             if (request.ShoppingCart == null)
                 throw new ValidationException($"{nameof(request.ShoppingCart)} is required.");

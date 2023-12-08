@@ -74,7 +74,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
 
             return shoppingCart;
         }
-        private async Task ValidateRequest(CreateShoppingCart request)
+        public async Task ValidateRequest(CreateShoppingCart request)
         {
             if (request.ShoppingCart == null)
                 throw new ValidationException($"{nameof(request.ShoppingCart)} is required.");

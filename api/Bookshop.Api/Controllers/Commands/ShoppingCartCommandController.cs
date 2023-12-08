@@ -1,5 +1,6 @@
 ﻿using Bookshop.Application.Features.ShoppingCarts;
 using Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCart;
+using Bookshop.Application.Features.ShoppingCarts.Commands.DeleteShoppingCart;
 using Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCart;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,17 @@ namespace Bookshop.Api.Controllers.Commands
             {
                 ShoppingCart = shoppingCartDto
             });
+            return Ok(dataCommandReponse);
+        }
+        [HttpPost]
+        [Route("delete-shoppingcart")]
+        public async Task<IActionResult> DeleteSchool([FromBody] long id)
+        {
+            var dataCommandReponse = await _mediator.Send(new DeleteShoppingCart
+            {
+                ShoppingCartId = id
+            });
+
             return Ok(dataCommandReponse);
         }
     }
