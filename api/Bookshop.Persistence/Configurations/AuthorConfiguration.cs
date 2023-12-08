@@ -17,7 +17,8 @@ namespace Bookshop.Persistence.Configurations
 
             // Relationships
             builder.HasMany(e => e.Books).WithOne(e => e.Author)
-                .HasForeignKey(e => e.AuthorId).IsRequired();
+                   .HasForeignKey(e => e.AuthorId).IsRequired()
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

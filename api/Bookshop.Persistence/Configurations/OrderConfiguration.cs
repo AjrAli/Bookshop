@@ -22,7 +22,8 @@ namespace Bookshop.Persistence.Configurations
 
             // Relationships
             builder.HasMany(e => e.LineItems).WithOne(e => e.Order)
-                .HasForeignKey(e => e.OrderId);
+                   .HasForeignKey(e => e.OrderId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

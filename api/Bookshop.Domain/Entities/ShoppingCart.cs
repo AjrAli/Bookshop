@@ -17,45 +17,22 @@ namespace Bookshop.Domain.Entities
             }
         
         }
-        public void AddItem(Book book, int quantity)
-        {
-            if (book != null && quantity > 0)
-            {
-                var item = LineItems.FirstOrDefault(x => x.BookId == book.Id);
-                if (item != null)
-                {
-                    item.Quantity += quantity;
-                }
-                else
-                {
-                    item = new LineItem(book, quantity);
-                    LineItems.Add(item);
-                }
-                CalculateTotalWithoutTaxes();
-            }
-        }
-        public void RemoveItem(Book book, int quantity)
-        {
-            if (book != null && quantity > 0)
-            {
-                var item = LineItems.FirstOrDefault(x => x.BookId == book.Id);
-                if (item != null)
-                {
-
-                    item.Quantity -= quantity;
-                    if (item.Quantity <= 0)
-                        DeleteItem(book);
-                }
-                CalculateTotalWithoutTaxes();
-            }
-        }
-        public void DeleteItem(Book book)
+        public void UpdateLineItem(Book book, int quantity)
         {
             if (book != null)
             {
                 var item = LineItems.FirstOrDefault(x => x.BookId == book.Id);
                 if (item != null)
-                    LineItems.Remove(item);
+                {
+                    item.Quantity = quantity;
+                    if (item.Quantity <= 0)
+                        LineItems.Remove(item);
+                }
+                else if(quantity > 0)
+                {
+                    item = new LineItem(book, quantity);
+                    LineItems.Add(item);
+                }
                 CalculateTotalWithoutTaxes();
             }
         }

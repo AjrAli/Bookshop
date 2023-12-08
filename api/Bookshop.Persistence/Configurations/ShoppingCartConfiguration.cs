@@ -17,7 +17,9 @@ namespace Bookshop.Persistence.Configurations
 
             // Relationships
             builder.HasMany(e => e.LineItems).WithOne(e => e.ShoppingCart)
-                   .HasForeignKey(e => e.ShoppingCartId);
+                   .HasForeignKey(e => e.ShoppingCartId)
+                   .OnDelete(DeleteBehavior.Cascade);
+                   
             builder.HasOne(e => e.Customer)
                    .WithOne()
                    .HasForeignKey<ShoppingCart>(e => e.CustomerId)

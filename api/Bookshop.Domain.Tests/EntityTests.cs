@@ -18,7 +18,7 @@ namespace Bookshop.Domain.Tests
                 var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
-                shoppingCart.AddItem(book, 2);
+                shoppingCart.UpdateLineItem(book, 2);
 
                 // Assert
                 Assert.AreEqual(1, shoppingCart.LineItems.Count);
@@ -35,12 +35,12 @@ namespace Bookshop.Domain.Tests
                 var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
-                shoppingCart.AddItem(book, 2);
-                shoppingCart.AddItem(book, 3);
+                shoppingCart.UpdateLineItem(book, 2);
+                shoppingCart.UpdateLineItem(book, 3);
 
                 // Assert
                 Assert.AreEqual(1, shoppingCart.LineItems.Count);
-                Assert.AreEqual(5, shoppingCart.LineItems.First().Quantity);
+                Assert.AreEqual(3, shoppingCart.LineItems.First().Quantity);
             }
 
             [TestMethod]
@@ -53,12 +53,12 @@ namespace Bookshop.Domain.Tests
                 var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
-                shoppingCart.AddItem(book, 5);
-                shoppingCart.RemoveItem(book, 3);
+                shoppingCart.UpdateLineItem(book, 5);
+                shoppingCart.UpdateLineItem(book, 3);
 
                 // Assert
                 Assert.AreEqual(1, shoppingCart.LineItems.Count);
-                Assert.AreEqual(2, shoppingCart.LineItems.First().Quantity);
+                Assert.AreEqual(3, shoppingCart.LineItems.First().Quantity);
             }
 
             [TestMethod]
@@ -71,8 +71,8 @@ namespace Bookshop.Domain.Tests
                 var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
-                shoppingCart.AddItem(book, 2);
-                shoppingCart.RemoveItem(book, 2);
+                shoppingCart.UpdateLineItem(book, 2);
+                shoppingCart.UpdateLineItem(book, 0);
 
                 // Assert
                 Assert.AreEqual(0, shoppingCart.LineItems.Count);
@@ -87,11 +87,11 @@ namespace Bookshop.Domain.Tests
                 var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
-                shoppingCart.AddItem(book, 2);
-                shoppingCart.AddItem(book, 3);
+                shoppingCart.UpdateLineItem(book, 2);
+                shoppingCart.UpdateLineItem(book, 3);
 
                 // Assert
-                Assert.AreEqual(100, shoppingCart.Total);
+                Assert.AreEqual(60, shoppingCart.Total);
             }
         }
         [TestClass]
@@ -243,8 +243,8 @@ namespace Bookshop.Domain.Tests
                     Id = 2
                 };
                 customer.ShoppingCart = new ShoppingCart();
-                customer.ShoppingCart.AddItem(book1, 2);
-                customer.ShoppingCart.AddItem(book2, 1);
+                customer.ShoppingCart.UpdateLineItem(book1, 2);
+                customer.ShoppingCart.UpdateLineItem(book2, 1);
 
                 // Act
                 // Simulate placing an order

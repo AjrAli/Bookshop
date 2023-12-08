@@ -742,11 +742,13 @@ namespace Bookshop.Persistence.Migrations
 
                     b.HasOne("Bookshop.Domain.Entities.Order", "Order")
                         .WithMany("LineItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Bookshop.Domain.Entities.ShoppingCart", "ShoppingCart")
                         .WithMany("LineItems")
-                        .HasForeignKey("ShoppingCartId");
+                        .HasForeignKey("ShoppingCartId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Book");
 

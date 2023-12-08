@@ -69,7 +69,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
                     .FirstOrDefaultAsync(x => x.Id == item.BookId)
                     ?? throw new ValidationException($"BookId: {item.BookId} not found in the database.");
 
-                shoppingCart.AddItem(book, item.Quantity);
+                shoppingCart.UpdateLineItem(book, item.Quantity);
             }
 
             return shoppingCart;

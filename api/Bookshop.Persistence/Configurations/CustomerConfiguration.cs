@@ -33,7 +33,8 @@ namespace Bookshop.Persistence.Configurations
                    .HasForeignKey<Customer>(e => e.ShoppingCartId)
                    .OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(e => e.Orders).WithOne(e => e.Customer)
-                   .HasForeignKey(e => e.CustomerId).IsRequired();
+                   .HasForeignKey(e => e.CustomerId).IsRequired()
+                   .OnDelete(DeleteBehavior.Cascade);
 
         }
     }
