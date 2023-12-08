@@ -24,7 +24,8 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
             GroupItemsByBookId(shoppingCartDto);
             var updatedShoppingCart = await UpdateShoppingCartFromDto(shoppingCartDto);
             UpdateShoppingCartInDatabase(shoppingCartDto, updatedShoppingCart);
-            await SaveChangesAsyncCalled(request, cancellationToken);
+            RemoveShoppingCartInDatabaseIfNoItems(updatedShoppingCart);
+            await SaveChangesAsync(request, cancellationToken);
             var shoppingCartUpdated = await GetMappedShoppingCart(shoppingCartDto.CustomerId);
             return new()
             {
@@ -37,31 +38,51 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
         {
             return await _dbContext.ShoppingCarts
                 .Include(x => x.LineItems)
-                .ThenInclude(x => x.Book)
-                .ThenInclude(x => x.Author)
+                    .ThenInclude(x => x.Book)
+                        .ThenInclude(x => x.Author)
                 .Include(x => x.LineItems)
-                .ThenInclude(x => x.Book)
-                .ThenInclude(x => x.Category)
+                    .ThenInclude(x => x.Book)
+                        .ThenInclude(x => x.Category)
                 .Where(x => x.CustomerId == customerId)
                 .Select(x => _mapper.Map<ShoppingCartResponseDto>(x))
                 .FirstOrDefaultAsync();
         }
-        private async Task SaveChangesAsyncCalled(UpdateShoppingCart request, CancellationToken cancellationToken)
+        private async Task SaveChangesAsync(UpdateShoppingCart request, CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
             request.IsSaveChangesAsyncCalled = true;
         }
+        private void RemoveShoppingCartInDatabaseIfNoItems(ShoppingCart shoppingCart)
+        {
+            if (shoppingCart.LineItems.Count == 0)
+            {
+                RemoveShoppingCartFromCustomer(shoppingCart);
+                _dbContext.ShoppingCarts.Remove(shoppingCart);
+            }
+        }
+        private void RemoveShoppingCartFromCustomer(ShoppingCart shoppingCart)
+        {
+            var customer = _dbContext.Customers.FirstOrDefault(x => x.Id == shoppingCart.CustomerId);
+            if (customer != null)
+            {
+                customer.ShoppingCartId = null;
+                _dbContext.Customers.Update(customer);
+            }
+        }
         private void UpdateShoppingCartInDatabase(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
         {
             var itemsToRemove = LineItemsToRemove(shoppingCartDto, shoppingCart);
-            foreach (var item in itemsToRemove)          
-                shoppingCart.UpdateLineItem(item.Book, 0);         
-            _dbContext.ShoppingCarts.Update(shoppingCart);
-            _dbContext.LineItems.RemoveRange(itemsToRemove);
+            foreach (var item in itemsToRemove)
+                shoppingCart.UpdateLineItem(item.Book, 0);
+            if (shoppingCart.LineItems.Count > 0)
+            {
+                _dbContext.ShoppingCarts.Update(shoppingCart);
+                _dbContext.LineItems.RemoveRange(itemsToRemove);
+            }
         }
-        private ICollection<LineItem> LineItemsToRemove(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
+        private ICollection<LineItem>? LineItemsToRemove(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
         {
-            return shoppingCart.LineItems.Where(x => !shoppingCartDto.Items.Any(y => y.BookId == x.BookId)).ToList();
+            return shoppingCart.LineItems.Where(x => (!shoppingCartDto.Items.Any(y => y.BookId == x.BookId)) && x.BookId != 0)?.ToList();
         }
         private void GroupItemsByBookId(ShoppingCartRequestDto shoppingCartDto)
         {
@@ -100,7 +121,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
 
             if (!(await _dbContext.ShoppingCarts.AnyAsync(x => x.CustomerId == shoppingCart.CustomerId) &&
                 await _dbContext.Customers.AnyAsync(x => x.ShoppingCartId == shoppingCart.Id)))
-                throw new ValidationException($"ShoppingCart {shoppingCart.Id}with customer {shoppingCart.CustomerId} not found in Database");
+                throw new ValidationException($"ShoppingCart {shoppingCart.Id} with customer {shoppingCart.CustomerId} not found in Database");
 
             foreach (var item in shoppingCart.Items)
             {
