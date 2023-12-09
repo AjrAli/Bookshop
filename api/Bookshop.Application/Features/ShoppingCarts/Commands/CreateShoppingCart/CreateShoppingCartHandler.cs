@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
-using Bookshop.Application.Features.ShoppingCarts.Helpers;
+using Bookshop.Application.Features.ShoppingCarts.Extension;
+using Bookshop.Application.Features.ShoppingCarts.Validation;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -23,26 +24,12 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
             await ValidateRequest(request);
             var newShoppingCart = await CreateNewShoppingCartFromDto(request.ShoppingCart);
             await StoreShoppingCartInDatabase(request, newShoppingCart, cancellationToken);
-            var shoppingCartCreated = await GetMappedShoppingCart(request.ShoppingCart.CustomerId);
+            var shoppingCartCreated = await newShoppingCart.ToMappedShoppingCartDto(_dbContext, _mapper);
             return new()
             {
                 ShoppingCart = shoppingCartCreated,
                 Message = $"ShoppingCart successfully created"
             };
-        }
-
-        private async Task<ShoppingCartResponseDto?> GetMappedShoppingCart(long? customerId)
-        {
-            return await _dbContext.ShoppingCarts
-                .Include(x => x.LineItems)
-                .ThenInclude(x => x.Book)
-                .ThenInclude(x => x.Author)
-                .Include(x => x.LineItems)
-                .ThenInclude(x => x.Book)
-                .ThenInclude(x => x.Category)
-                .Where(x => x.CustomerId == customerId)
-                .Select(x => _mapper.Map<ShoppingCartResponseDto>(x))
-                .FirstOrDefaultAsync();
         }
         private async Task StoreShoppingCartInDatabase(CreateShoppingCart request, ShoppingCart shoppingCart, CancellationToken cancellationToken)
         {
@@ -55,7 +42,8 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
         }
         private async Task<ShoppingCart> CreateNewShoppingCartFromDto(ShoppingCartRequestDto shoppingCartDto)
         {
-            var shoppingCart = new ShoppingCart { CustomerId = shoppingCartDto.CustomerId };
+            var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.IdentityUserDataId == shoppingCartDto.UserId);
+            var shoppingCart = new ShoppingCart { CustomerId = customer.Id };
             // Group if same book in multiple items of ShoppingCartDto
             shoppingCartDto.Items = shoppingCartDto.Items?.GroupBy(x => new { x.BookId, x.Id })
                                                          .Select(item => new ShopItemRequestDto

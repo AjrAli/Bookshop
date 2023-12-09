@@ -33,7 +33,7 @@ namespace Bookshop.Api
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
-
+            services.AddHttpContextAccessor();
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAnyOrigin", builder =>

@@ -5,11 +5,17 @@ namespace Bookshop.Api.Services
 {
     public class LoggedInUserService : ILoggedInUserService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public LoggedInUserService(IHttpContextAccessor httpContextAccessor)
         {
-            UserId = httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            _httpContextAccessor = httpContextAccessor;
         }
-
-        public string? UserId { get; set; }
+        public string? GetUserId()
+        {
+            var result = string.Empty;
+            if(_httpContextAccessor?.HttpContext != null)
+                result = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            return result;
+        }
     }
 }

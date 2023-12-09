@@ -1,7 +1,6 @@
 ﻿using Bookshop.Application.Settings;
 using Bookshop.Persistence.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +33,7 @@ namespace Bookshop.Identity
                 .AddJwtBearer(o =>
                 {
                     o.RequireHttpsMetadata = false;
-                    o.SaveToken = false;
+                    o.SaveToken = true;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -45,51 +44,6 @@ namespace Bookshop.Identity
                         ValidIssuer = jwtSettings.Issuer,
                         ValidAudience = jwtSettings.Audience,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
-                    };
-
-                    o.Events = new JwtBearerEvents()
-                    {
-                        OnMessageReceived = c =>
-                        {
-                            if (c.Request.Query.ContainsKey("access_token"))
-                            {
-                                c.Token = c.Request.Query["access_token"];
-                            }
-                            else if (c.Request.Cookies.ContainsKey("X-Access-Token"))
-                            {
-                                c.Token = c.Request.Cookies["X-Access-Token"];
-                            }
-
-                            return Task.CompletedTask;
-                        },
-
-                        OnAuthenticationFailed = c =>
-                        {
-                            c.NoResult();
-                            c.Response.StatusCode = 500;
-                            c.Response.ContentType = "text/plain";
-                            if (c.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                            {
-                                c.Response.Headers.Add("Token-Expired", "true");
-                                c.Response.Cookies.Delete("X-Access-Token");
-                                return Task.CompletedTask;
-                            }
-                            return c.Response.WriteAsync(c.Exception.ToString());
-
-                        },
-                        OnChallenge = context =>
-                        {
-                            context.HandleResponse();
-                            context.Response.StatusCode = 401;
-                            context.Response.ContentType = "text/plain";
-                            return context.Response.WriteAsync("401 Not authorized");
-                        },
-                        OnForbidden = context =>
-                        {
-                            context.Response.StatusCode = 403;
-                            context.Response.ContentType = "text/plain";
-                            return context.Response.WriteAsync("403 Not authorized");
-                        },
                     };
                 });
         }

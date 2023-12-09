@@ -1,11 +1,7 @@
-﻿using Bookshop.Application.Features.Dto;
-using Bookshop.Domain.Entities;
-
-namespace Bookshop.Application.Features.Customers
+﻿namespace Bookshop.Application.Features.Customers
 {
-    public class CustomerRequestDto : IBaseDto
+    public class CustomerRequestDto
     {
-        public long Id { get ; set ; }
         public string? Username { get; set; }
         public string? Password { get; set; }
         public string? ConfirmPassword { get; set; }
@@ -17,6 +13,6 @@ namespace Bookshop.Application.Features.Customers
         public AddressDto? BillingAddress { get; set; }
         public string? Email { get; set; }
         public bool EmailConfirmed { get; set; }
-        public string? IdentityUserDataId { get; set; }
+        public string? UserId { get; set; }
     }
 }

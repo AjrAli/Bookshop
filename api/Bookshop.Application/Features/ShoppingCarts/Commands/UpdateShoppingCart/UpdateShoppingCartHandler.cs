@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
-using Bookshop.Application.Features.ShoppingCarts.Helpers;
+using Bookshop.Application.Features.ShoppingCarts.Extension;
+using Bookshop.Application.Features.ShoppingCarts.Validation;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -21,32 +22,17 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
         public async Task<UpdateShoppingCartResponse> Handle(UpdateShoppingCart request, CancellationToken cancellationToken)
         {
             await ValidateRequest(request);
-            var shoppingCartDto = request.ShoppingCart;
-            GroupItemsByBookId(shoppingCartDto);
-            var updatedShoppingCart = await UpdateShoppingCartFromDto(shoppingCartDto);
-            UpdateShoppingCartInDatabase(shoppingCartDto, updatedShoppingCart);
+            GroupItemsByBookId(request.ShoppingCart);
+            var updatedShoppingCart = await UpdateShoppingCartFromDto(request.ShoppingCart);
+            UpdateShoppingCartInDatabase(request.ShoppingCart, updatedShoppingCart);
             RemoveShoppingCartInDatabaseIfNoItems(updatedShoppingCart);
             await SaveChangesAsync(request, cancellationToken);
-            var shoppingCartUpdated = await GetMappedShoppingCart(shoppingCartDto.CustomerId);
+            var shoppingCartUpdated = await updatedShoppingCart.ToMappedShoppingCartDto(_dbContext, _mapper);
             return new()
             {
                 ShoppingCart = shoppingCartUpdated,
                 Message = $"ShoppingCart successfully updated"
             };
-        }
-
-        private async Task<ShoppingCartResponseDto?> GetMappedShoppingCart(long? customerId)
-        {
-            return await _dbContext.ShoppingCarts
-                .Include(x => x.LineItems)
-                    .ThenInclude(x => x.Book)
-                        .ThenInclude(x => x.Author)
-                .Include(x => x.LineItems)
-                    .ThenInclude(x => x.Book)
-                        .ThenInclude(x => x.Category)
-                .Where(x => x.CustomerId == customerId)
-                .Select(x => _mapper.Map<ShoppingCartResponseDto>(x))
-                .FirstOrDefaultAsync();
         }
         private async Task SaveChangesAsync(UpdateShoppingCart request, CancellationToken cancellationToken)
         {

@@ -45,12 +45,10 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
             {
                 throw new ValidationException($"Credentials for '{request?.Username} aren't valid'.");
             }
-            var userRoles = await _userManager.GetRolesAsync(user); // Get the roles of the user
-            var userClaims = await _userManager.GetClaimsAsync(user);
-            var jwtSecurityToken = JwtHelper.GenerateToken(user, userClaims, userRoles, _jwtSettings);
+            var jwtSecurityToken = JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
             var customer = await _dbContext.Customers.Include(x => x.IdentityData)
                                                .Where(x => x.IdentityUserDataId == user.Id)
-                                               .Select(x => _mapper.Map<CustomerRequestDto>(x))
+                                               .Select(x => _mapper.Map<CustomerResponseDto>(x))
                                                .FirstOrDefaultAsync();
             return new AuthenticateResponse
             {

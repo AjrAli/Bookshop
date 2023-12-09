@@ -16,13 +16,12 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             RuleFor(p => p.Customer.Password)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull()
-                .Equal(p => p.Customer.ConfirmPassword)
                 .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
                 .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
             RuleFor(p => p.Customer.ConfirmPassword)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull()
-                .Equal(p => p.Customer.Password)
+                .Equal(p => p.Customer.Password).WithMessage("{PropertyName} must be the same as field password.")
                 .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
                 .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
 

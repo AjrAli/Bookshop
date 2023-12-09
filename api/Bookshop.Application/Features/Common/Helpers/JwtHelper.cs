@@ -1,4 +1,5 @@
 ﻿using Bookshop.Application.Settings;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,12 +10,13 @@ namespace Bookshop.Application.Features.Common.Helpers
 {
     public static class JwtHelper
     {
-        public static JwtSecurityToken? GenerateToken(IdentityUserData user, IList<Claim> userClaims, IList<string> userRoles, JwtSettings jwtSettings)
+        public static JwtSecurityToken? GenerateToken(UserManager<IdentityUserData> userManager, IdentityUserData user, JwtSettings jwtSettings)
         {
+            var userRoles = userManager.GetRolesAsync(user).Result;
+            var userClaims = userManager.GetClaimsAsync(user).Result;
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
             }
             .Union(userClaims)

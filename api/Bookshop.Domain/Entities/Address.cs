@@ -1,6 +1,4 @@
 ﻿using Bookshop.Domain.Common;
-using System.Diagnostics.Metrics;
-using System.IO;
 
 namespace Bookshop.Domain.Entities
 {

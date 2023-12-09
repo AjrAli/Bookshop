@@ -26,11 +26,9 @@ namespace Bookshop.Application.Profiles.ShoppingCarts
             // ShoppingCart Response profile
             CreateMap<ShoppingCart, ShoppingCartResponseDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(source => source.CustomerId))
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(source => source.LineItems));
             CreateMap<ShoppingCartResponseDto, ShoppingCart>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(source => source.CustomerId))
                 .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items));
 
 
@@ -47,11 +45,9 @@ namespace Bookshop.Application.Profiles.ShoppingCarts
             // ShoppingCart Request profile
             CreateMap<ShoppingCart, ShoppingCartRequestDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(source => source.CustomerId))
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(source => source.LineItems));
             CreateMap<ShoppingCartRequestDto, ShoppingCart>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(source => source.CustomerId))
                 .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items));
         }
     }

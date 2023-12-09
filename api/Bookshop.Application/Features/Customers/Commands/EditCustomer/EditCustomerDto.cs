@@ -1,10 +1,7 @@
-﻿using Bookshop.Application.Features.Dto;
-
-namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
+﻿namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
 {
-    public class EditCustomerDto : IBaseDto
+    public class EditCustomerDto
     {
-        public long Id {  get; set; }
         public string? Password { get; set; }
         public string? ConfirmPassword { get; set; }
         public string? NewPassword { get; set; }
@@ -15,6 +12,6 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
         public AddressDto? ShippingAddress { get; set; }
         public long? BillingAddressId { get; set; }
         public AddressDto? BillingAddress { get; set; }
-        public string? IdentityUserDataId { get; set; }
+        public string? UserId { get; set; }
     }
 }

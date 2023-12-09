@@ -3,6 +3,7 @@ using Bookshop.Application.Configuration;
 using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
 using Bookshop.Application.Features.Common.Helpers;
+using Bookshop.Application.Features.Customers.Helpers;
 using Bookshop.Application.Settings;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
@@ -37,7 +38,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             var newCustomer = CreateNewCustomerFromDto(request.Customer);
             await CreateUserAndRole(newCustomer, request.Customer?.Password);
             var user = await _userManager.FindByNameAsync(newCustomer?.IdentityData.UserName);
-            var jwtSecurityToken = GenerateJwtToken(user);
+            var jwtSecurityToken = JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
             await StoreCustomerInDatabase(request, newCustomer, cancellationToken);
             var customerCreated = await _dbContext.Customers.Include(x => x.IdentityData)
                                    .Where(x => x.IdentityUserDataId == user.Id)
@@ -57,17 +58,9 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             await _dbContext.SaveChangesAsync(cancellationToken);
             request.IsSaveChangesAsyncCalled = true;
         }
-        public Task ValidateRequest(CreateCustomer request)
+        public async Task ValidateRequest(CreateCustomer request)
         {
             _ = request.Customer ?? throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
-            return Task.CompletedTask;
-        }
-
-        private JwtSecurityToken GenerateJwtToken(IdentityUserData user)
-        {
-            var userRoles = _userManager.GetRolesAsync(user).Result;
-            var userClaims = _userManager.GetClaimsAsync(user).Result;
-            return JwtHelper.GenerateToken(user, userClaims, userRoles, _jwtSettings);
         }
 
         private Customer CreateNewCustomerFromDto(CustomerRequestDto customerDto)
@@ -109,18 +102,13 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             var resultUser = await _userManager.CreateAsync(customer.IdentityData, password);
 
             if (!resultUser.Succeeded)
-                ThrowBadRequestException(resultUser.Errors, customer?.IdentityData.UserName);
+                UserCreationExceptionHelper.ThrowUserCreationBadRequestException(resultUser.Errors, customer?.IdentityData.UserName);
 
             var resultRole = await _userManager.AddToRoleAsync(customer.IdentityData, RoleNames.Customer);
 
             if (!resultRole.Succeeded)
-                ThrowBadRequestException(resultRole.Errors, customer?.IdentityData.UserName);
+                UserCreationExceptionHelper.ThrowUserCreationBadRequestException(resultRole.Errors, customer?.IdentityData.UserName);
         }
 
-        private void ThrowBadRequestException(IEnumerable<IdentityError> errors, string userName)
-        {
-            var errorDescriptions = errors.Select(x => x.Description).ToList();
-            throw new BadRequestException($"Failed to create user {userName}", errorDescriptions);
-        }
     }
 }

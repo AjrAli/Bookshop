@@ -13,12 +13,6 @@ namespace Bookshop.Persistence.Context
     {
         private readonly ILoggedInUserService? _loggedInUserService;
         private static readonly ILoggerFactory _loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-
-        public BookshopDbContext(DbContextOptions<BookshopDbContext> options)
-            : base(options)
-        {
-        }
-
         public BookshopDbContext(DbContextOptions<BookshopDbContext> options,
             ILoggedInUserService loggedInUserService)
             : base(options)
@@ -72,11 +66,11 @@ namespace Bookshop.Persistence.Context
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = _loggedInUserService?.UserId ?? "";
-                        entry.Entity.LastModifiedBy = _loggedInUserService?.UserId ?? "";
+                        entry.Entity.CreatedBy = _loggedInUserService?.GetUserId() ?? "";
+                        entry.Entity.LastModifiedBy = _loggedInUserService?.GetUserId() ?? "";
                         break;
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = _loggedInUserService?.UserId ?? "";
+                        entry.Entity.LastModifiedBy = _loggedInUserService?.GetUserId() ?? "";
                         break;
                 }
             }
