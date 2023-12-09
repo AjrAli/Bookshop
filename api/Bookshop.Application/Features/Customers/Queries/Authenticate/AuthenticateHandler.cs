@@ -48,7 +48,10 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
             var userRoles = await _userManager.GetRolesAsync(user); // Get the roles of the user
             var userClaims = await _userManager.GetClaimsAsync(user);
             var jwtSecurityToken = JwtHelper.GenerateToken(user, userClaims, userRoles, _jwtSettings);
-            var customer = _mapper.Map<CustomerDto>(_dbContext.Customers.Include(x => x.IdentityData).FirstOrDefault(x => x.IdentityUserDataId == user.Id));
+            var customer = await _dbContext.Customers.Include(x => x.IdentityData)
+                                               .Where(x => x.IdentityUserDataId == user.Id)
+                                               .Select(x => _mapper.Map<CustomerRequestDto>(x))
+                                               .FirstOrDefaultAsync();
             return new AuthenticateResponse
             {
                 Message = $"User {request?.Username} successfully connected",

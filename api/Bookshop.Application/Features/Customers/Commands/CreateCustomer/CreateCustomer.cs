@@ -4,7 +4,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 {
     public class CreateCustomer : ICommand<CreateCustomerResponse>
     {
-        public CustomerDto? Customer { get; set; }
+        public CustomerRequestDto? Customer { get; set; }
         public bool IsSaveChangesAsyncCalled { get; set; }
     }
 }

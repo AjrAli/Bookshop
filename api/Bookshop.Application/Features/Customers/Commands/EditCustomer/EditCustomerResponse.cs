@@ -1,10 +1,10 @@
 ﻿using Bookshop.Application.Features.Response;
 
-namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
+namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
 {
-    public class CreateCustomerResponse : BaseResponse
+    public class EditCustomerResponse : BaseResponse
     {
-        public CreateCustomerResponse() : base()
+        public EditCustomerResponse() : base()
         {
 
         }

@@ -1,4 +1,6 @@
 ﻿using Bookshop.Domain.Common;
+using System.Diagnostics.Metrics;
+using System.IO;
 
 namespace Bookshop.Domain.Entities
 {
@@ -10,6 +12,14 @@ namespace Bookshop.Domain.Entities
         public string Country { get; set; }
         public string State { get; set; }
         private Address() { }
+        public void EditAdress(Address address)
+        {
+            Street = address.Street;
+            City = address.City;
+            PostalCode = address.PostalCode;
+            Country = address.Country;
+            State = address.State;
+        }
         public Address(string street, string city, string postalCode, string country, string state)
         {
             Street = street;

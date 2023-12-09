@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
+using Bookshop.Application.Features.ShoppingCarts.Helpers;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -76,29 +77,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
         }
         public async Task ValidateRequest(CreateShoppingCart request)
         {
-            if (request.ShoppingCart == null)
-                throw new ValidationException($"{nameof(request.ShoppingCart)} is required.");
-
-            var shoppingCart = request.ShoppingCart;
-
-            if (shoppingCart.Items == null || !shoppingCart.Items.Any())
-                throw new ValidationException("No items are listed in the ShoppingCart.");
-
-            if (shoppingCart.CustomerId == null || shoppingCart.CustomerId == 0)
-                throw new ValidationException("Customer undefined for the ShoppingCart.");
-
-            if (await _dbContext.ShoppingCarts.AnyAsync(x => x.CustomerId == shoppingCart.CustomerId) ||
-                await _dbContext.Customers.AnyAsync(x => x.ShoppingCartId == shoppingCart.Id))
-                throw new ValidationException($"Customer {shoppingCart.CustomerId} already has a ShoppingCart.");
-
-            foreach (var item in shoppingCart.Items)
-            {
-                if (!await _dbContext.Books.AnyAsync(x => x.Id == item.BookId))
-                    throw new ValidationException($"BookId: {item.BookId} not found in the database.");
-
-                if (item.Quantity <= 0)
-                    throw new ValidationException($"Invalid quantity: {item.Quantity} for BookId: {item.BookId}.");
-            }
+            await request.ShoppingCart.ValidateCreateShoppingCartRequest(_dbContext);
         }
     }
 }

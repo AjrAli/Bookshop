@@ -1,18 +1,13 @@
-﻿using Bookshop.Domain.Entities;
-using FluentValidation;
-using FluentValidation.Validators;
+﻿using FluentValidation;
 
-namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
+namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
 {
-    public class CreateCustomerValidator : AbstractValidator<CreateCustomer>
+    public class EditCustomerValidator : AbstractValidator<EditCustomer>
     {
-        public CreateCustomerValidator()
+        public EditCustomerValidator()
         {
             //UserData for Customer
-            RuleFor(p => p.Customer.Username)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .NotNull()
-                .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
+            // Current Password
             RuleFor(p => p.Customer.Password)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull()
@@ -25,12 +20,21 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
                 .Equal(p => p.Customer.Password)
                 .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
                 .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
-
-            RuleFor(p => p.Customer.Email)
+            // New Password
+            RuleFor(p => p.Customer.NewPassword)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull()
-                .EmailAddress()
+                .Equal(p => p.Customer.ConfirmNewPassword)
+                .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
                 .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
+            RuleFor(p => p.Customer.ConfirmNewPassword)
+                .NotEmpty().WithMessage("{PropertyName} is required.")
+                .NotNull()
+                .Equal(p => p.Customer.NewPassword)
+                .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
+                .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
+
+
             // Customer
             RuleFor(p => p.Customer.FirstName)
                 .NotEmpty().WithMessage("{PropertyName} is required.")

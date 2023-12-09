@@ -99,30 +99,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
         }
         public async Task ValidateRequest(UpdateShoppingCart request)
         {
-            if (request.ShoppingCart == null)
-                throw new ValidationException($"{nameof(request.ShoppingCart)} is required.");
-
-            var shoppingCart = request.ShoppingCart;
-            if (shoppingCart.Id == 0)
-                throw new ValidationException($"ShoppingCart {shoppingCart.Id} doesn't exist");
-            if (shoppingCart.Items == null || !shoppingCart.Items.Any())
-                throw new ValidationException("No items are listed in the ShoppingCart.");
-
-            if (shoppingCart.CustomerId == null || shoppingCart.CustomerId == 0)
-                throw new ValidationException("Customer undefined for the ShoppingCart.");
-
-            if (!(await _dbContext.ShoppingCarts.AnyAsync(x => x.CustomerId == shoppingCart.CustomerId) &&
-                await _dbContext.Customers.AnyAsync(x => x.ShoppingCartId == shoppingCart.Id)))
-                throw new ValidationException($"ShoppingCart {shoppingCart.Id} with customer {shoppingCart.CustomerId} not found in Database");
-
-            foreach (var item in shoppingCart.Items)
-            {
-                if (!await _dbContext.Books.AnyAsync(x => x.Id == item.BookId))
-                    throw new ValidationException($"BookId: {item.BookId} not found in the database.");
-
-                if (item.Quantity < 0 || (item.Quantity == 0 && item.Id == 0))
-                    throw new ValidationException($"Invalid quantity: {item.Quantity} for BookId: {item.BookId}.");
-            }
+            await request.ShoppingCart.ValidateUpdateShoppingCartRequest(_dbContext);
         }
     }
 }

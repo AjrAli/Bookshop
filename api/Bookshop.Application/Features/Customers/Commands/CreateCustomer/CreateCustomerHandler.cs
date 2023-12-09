@@ -34,12 +34,15 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
         public async Task<CreateCustomerResponse> Handle(CreateCustomer request, CancellationToken cancellationToken)
         {
             await ValidateRequest(request);
-            var newUser = CreateNewCustomerFromDto(request.Customer);
-            await CreateUserAndRole(newUser, request.Customer?.Password);
-            var user = await _userManager.FindByNameAsync(newUser?.IdentityData.UserName);
+            var newCustomer = CreateNewCustomerFromDto(request.Customer);
+            await CreateUserAndRole(newCustomer, request.Customer?.Password);
+            var user = await _userManager.FindByNameAsync(newCustomer?.IdentityData.UserName);
             var jwtSecurityToken = GenerateJwtToken(user);
-            await StoreCustomerInDatabase(request, newUser, cancellationToken);
-            var customerCreated = _mapper.Map<CustomerDto>(_dbContext.Customers.Include(x => x.IdentityData).FirstOrDefault(x => x.IdentityUserDataId == user.Id));
+            await StoreCustomerInDatabase(request, newCustomer, cancellationToken);
+            var customerCreated = await _dbContext.Customers.Include(x => x.IdentityData)
+                                   .Where(x => x.IdentityUserDataId == user.Id)
+                                   .Select(x => _mapper.Map<CustomerResponseDto>(x))
+                                   .FirstOrDefaultAsync();
             return new()
             {
                 Customer = customerCreated,
@@ -67,7 +70,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             return JwtHelper.GenerateToken(user, userClaims, userRoles, _jwtSettings);
         }
 
-        private Customer CreateNewCustomerFromDto(CustomerDto customerDto)
+        private Customer CreateNewCustomerFromDto(CustomerRequestDto customerDto)
         {
             var shippingAddress = new Address(
                 customerDto?.ShippingAddress.Street,
@@ -101,17 +104,17 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             };
         }
 
-        private async Task CreateUserAndRole(Customer newUser, string password)
+        private async Task CreateUserAndRole(Customer customer, string password)
         {
-            var resultUser = await _userManager.CreateAsync(newUser.IdentityData, password);
+            var resultUser = await _userManager.CreateAsync(customer.IdentityData, password);
 
             if (!resultUser.Succeeded)
-                ThrowBadRequestException(resultUser.Errors, newUser?.IdentityData.UserName);
+                ThrowBadRequestException(resultUser.Errors, customer?.IdentityData.UserName);
 
-            var resultRole = await _userManager.AddToRoleAsync(newUser.IdentityData, RoleNames.Customer);
+            var resultRole = await _userManager.AddToRoleAsync(customer.IdentityData, RoleNames.Customer);
 
             if (!resultRole.Succeeded)
-                ThrowBadRequestException(resultRole.Errors, newUser?.IdentityData.UserName);
+                ThrowBadRequestException(resultRole.Errors, customer?.IdentityData.UserName);
         }
 
         private void ThrowBadRequestException(IEnumerable<IdentityError> errors, string userName)

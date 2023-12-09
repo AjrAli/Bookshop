@@ -10,12 +10,7 @@ namespace Bookshop.Application.Profiles.Categories
         {
 
             // Category profile
-            CreateMap<Category, CategoryDto>();
-            CreateMap<CategoryDto, Category>(MemberList.None);
-            CreateMap<CategoryDto, Category>()
-                .ForMember(dest => dest.Title, opt => opt.MapFrom(source => source.Title))
-                .ForMember(dest => dest.IsVisible, opt => opt.MapFrom(source => source.IsVisible))
-                .ForMember(dest => dest.Description, opt => opt.MapFrom(source => source.Description));
+            CreateMap<Category, CategoryDto>().ReverseMap();
         }
     }
 }

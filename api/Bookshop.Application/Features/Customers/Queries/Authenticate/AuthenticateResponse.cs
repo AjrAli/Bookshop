@@ -8,7 +8,7 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
         {
 
         }
-        public CustomerDto? Customer { get; set; }
+        public CustomerRequestDto? Customer { get; set; }
         public string? Token { get; set; }
     }
 }
