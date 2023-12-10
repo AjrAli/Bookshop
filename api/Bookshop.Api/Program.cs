@@ -1,4 +1,3 @@
-using Bookshop.Domain.Entities;
 using Bookshop.Identity.Seed;
 using Bookshop.Persistence.Context;
 using Bookshop.Persistence.Seed;
@@ -37,8 +36,9 @@ namespace Bookshop.Api
                     await CreateRoles.SeedAsync(roleManager);
                     var userManager = services.GetRequiredService<UserManager<IdentityUserData>>();
                     var dbContext = services.GetRequiredService<BookshopDbContext>();
+                    await DatabaseSeeder.SeedLocationPricingsAsync(dbContext);
                     await CreateFirstUser.SeedAsync(userManager, dbContext);
-                    await DatabaseSeeder.SeedAsync(dbContext);
+                    await DatabaseSeeder.SeedCustomerDataAsync(dbContext);
                     Log.Information("Starting web host");
                 }
                 catch (Exception ex)

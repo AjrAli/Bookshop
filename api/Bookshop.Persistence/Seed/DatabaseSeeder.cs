@@ -6,12 +6,25 @@ namespace Bookshop.Persistence.Seed
 {
     public static class DatabaseSeeder
     {
-        public static async Task SeedAsync(BookshopDbContext context)
+        public static async Task SeedLocationPricingsAsync(BookshopDbContext context)
         {
-            await SeedCustomerDataAsync(context);
+            if (!context.LocationPricings.Any())
+            {
+                var listLocationPricing = new List<LocationPricing>
+                {
+                    new LocationPricing("Belgium", 9.99m, 21m),
+                    new LocationPricing("Spain", 14.99m, 18m),
+                    new LocationPricing("United Kingdom", 19.99m, 11m),
+                    new LocationPricing("France", 4.99m, 12m),
+                    new LocationPricing("Germany", 5.99m, 15m),
+                    new LocationPricing("Italy", 19.99m, 19m),
+                    new LocationPricing("OTHERS", 19.99m, 21m)
+                };
+                await context.LocationPricings.AddRangeAsync(listLocationPricing);
+                await context.SaveChangesAsync();
+            }
         }
-
-        private static async Task SeedCustomerDataAsync(BookshopDbContext context)
+        public static async Task SeedCustomerDataAsync(BookshopDbContext context)
         {
             if (context.Customers.Any())
             {
@@ -36,7 +49,7 @@ namespace Bookshop.Persistence.Seed
                     };
                     shoppingCart.CalculateTotalWithoutTaxes();
                     customer.ShoppingCart = shoppingCart;
-                    var order1 = new Order(21m, 10m, Order.CreditCards.Visa, Order.Status.Pending)
+                    var order1 = new Order(Order.CreditCards.Visa, Order.Status.Pending)
                     {
                         Customer = customer,
                         LineItems = lineItems

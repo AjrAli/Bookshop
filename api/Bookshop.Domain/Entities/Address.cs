@@ -7,24 +7,27 @@ namespace Bookshop.Domain.Entities
         public string Street { get; set; }
         public string City { get; set; }
         public string PostalCode { get; set; }
-        public string Country { get; set; }
         public string State { get; set; }
+        public string Country { get; set; }
         private Address() { }
         public void EditAdress(Address address)
         {
             Street = address.Street;
             City = address.City;
             PostalCode = address.PostalCode;
-            Country = address.Country;
             State = address.State;
+            Country = address.Country;
         }
         public Address(string street, string city, string postalCode, string country, string state)
         {
             Street = street;
             City = city;
             PostalCode = postalCode;
-            Country = country;
             State = state;
+            Country = country;
         }
+        // Relationships
+        public LocationPricing? LocationPricing { get; set; }
+        public long? LocationPricingId { get; set; }
     }
 }

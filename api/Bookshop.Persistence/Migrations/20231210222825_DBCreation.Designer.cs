@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookshop.Persistence.Migrations
 {
     [DbContext(typeof(BookshopDbContext))]
-    [Migration("20231209224811_DBCreation")]
+    [Migration("20231210222825_DBCreation")]
     partial class DBCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,9 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
+                    b.Property<long?>("LocationPricingId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -78,6 +81,8 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LocationPricingId");
 
                     b.ToTable("Addresses", (string)null);
                 });
@@ -448,6 +453,50 @@ namespace Bookshop.Persistence.Migrations
                     b.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100", c => c.HasName("CK_Quantity_MaxValue1"));
                 });
 
+            modelBuilder.Entity("Bookshop.Domain.Entities.LocationPricing", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+                    b.Property<string>("LastModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("LastModifiedDate")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+                    b.Property<decimal>("ShippingFee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("VatRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LocationPricings", (string)null);
+                });
+
             modelBuilder.Entity("Bookshop.Domain.Entities.Order", b =>
                 {
                     b.Property<long>("Id")
@@ -486,12 +535,6 @@ namespace Bookshop.Persistence.Migrations
                     b.Property<string>("MethodOfPayment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("SalesTax")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ShippingFee")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("StatusOrder")
                         .IsRequired()
@@ -681,6 +724,16 @@ namespace Bookshop.Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Bookshop.Domain.Entities.Address", b =>
+                {
+                    b.HasOne("Bookshop.Domain.Entities.LocationPricing", "LocationPricing")
+                        .WithMany()
+                        .HasForeignKey("LocationPricingId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("LocationPricing");
                 });
 
             modelBuilder.Entity("Bookshop.Domain.Entities.Book", b =>

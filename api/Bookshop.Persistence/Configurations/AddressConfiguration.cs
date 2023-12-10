@@ -17,6 +17,12 @@ namespace Bookshop.Persistence.Configurations
             builder.Property(e => e.State).IsRequired().HasMaxLength(100);
             builder.Property(e => e.City).IsRequired().HasMaxLength(100);
             builder.Property(e => e.Country).IsRequired().HasMaxLength(100);
+
+            // Relationships
+            builder.HasOne(e => e.LocationPricing)
+                   .WithMany()
+                   .HasForeignKey(e => e.LocationPricingId)
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

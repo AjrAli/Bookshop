@@ -157,21 +157,30 @@ namespace Bookshop.Domain.Tests
             public void Order_CalculateTotalOrder_ShouldReturnCorrectTotalAmount()
             {
                 // Arrange
-                var order = new Order(5.0m, 10.0m, Order.CreditCards.Visa, Order.Status.Cancelled);
+                var firstName = "John";
+                var lastName = "Doe";
+                var locationpricing = new LocationPricing("Belgium", 10m, 10m);
+                var shippingAddress = new Address("streetOfUser1", "cityOfUser1", "CodeUser1", "Belgium", "stateOfUser1") 
+                { 
+                    LocationPricing = locationpricing
+                };
+                var billingAddress = new Address("billstreetOfUser1", "billcityOfUser1", "billCodeUser1", "billcountryOfUser1", "billstateOfUser1");
+                var customer = new Customer(firstName, lastName, shippingAddress, billingAddress);
+                var order = new Order(Order.CreditCards.Visa, Order.Status.Cancelled);
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
                 var book1 = new Book("Test Book 1", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
                 var book2 = new Book("Test Book 2", "Description", "Publisher", "ISBN456", 30.0m, 50, 150, "6x9", Book.Languages.French, DateTime.Now, author, category);
                 var lineItem1 = new LineItem(book1, 2);
                 var lineItem2 = new LineItem(book2, 1);
-
+                order.Customer = customer;
                 order.LineItems = new List<LineItem> { lineItem1, lineItem2 };
 
                 // Act
                 order.CalculateTotalOrder();
 
                 // Assert
-                Assert.AreEqual(83.5m, order.Total); // Assuming correct calculation based on provided logic
+                Assert.AreEqual(87m, order.Total); // Assuming correct calculation based on provided logic
             }
         }
         [TestClass]
@@ -200,9 +209,13 @@ namespace Bookshop.Domain.Tests
             public void Customer_Orders_ShouldBeInitializedWithRelationship()
             {
                 // Arrange
-                var shippingAddress = new Address("streetOfUser1", "cityOfUser1", "CodeUser1", "countryOfUser1", "stateOfUser1");
+                var locationpricing = new LocationPricing("Belgium", 10m, 10m);
+                var shippingAddress = new Address("streetOfUser1", "cityOfUser1", "CodeUser1", "Belgium", "stateOfUser1")
+                {
+                    LocationPricing = locationpricing
+                };
                 var billingAddress = new Address("billstreetOfUser1", "billcityOfUser1", "billCodeUser1", "billcountryOfUser1", "billstateOfUser1");
-                var order = new Order(5.0m, 10.0m, Order.CreditCards.Visa, Order.Status.Cancelled);
+                var order = new Order(Order.CreditCards.Visa, Order.Status.Cancelled);
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
                 var book1 = new Book("Test Book 1", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
@@ -227,7 +240,11 @@ namespace Bookshop.Domain.Tests
             public void Customer_ShoppingCart_And_Order_ShouldWorkTogether()
             {
                 // Arrange
-                var shippingAddress = new Address("streetOfUser1", "cityOfUser1", "CodeUser1", "countryOfUser1", "stateOfUser1");
+                var locationpricing = new LocationPricing("Belgium", 10m, 10m);
+                var shippingAddress = new Address("streetOfUser1", "cityOfUser1", "CodeUser1", "Belgium", "stateOfUser1")
+                {
+                    LocationPricing = locationpricing
+                };
                 var billingAddress = new Address("billstreetOfUser1", "billcityOfUser1", "billCodeUser1", "billcountryOfUser1", "billstateOfUser1");
                 var customer = new Customer("John", "Doe", shippingAddress, billingAddress);
 
@@ -249,7 +266,8 @@ namespace Bookshop.Domain.Tests
                 // Act
                 // Simulate placing an order
                 customer.ShoppingCart.CalculateTotalWithoutTaxes();
-                var order = new Order(5.0m, 10.0m, Order.CreditCards.Visa, Order.Status.Completed);
+                var order = new Order(Order.CreditCards.Visa, Order.Status.Completed);
+                order.Customer = customer;
                 order.LineItems = new List<LineItem>(customer.ShoppingCart.LineItems);
                 customer.Orders.Add(order);
 
@@ -258,7 +276,7 @@ namespace Bookshop.Domain.Tests
                 Assert.AreEqual(2, customer.ShoppingCart.LineItems.Count);
                 Assert.AreEqual(3, customer.ShoppingCart.TotalItems());
                 Assert.AreEqual(70, customer.ShoppingCart.Total);
-                Assert.AreEqual(83.5m, customer.Orders.FirstOrDefault()?.Total);
+                Assert.AreEqual(87m, customer.Orders.FirstOrDefault()?.Total);
                 Assert.AreEqual(1, customer.Orders.Count);
             }
         }

@@ -20,6 +20,7 @@ namespace Bookshop.Persistence.Context
             _loggedInUserService = loggedInUserService;
         }
         public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<LocationPricing> LocationPricings => Set<LocationPricing>();
         public DbSet<Author> Authors => Set<Author>();
         public DbSet<Book> Books => Set<Book>();
         public DbSet<LineItem> LineItems => Set<LineItem>();
@@ -45,6 +46,7 @@ namespace Bookshop.Persistence.Context
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new ShoppingCartConfiguration());
+            modelBuilder.ApplyConfiguration(new LocationPricingConfiguration());
         }
 
         public override int SaveChanges()
