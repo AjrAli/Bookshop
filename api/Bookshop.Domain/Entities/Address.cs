@@ -10,13 +10,14 @@ namespace Bookshop.Domain.Entities
         public string State { get; set; }
         public string Country { get; set; }
         private Address() { }
-        public void EditAdress(Address address)
+        public void EditAdress(Address address, LocationPricing? locationPricing)
         {
             Street = address.Street;
             City = address.City;
             PostalCode = address.PostalCode;
             State = address.State;
             Country = address.Country;
+            LocationPricing = locationPricing;
         }
         public Address(string street, string city, string postalCode, string country, string state)
         {

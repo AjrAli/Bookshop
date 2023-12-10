@@ -59,9 +59,10 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
         {
             _dbContext.Customers.Update(customer);
         }
-        public async Task ValidateRequest(EditCustomer request)
+        public Task ValidateRequest(EditCustomer request)
         {
             _ = request.Customer ?? throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
+            return Task.CompletedTask;
         }
         private async Task<Customer> EditCustomerFromDto(EditCustomerDto customerDto)
         {
@@ -70,8 +71,9 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
                                              .Include(x => x.ShippingAddress)
                                              .Include(x => x.IdentityData)
                                              .FirstOrDefaultAsync(x => x.IdentityUserDataId == customerDto.UserId);
-            customerExisting.BillingAddress.EditAdress(_mapper.Map<Address>(customerDto.BillingAddress));
-            customerExisting.ShippingAddress.EditAdress(_mapper.Map<Address>(customerDto.ShippingAddress));
+            var locationPricing = await _dbContext.FindLocationPricingByCountry(customerDto?.ShippingAddress.Country);
+            customerExisting.ShippingAddress.EditAdress(_mapper.Map<Address>(customerDto.ShippingAddress), locationPricing);
+            customerExisting.BillingAddress.EditAdress(_mapper.Map<Address>(customerDto.BillingAddress), null);
             customerExisting.FirstName = customerDto.FirstName;
             customerExisting.LastName = customerDto.LastName;
             return customerExisting;

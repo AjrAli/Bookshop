@@ -35,7 +35,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
         public async Task<CreateCustomerResponse> Handle(CreateCustomer request, CancellationToken cancellationToken)
         {
             await ValidateRequest(request);
-            var newCustomer = CreateNewCustomerFromDto(request.Customer);
+            var newCustomer = await CreateNewCustomerFromDto(request.Customer);
             await CreateUserAndRole(newCustomer, request.Customer?.Password);
             var user = await _userManager.FindByNameAsync(newCustomer?.IdentityData.UserName);
             var jwtSecurityToken = JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
@@ -58,20 +58,25 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             await _dbContext.SaveChangesAsync(cancellationToken);
             request.IsSaveChangesAsyncCalled = true;
         }
-        public async Task ValidateRequest(CreateCustomer request)
+        public Task ValidateRequest(CreateCustomer request)
         {
             _ = request.Customer ?? throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
+            return Task.CompletedTask;
         }
 
-        private Customer CreateNewCustomerFromDto(CustomerRequestDto customerDto)
+        private async Task<Customer> CreateNewCustomerFromDto(CustomerRequestDto customerDto)
         {
+            
             var shippingAddress = new Address(
                 customerDto?.ShippingAddress.Street,
                 customerDto?.ShippingAddress.City,
                 customerDto?.ShippingAddress.PostalCode,
                 customerDto?.ShippingAddress.Country,
                 customerDto?.ShippingAddress.State
-            );
+            )
+            {
+                LocationPricing = await _dbContext.FindLocationPricingByCountry(customerDto?.ShippingAddress.Country)
+            };
 
             var billingAddress = new Address(
                 customerDto?.BillingAddress.Street,

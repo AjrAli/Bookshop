@@ -86,5 +86,10 @@ namespace Bookshop.Persistence.Context
         {
             return await context.Orders.Include(x => x.LineItems).FirstOrDefaultAsync(x => x.Id == orderId);
         }
+        public static async Task<LocationPricing?> FindLocationPricingByCountry(this BookshopDbContext context, string country)
+        {
+            return await context.LocationPricings.FirstOrDefaultAsync(x => x.Country.ToUpper() == country.ToUpper() ||
+                                                                              x.Country == "OTHERS");
+        }
     }
 }
