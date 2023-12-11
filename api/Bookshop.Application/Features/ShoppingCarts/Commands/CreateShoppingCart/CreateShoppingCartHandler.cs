@@ -33,7 +33,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
         }
         private async Task StoreShoppingCartInDatabase(CreateShoppingCart request, ShoppingCart shoppingCart, CancellationToken cancellationToken)
         {
-            var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == shoppingCart.CustomerId);
+            var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == shoppingCart.Customer.Id);
             customer.ShoppingCart = shoppingCart;
             await _dbContext.ShoppingCarts.AddAsync(shoppingCart, cancellationToken);
             _dbContext.Customers.Update(customer);
@@ -43,7 +43,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
         private async Task<ShoppingCart> CreateNewShoppingCartFromDto(ShoppingCartRequestDto shoppingCartDto)
         {
             var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.IdentityUserDataId == shoppingCartDto.UserId);
-            var shoppingCart = new ShoppingCart { CustomerId = customer.Id };
+            var shoppingCart = new ShoppingCart(customer);
             // Group if same book in multiple items of ShoppingCartDto
             shoppingCartDto.Items = shoppingCartDto.Items?.GroupBy(x => new { x.BookId, x.Id })
                                                          .Select(item => new ShopItemRequestDto
@@ -58,7 +58,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
                     .FirstOrDefaultAsync(x => x.Id == item.BookId)
                     ?? throw new ValidationException($"BookId: {item.BookId} not found in the database.");
 
-                shoppingCart.UpdateLineItem(book, item.Quantity);
+                shoppingCart.UpdateCartItem(book, item.Quantity);
             }
 
             return shoppingCart;

@@ -1,7 +1,10 @@
 ﻿using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
+using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDetails;
 using Bookshop.Domain.Entities;
+using Bookshop.Persistence.Contracts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
@@ -14,11 +17,14 @@ namespace Bookshop.Api.Controllers.Queries
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ShoppingCartQueryController> _logger;
+        private readonly ILoggedInUserService? _loggedInUserService;
         public ShoppingCartQueryController(IMediator mediator,
-                                ILogger<ShoppingCartQueryController> logger)
+                                ILogger<ShoppingCartQueryController> logger,
+                                ILoggedInUserService? loggedInUserService)
         {
             _mediator = mediator;
             _logger = logger;
+            _loggedInUserService = loggedInUserService;
         }
 
         [HttpGet]
@@ -40,6 +46,17 @@ namespace Bookshop.Api.Controllers.Queries
             var dataReponse = await _mediator.Send(new GetAll<ShoppingCart>
             {
                 NavigationPropertyConfigurations = queryConfig
+            });
+            return Ok(dataReponse);
+        }
+        [Authorize]
+        [HttpGet]
+        [Route("get-shoppingcart-details")]
+        public async Task<IActionResult> GetShoppingCartDetails()
+        {
+            var dataReponse = await _mediator.Send(new GetShoppingCartDetails
+            {
+                UserId = _loggedInUserService?.GetUserId()
             });
             return Ok(dataReponse);
         }

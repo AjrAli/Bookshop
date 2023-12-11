@@ -42,19 +42,9 @@ namespace Bookshop.Persistence.Seed
                             new LineItem(book, 10),
                             new LineItem(book2, 15)
                         };
-                    var shoppingCart = new ShoppingCart()
-                    {
-                        Customer = customer,
-                        LineItems = lineItems
-                    };
-                    shoppingCart.CalculateTotalWithoutTaxes();
+                    var shoppingCart = new ShoppingCart(customer, lineItems);
                     customer.ShoppingCart = shoppingCart;
-                    var order1 = new Order(Order.CreditCards.Visa, Order.Status.Pending)
-                    {
-                        Customer = customer,
-                        LineItems = lineItems
-                    };
-                    order1.CalculateTotalOrder();
+                    var order1 = new Order(Order.CreditCards.Visa, customer, lineItems);
                     customer.Orders.Add(order1);
                     context.Customers.Update(customer);
                     await context.SaveChangesAsync();

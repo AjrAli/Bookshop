@@ -5,38 +5,67 @@ namespace Bookshop.Domain.Entities
     public class ShoppingCart : AuditableEntity
     {
         private decimal _total;
-        public decimal Total 
+        public decimal Total
         {
             get
             {
-                return CalculateTotalWithoutTaxes();
+                return CalculateSubtotal();
             }
             set
             {
                 _total = value;
             }
-        
+
         }
-        public void UpdateLineItem(Book book, int quantity)
+        private ShoppingCart() { }
+        public ShoppingCart(Customer customer, ICollection<LineItem>? lineItems = null)
         {
-            if (book != null)
+            Customer = customer;
+            LineItems = lineItems ?? new List<LineItem>();
+            if (LineItems.Count > 0)
+                CalculateSubtotal();
+
+        }
+        public void UpdateCartItem(Book book, int quantity)
+        {
+            if (book == null)
             {
-                var item = LineItems.FirstOrDefault(x => x.BookId == book.Id);
-                if (item != null)
-                {
-                    item.Quantity = quantity;
-                    if (item.Quantity <= 0)
-                        LineItems.Remove(item);
-                }
-                else if(quantity > 0)
-                {
-                    item = new LineItem(book, quantity);
-                    LineItems.Add(item);
-                }
-                CalculateTotalWithoutTaxes();
+                return;
+            }
+
+            var existingItem = LineItems?.FirstOrDefault(x => x.BookId == book.Id);
+
+            if (existingItem != null)
+            {
+                UpdateExistingItem(existingItem, quantity);
+            }
+            else
+            {
+                AddNewItem(book, quantity);
+            }
+            CalculateSubtotal();
+        }
+        private void UpdateExistingItem(LineItem existingItem, int quantity)
+        {
+            if (quantity <= 0)
+            {
+                LineItems?.Remove(existingItem);
+            }
+            else
+            {
+                existingItem.Quantity = quantity;
             }
         }
-        public decimal CalculateTotalWithoutTaxes()
+        private void AddNewItem(Book book, int quantity)
+        {
+            if (quantity > 0)
+            {
+                var newItem = new LineItem(book, quantity);
+                LineItems?.Add(newItem);
+            }
+        }
+
+        public decimal CalculateSubtotal()
         {
             decimal? total = null;
             if (LineItems != null && LineItems.Count > 0)
@@ -44,10 +73,10 @@ namespace Bookshop.Domain.Entities
                 total = LineItems.Sum(x => x.Price);
                 if (total != null)
                 {
-                    _total = (decimal)total;
+                    _total = Math.Round((decimal)total, 2);
                 }
             }
-            else    
+            else
                 _total = 0;
             return _total;
         }
@@ -58,6 +87,6 @@ namespace Bookshop.Domain.Entities
         // Relationships
         public long? CustomerId { get; set; }
         public Customer? Customer { get; set; }
-        public ICollection<LineItem> LineItems { get; set; } = new List<LineItem>();
+        public ICollection<LineItem>? LineItems { get; set; }
     }
 }

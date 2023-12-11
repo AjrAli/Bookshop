@@ -25,12 +25,14 @@ namespace Bookshop.Domain.Entities
 
         private Order() { }
 
-        public Order(CreditCards creditCard,
-                     Status statusOrder)
+        public Order(CreditCards creditCard, Customer customer, ICollection<LineItem> lineItems)
         {
             MethodOfPayment = creditCard;
-            StatusOrder = statusOrder;
+            StatusOrder = Status.Pending;
             DateOrder = DateTime.Now;
+            Customer = customer;
+            LineItems = lineItems;
+            CalculateTotalOrder();
         }
 
         public decimal CalculateTotalOrder()
@@ -43,7 +45,7 @@ namespace Bookshop.Domain.Entities
                     Customer?.ShippingAddress?.LocationPricing?.ShippingFee;
                 if (total != null)
                 {
-                    _total = (decimal)total;
+                    _total = Math.Round((decimal)total,2);
                 }
             }
             return _total;

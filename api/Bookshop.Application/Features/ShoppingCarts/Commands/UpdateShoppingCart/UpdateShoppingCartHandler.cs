@@ -51,7 +51,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
         {
             var itemsToRemove = LineItemsToRemove(shoppingCartDto, shoppingCart);
             foreach (var item in itemsToRemove)
-                shoppingCart.UpdateLineItem(item.Book, 0);
+                shoppingCart.UpdateCartItem(item.Book, 0);
             if (shoppingCart.LineItems.Count > 0)
             {
                 _dbContext.ShoppingCarts.Update(shoppingCart);
@@ -79,7 +79,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
             foreach (var item in shoppingCartDto.Items)
             {
                 var book = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == item.BookId) ?? throw new ValidationException($"BookId: {item.BookId} not found in the database.");
-                shoppingCartExisting.UpdateLineItem(book, item.Quantity);
+                shoppingCartExisting.UpdateCartItem(book, item.Quantity);
             }
             return shoppingCartExisting;
         }
