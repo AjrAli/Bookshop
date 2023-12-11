@@ -24,7 +24,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
             await ValidateRequest(request);
             var newShoppingCart = await CreateNewShoppingCartFromDto(request.ShoppingCart);
             await StoreShoppingCartInDatabase(request, newShoppingCart, cancellationToken);
-            var shoppingCartCreated = await newShoppingCart.ToMappedShoppingCartDto(_dbContext, _mapper);
+            var shoppingCartCreated = await newShoppingCart.ToMappedShoppingCartDto(_dbContext, _mapper, cancellationToken);
             return new()
             {
                 ShoppingCart = shoppingCartCreated,

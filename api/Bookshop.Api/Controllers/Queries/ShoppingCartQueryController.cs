@@ -1,5 +1,6 @@
 ﻿using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
+using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCart;
 using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDetails;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Contracts;
@@ -46,6 +47,17 @@ namespace Bookshop.Api.Controllers.Queries
             var dataReponse = await _mediator.Send(new GetAll<ShoppingCart>
             {
                 NavigationPropertyConfigurations = queryConfig
+            });
+            return Ok(dataReponse);
+        }
+        [Authorize]
+        [HttpGet]
+        [Route("get-shoppingcart")]
+        public async Task<IActionResult> GetShoppingCart()
+        {
+            var dataReponse = await _mediator.Send(new GetShoppingCart
+            {
+                UserId = _loggedInUserService?.GetUserId()
             });
             return Ok(dataReponse);
         }

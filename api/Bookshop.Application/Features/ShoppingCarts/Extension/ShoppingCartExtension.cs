@@ -2,12 +2,13 @@
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace Bookshop.Application.Features.ShoppingCarts.Extension
 {
     public static class ShoppingCartExtension
     {
-        public static async Task<ShoppingCartResponseDto?> ToMappedShoppingCartDto(this ShoppingCart shoppingCart, BookshopDbContext context, IMapper mapper)
+        public static async Task<ShoppingCartResponseDto?> ToMappedShoppingCartDto(this ShoppingCart shoppingCart, BookshopDbContext context, IMapper mapper, CancellationToken cancellationToken)
         {
             return await context.ShoppingCarts
                 .Include(x => x.LineItems)
@@ -18,7 +19,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Extension
                         .ThenInclude(x => x.Category)
                 .Where(x => x.CustomerId == shoppingCart.CustomerId)
                 .Select(x => mapper.Map<ShoppingCartResponseDto>(x))
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
         }
         public static void RemoveShoppingCartFromCustomer(this ShoppingCart shoppingCart, BookshopDbContext context)
         {
