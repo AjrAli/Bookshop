@@ -65,15 +65,7 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
                             x.Category.Title.Contains(keyword));
             var languageStrFromKeyword = Enum.GetNames(typeof(Languages)).FirstOrDefault(x => x.Contains(keyword, StringComparison.OrdinalIgnoreCase));
             if (languageStrFromKeyword != null)
-                if (Enum.TryParse(typeof(Languages), languageStrFromKeyword, out object? languageFromKeyword))
-                {
-                    if (languageFromKeyword != null)
-                    {
-                        var languageFound = (Languages)languageFromKeyword;
-                        predicate = predicate.Or(x => x.Language == languageFound);
-                    }
-
-                }
+                predicate = predicate.Or(x => x.Language == Enum.Parse<Languages>(languageStrFromKeyword));
 
             // Apply the dynamic OR conditions
             var results = await query.Where(predicate).Select(x => new GetSearchResultsDto
