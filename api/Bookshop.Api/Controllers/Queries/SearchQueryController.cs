@@ -19,8 +19,7 @@ namespace Bookshop.Api.Controllers.Queries
             _logger = logger;
         }
 
-        [HttpGet]
-        [Route("{keyword?}")]
+        [HttpGet("{keyword}")]
         public async Task<IActionResult> GetSearchResults(string keyword)
         {
             var dataReponse = await _mediator.Send(new GetSearchResults

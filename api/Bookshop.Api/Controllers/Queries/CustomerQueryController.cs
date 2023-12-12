@@ -22,8 +22,7 @@ namespace Bookshop.Api.Controllers.Queries
             _logger = logger;
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
             var queryConfig = BuildCustomerQueryConfiguration();

@@ -46,8 +46,7 @@ namespace Bookshop.Api.Controllers.Commands
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost]
-        [Route("delete-shoppingcart")]
+        [HttpPost("delete-shoppingcart")]
         public async Task<IActionResult> DeleteSchool([FromBody] long id)
         {
             var dataCommandReponse = await _mediator.Send(new DeleteShoppingCart

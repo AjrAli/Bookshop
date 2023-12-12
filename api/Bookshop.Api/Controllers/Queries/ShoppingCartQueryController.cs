@@ -28,8 +28,7 @@ namespace Bookshop.Api.Controllers.Queries
             _loggedInUserService = loggedInUserService;
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
             var queryConfig = BuildShoppingCartQueryConfiguration();
@@ -51,8 +50,7 @@ namespace Bookshop.Api.Controllers.Queries
             return Ok(dataReponse);
         }
         [Authorize]
-        [HttpGet]
-        [Route("get-shoppingcart")]
+        [HttpGet("get-shoppingcart")]
         public async Task<IActionResult> GetShoppingCart()
         {
             var dataReponse = await _mediator.Send(new GetShoppingCart
@@ -62,8 +60,7 @@ namespace Bookshop.Api.Controllers.Queries
             return Ok(dataReponse);
         }
         [Authorize]
-        [HttpGet]
-        [Route("get-shoppingcart-details")]
+        [HttpGet("get-shoppingcart-details")]
         public async Task<IActionResult> GetShoppingCartDetails()
         {
             var dataReponse = await _mediator.Send(new GetShoppingCartDetails
