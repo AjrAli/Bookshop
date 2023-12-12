@@ -1,6 +1,9 @@
 ﻿using Bookshop.Application.Contracts.MediatR.Query;
+using Bookshop.Application.Features.Common.Helpers;
+using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using static Bookshop.Domain.Entities.Book;
 
@@ -49,32 +52,41 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 
         private async Task<IEnumerable<GetSearchResultsDto>> SearchBooks(string keyword, CancellationToken cancellationToken)
         {
-            Languages parsedLanguageKeywordCheck;
-            Enum.TryParse(Enum.GetNames(typeof(Languages)).FirstOrDefault(x => x.Contains(keyword, StringComparison.OrdinalIgnoreCase)), out parsedLanguageKeywordCheck);
-            var results = await _dbContext.Books
-                .Include(b => b.Author)
-                .Include(b => b.Category)
-                .Where(x => x.Title.Contains(keyword) ||
+            var query = _dbContext.Books.Include(b => b.Author).Include(b => b.Category).AsQueryable();
+            // Build OR conditions using Expression
+            Expression<Func<Book, bool>> predicate = p => false;
+            predicate = predicate.Or(x => x.Title.Contains(keyword) ||
                             x.Description.Contains(keyword) ||
                             x.Publisher.Contains(keyword) ||
                             x.Isbn.Contains(keyword) ||
                             x.Price.ToString().Contains(keyword) ||
-                            x.Language == parsedLanguageKeywordCheck ||
                             x.PublishDate.ToString().Contains(keyword) ||
                             x.Author.Name.Contains(keyword) ||
-                            x.Category.Title.Contains(keyword))
-                .Select(x => new GetSearchResultsDto
+                            x.Category.Title.Contains(keyword));
+            var languageStrFromKeyword = Enum.GetNames(typeof(Languages)).FirstOrDefault(x => x.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+            if (languageStrFromKeyword != null)
+                if (Enum.TryParse(typeof(Languages), languageStrFromKeyword, out object? languageFromKeyword))
                 {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Description = x.Description.Substring(0,50),
-                    Details = $"{x.Publisher} - {x.Isbn} - {x.PublishDate.ToShortDateString()}",
-                    Price = x.Price.ToString(),
-                    AuthorName =  x.Author.Name,
-                    CategoryTitle = x.Category.Title,
-                    Language = x.Language.ToString()
-                })
-                .ToListAsync(cancellationToken);
+                    if (languageFromKeyword != null)
+                    {
+                        var languageFound = (Languages)languageFromKeyword;
+                        predicate = predicate.Or(x => x.Language == languageFound);
+                    }
+
+                }
+
+            // Apply the dynamic OR conditions
+            var results = await query.Where(predicate).Select(x => new GetSearchResultsDto
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Description = x.Description.Substring(0, 50),
+                Details = $"{x.Publisher} - {x.Isbn} - {x.PublishDate.ToShortDateString()}",
+                Price = x.Price.ToString(),
+                AuthorName = x.Author.Name,
+                CategoryTitle = x.Category.Title,
+                Language = x.Language.ToString()
+            }).ToListAsync(cancellationToken);
 
             return results;
         }
@@ -125,7 +137,6 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             return counter;
         }
     }
-
     // Custom comparer to handle duplicates in the list
     public class GetSearchResultsDtoComparer : IEqualityComparer<GetSearchResultsDto>
     {

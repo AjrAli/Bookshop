@@ -16,8 +16,6 @@ namespace Bookshop.Domain.Entities
 
         [EnumDataType(typeof(Languages))]
         public Languages Language {  get; set; }
-
-        [EnumDataType(typeof(DateTime))]
         public DateTime PublishDate { get; set; }
         private Book() { }
         public Book(string title, 
@@ -48,7 +46,6 @@ namespace Bookshop.Domain.Entities
         }
         public enum Languages
         {
-            UnexpectedChoice,
             English,
             French,
             Dutch,
