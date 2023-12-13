@@ -2,7 +2,6 @@
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
 
 namespace Bookshop.Application.Features.ShoppingCarts.Extension
 {
@@ -29,6 +28,11 @@ namespace Bookshop.Application.Features.ShoppingCarts.Extension
                 customer.ShoppingCartId = null;
                 context.Customers.Update(customer);
             }
+        }
+        public static void RemoveLineItems(this ShoppingCart shoppingCart, BookshopDbContext context)
+        {
+            foreach (var item in shoppingCart.LineItems)
+                context.LineItems.Remove(item);          
         }
     }
 }

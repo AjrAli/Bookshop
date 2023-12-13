@@ -79,7 +79,10 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
             foreach (var item in shoppingCartDto.Items)
             {
                 var book = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == item.BookId) ?? throw new ValidationException($"BookId: {item.BookId} not found in the database.");
-                shoppingCartExisting.UpdateCartItem(book, item.Quantity);
+                if (book.Quantity > 0)
+                    shoppingCartExisting.UpdateCartItem(book, item.Quantity);
+                else
+                    throw new ValidationException($"Book: {book.Title} is not anymore available");
             }
             return shoppingCartExisting;
         }

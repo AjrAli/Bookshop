@@ -28,6 +28,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.DeleteShoppingCar
                 throw new NotFoundException($"{nameof(ShoppingCart)} : {request.ShoppingCartId} is not found for current user");
             }
             shoppingCartToDelete.RemoveShoppingCartFromCustomer(_dbContext);
+            shoppingCartToDelete.RemoveLineItems(_dbContext);
             _dbContext.ShoppingCarts.Remove(shoppingCartToDelete);
             return new DeleteShoppingCartResponse
             {

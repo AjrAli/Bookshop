@@ -6,5 +6,6 @@ namespace Bookshop.Application.Features.Orders
     {
         public long Id { get; set; }
         public string? UserId { get; set; }
+        public string? MethodOfPayment { get; set;}
     }
 }

@@ -801,7 +801,7 @@ namespace Bookshop.Persistence.Migrations
                     b.HasOne("Bookshop.Domain.Entities.ShoppingCart", "ShoppingCart")
                         .WithMany("LineItems")
                         .HasForeignKey("ShoppingCartId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Book");
 

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookshop.Persistence.Migrations
 {
     [DbContext(typeof(BookshopDbContext))]
-    [Migration("20231210222825_DBCreation")]
+    [Migration("20231212231555_DBCreation")]
     partial class DBCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -803,7 +803,7 @@ namespace Bookshop.Persistence.Migrations
                     b.HasOne("Bookshop.Domain.Entities.ShoppingCart", "ShoppingCart")
                         .WithMany("LineItems")
                         .HasForeignKey("ShoppingCartId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Book");
 

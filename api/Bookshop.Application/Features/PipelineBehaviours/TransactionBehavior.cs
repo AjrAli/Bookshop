@@ -1,4 +1,5 @@
 ﻿using Bookshop.Application.Contracts.MediatR.Command;
+using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,13 @@ namespace Bookshop.Application.Features.PipelineBehaviours
                 }
                 await transaction.CommitAsync(cancellationToken);
                 return response;
+            }
+            catch (InsufficientQuantityException ex)
+            {
+                //Update just shoppingCart this exception is safe
+                _logger.LogError(ex, "ShoppingCart will be updated with correct quantity available");
+                await transaction.CommitAsync(cancellationToken);
+                throw;
             }
             catch (Exception ex)
             {
