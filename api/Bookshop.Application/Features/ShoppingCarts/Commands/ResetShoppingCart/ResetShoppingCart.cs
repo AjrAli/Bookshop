@@ -1,8 +1,8 @@
 ﻿using Bookshop.Application.Contracts.MediatR.Command;
 
-namespace Bookshop.Application.Features.ShoppingCarts.Commands.DeleteShoppingCart
+namespace Bookshop.Application.Features.ShoppingCarts.Commands.ResetShoppingCart
 {
-    public class DeleteShoppingCart : ICommand<DeleteShoppingCartResponse>
+    public class ResetShoppingCart : ICommand<ResetShoppingCartResponse>
     {
         public string? UserId { get; set; }
         public bool IsSaveChangesAsyncCalled { get; set; }

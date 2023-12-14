@@ -1,6 +1,6 @@
 ﻿using Bookshop.Application.Features.ShoppingCarts;
 using Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCart;
-using Bookshop.Application.Features.ShoppingCarts.Commands.DeleteShoppingCart;
+using Bookshop.Application.Features.ShoppingCarts.Commands.ResetShoppingCart;
 using Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCart;
 using Bookshop.Persistence.Contracts;
 using MediatR;
@@ -46,10 +46,10 @@ namespace Bookshop.Api.Controllers.Commands
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("delete-user-shopcart")]
+        [HttpPost("reset-user-shopcart")]
         public async Task<IActionResult> DeleteSchool()
         {
-            var dataCommandReponse = await _mediator.Send(new DeleteShoppingCart
+            var dataCommandReponse = await _mediator.Send(new ResetShoppingCart
             {
                 UserId = _loggedInUserService?.GetUserId()
             });
