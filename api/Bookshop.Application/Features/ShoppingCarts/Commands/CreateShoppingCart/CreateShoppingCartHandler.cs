@@ -24,14 +24,15 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
             await ValidateRequest(request);
             var newShoppingCart = await CreateNewShoppingCartFromDto(request.ShoppingCart);
             await StoreShoppingCartInDatabase(request, newShoppingCart, cancellationToken);
-            await SaveChangesAsync(request, cancellationToken);
+            var isSaveChangesAsync = await SaveChangesAsync(request, cancellationToken);
             var shoppingCartCreated = await newShoppingCart.ToMappedShoppingCartDto(_dbContext, _mapper, cancellationToken);
 
             return new()
             {
                 ShoppingCart = shoppingCartCreated,
                 Message = $"ShoppingCart successfully created",
-                Details = newShoppingCart.GetQuantityMismatchMessage(request.ShoppingCart.Items)
+                Details = newShoppingCart.GetQuantityMismatchMessage(request.ShoppingCart.Items),
+                IsSaveChangesAsyncCalled = isSaveChangesAsync
             };
         }
         private async Task StoreShoppingCartInDatabase(CreateShoppingCart request, ShoppingCart shoppingCart, CancellationToken cancellationToken)
@@ -41,10 +42,10 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
             await _dbContext.ShoppingCarts.AddAsync(shoppingCart, cancellationToken);
             _dbContext.Customers.Update(customer);
         }
-        private async Task SaveChangesAsync(CreateShoppingCart request, CancellationToken cancellationToken)
+        private async Task<bool> SaveChangesAsync(CreateShoppingCart request, CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
-            request.IsSaveChangesAsyncCalled = true;
+            return true;
         }
         private async Task<ShoppingCart> CreateNewShoppingCartFromDto(ShoppingCartRequestDto shoppingCartDto)
         {

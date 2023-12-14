@@ -1,6 +1,5 @@
 ﻿using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
-using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -9,6 +8,7 @@ namespace Bookshop.Application.Features.PipelineBehaviours
 {
     public class TransactionBehavior<TCommand, TResponse> : IPipelineBehavior<TCommand, TResponse>
     where TCommand : ICommand<TResponse>
+    where TResponse : ICommandResponse
     {
         private readonly BookshopDbContext _context;
         private readonly ILogger<TransactionBehavior<TCommand, TResponse>> _logger;
@@ -28,7 +28,7 @@ namespace Bookshop.Application.Features.PipelineBehaviours
                 _logger.LogInformation("Starting a database transaction for {RequestName}", typeof(TCommand).Name);
                 var response = await next();
                 _logger.LogInformation("Committing the database transaction for {RequestName}", typeof(TCommand).Name);
-                if (!request.IsSaveChangesAsyncCalled)
+                if (!response.IsSaveChangesAsyncCalled)
                 {
                     await _context.SaveChangesAsync(cancellationToken);
                 }

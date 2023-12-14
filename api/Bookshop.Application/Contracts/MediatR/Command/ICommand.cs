@@ -2,7 +2,6 @@
 
 namespace Bookshop.Application.Contracts.MediatR.Command;
 
-public interface ICommand<out TResponse> : IRequest<TResponse>
+public interface ICommand<out TResponse> : IRequest<TResponse> where TResponse : ICommandResponse
 {
-    bool IsSaveChangesAsyncCalled { get; set; }
 }

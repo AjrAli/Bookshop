@@ -32,12 +32,13 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
             var newOrder = await ProcessingOrderFromDto(request.Order, customer, shoppingCart, cancellationToken);
             shoppingCart.RemoveShoppingCartReferencesWithLineItems(_dbContext);
             await StoreOrderInDatabase(request, newOrder, cancellationToken);
-            await SaveChangesAsync(request, cancellationToken);
+            var isSaveChangesAsync = await SaveChangesAsync(cancellationToken);
             var orderCreated = await newOrder.ToMappedOrderDto(_dbContext, _mapper, cancellationToken);
             return new()
             {
                 Order = orderCreated,
-                Message = $"Order successfully created"
+                Message = $"Order successfully created",
+                IsSaveChangesAsyncCalled = isSaveChangesAsync
             };
         }
         public async Task ValidateRequest(CreateOrder request)
@@ -118,10 +119,10 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
             await _dbContext.Orders.AddAsync(order, cancellationToken);
             _dbContext.Customers.Update(customer);
         }
-        private async Task SaveChangesAsync(CreateOrder request, CancellationToken cancellationToken)
+        private async Task<bool> SaveChangesAsync(CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
-            request.IsSaveChangesAsyncCalled = true;
+            return true;
         }
     }
 }

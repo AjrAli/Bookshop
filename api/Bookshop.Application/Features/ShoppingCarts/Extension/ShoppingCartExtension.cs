@@ -47,7 +47,8 @@ namespace Bookshop.Application.Features.ShoppingCarts.Extension
         public static void RemoveLineItems(this ShoppingCart shoppingCart, BookshopDbContext context)
         {
             foreach (var item in shoppingCart.LineItems)
-                context.LineItems.Remove(item);          
+                context.LineItems.Remove(item);
+            shoppingCart.LineItems = null;
         }
         public static bool RemoveShoppingCartIfEmpty(this ShoppingCart shoppingCart, BookshopDbContext context)
         {

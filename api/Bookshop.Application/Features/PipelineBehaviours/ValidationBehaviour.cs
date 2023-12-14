@@ -8,6 +8,7 @@ namespace Bookshop.Application.Features.PipelineBehaviours
 {
     public class ValidationBehaviour<TCommand, TResponse> : IPipelineBehavior<TCommand, TResponse>
         where TCommand : ICommand<TResponse>
+        where TResponse : ICommandResponse
     {
         private readonly IEnumerable<IValidator<TCommand>> _validators;
         private readonly ILogger<ValidationBehaviour<TCommand, TResponse>> _logger;

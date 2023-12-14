@@ -5,6 +5,5 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
     public class UpdateShoppingCart : ICommand<UpdateShoppingCartResponse>
     {
         public ShoppingCartRequestDto? ShoppingCart { get; set; }
-        public bool IsSaveChangesAsyncCalled { get; set; }
     }
 }

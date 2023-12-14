@@ -25,19 +25,20 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
             GroupItemsByBookId(request.ShoppingCart);
             var updatedShoppingCart = await UpdateShoppingCartFromDto(request.ShoppingCart, cancellationToken);
             UpdateShoppingCartInDatabase(request.ShoppingCart, updatedShoppingCart);
-            await SaveChangesAsync(request, cancellationToken);
+            var isSaveChangesAsync = await SaveChangesAsync(request, cancellationToken);
             var shoppingCartUpdated = await updatedShoppingCart.ToMappedShoppingCartDto(_dbContext, _mapper, cancellationToken);
             return new()
             {
                 ShoppingCart = shoppingCartUpdated,
                 Message = $"ShoppingCart successfully updated with stock availability",
-                Details = updatedShoppingCart.GetQuantityMismatchMessage(request.ShoppingCart.Items)
+                Details = updatedShoppingCart.GetQuantityMismatchMessage(request.ShoppingCart.Items),
+                IsSaveChangesAsyncCalled = isSaveChangesAsync
             };
         }
-        private async Task SaveChangesAsync(UpdateShoppingCart request, CancellationToken cancellationToken)
+        private async Task<bool> SaveChangesAsync(UpdateShoppingCart request, CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
-            request.IsSaveChangesAsyncCalled = true;
+            return true;
         }
         private void UpdateShoppingCartInDatabase(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
         {

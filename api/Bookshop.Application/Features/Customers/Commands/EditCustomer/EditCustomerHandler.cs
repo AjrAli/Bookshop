@@ -47,13 +47,13 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
             {
                 Customer = editedCustomerDto,
                 Token = _jwtTokenHandler.WriteToken(jwtSecurityToken),
-                Message = $"Customer {editedCustomerDto.FirstName} successfully edited"
+                Message = $"Customer {editedCustomerDto.FirstName} successfully edited",
+                IsSaveChangesAsyncCalled = true
             };
         }
         private async Task SaveChangesAsync(EditCustomer request, CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
-            request.IsSaveChangesAsyncCalled = true;
         }
         private void EditCustomerInDatabase(Customer customer)
         {

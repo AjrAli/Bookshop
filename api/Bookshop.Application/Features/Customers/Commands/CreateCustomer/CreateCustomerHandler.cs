@@ -48,7 +48,8 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             {
                 Customer = customerCreated,
                 Token = _jwtTokenHandler.WriteToken(jwtSecurityToken),
-                Message = $"Customer {customerCreated.FirstName} successfully created"
+                Message = $"Customer {customerCreated.FirstName} successfully created",
+                IsSaveChangesAsyncCalled = true
             };
         }
 
@@ -56,7 +57,6 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
         {
             await _dbContext.Customers.AddAsync(customer, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            request.IsSaveChangesAsyncCalled = true;
         }
         public Task ValidateRequest(CreateCustomer request)
         {
