@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
+using Bookshop.Application.Exceptions;
 using Bookshop.Application.Features.Orders.Extension;
 using Bookshop.Application.Features.Orders.Validation;
+using Bookshop.Application.Features.Service;
 using Bookshop.Application.Features.ShoppingCarts.Extension;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
 using static Bookshop.Domain.Entities.Order;
 
 namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
@@ -15,12 +16,13 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
     {
         private readonly BookshopDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IStockService _stockService;
 
-        public CreateOrderHandler(BookshopDbContext dbContext, IMapper mapper)
+        public CreateOrderHandler(BookshopDbContext dbContext, IMapper mapper, IStockService stockService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-
+            _stockService = stockService;
         }
         public async Task<CreateOrderResponse> Handle(CreateOrder request, CancellationToken cancellationToken)
         {
@@ -28,8 +30,9 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
             var customer = await GetCustomerWithDetails(request.Order, cancellationToken);
             var shoppingCart = await GetShoppingCartWithDetails(customer, cancellationToken);
             var newOrder = await ProcessingOrderFromDto(request.Order, customer, shoppingCart, cancellationToken);
-            RemoveShoppingCartWithReferences(shoppingCart);
+            RemoveShoppingCartReferences(shoppingCart);
             await StoreOrderInDatabase(request, newOrder, cancellationToken);
+            await SaveChangesAsync(request, cancellationToken);
             var orderCreated = await newOrder.ToMappedOrderDto(_dbContext, _mapper, cancellationToken);
             return new()
             {
@@ -39,14 +42,14 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
         }
         public async Task ValidateRequest(CreateOrder request)
         {
-            await request.Order.ValidateOrderRequest();
+            await request.Order.ValidateOrderRequest(_dbContext);
         }
-        private void RemoveShoppingCartWithReferences(ShoppingCart shoppingCart)
+        private void RemoveShoppingCartReferences(ShoppingCart shoppingCart)
         {
-            shoppingCart.RemoveShoppingCartFromCustomer(_dbContext);
             foreach (var lineItem in shoppingCart.LineItems)
                 lineItem.ShoppingCartId = null;
-            _dbContext.ShoppingCarts.Remove(shoppingCart);
+            shoppingCart.LineItems = null;
+            shoppingCart.UpdateShoppingCartTotal(_dbContext);
         }
         private async Task<Order> ProcessingOrderFromDto(OrderRequestDto orderDto,
                                                          Customer customer,
@@ -57,10 +60,10 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
             try
             {
                 var order = new Order(methodOfpaymentEnum, customer, shoppingCart.LineItems);
-                order.UpdateStockQuantities();
+                _stockService.UpdateStockQuantities(shoppingCart.LineItems);
                 return order;
             }
-            catch (InsufficientQuantityException ex)
+            catch (InsufficientBookQuantityException ex)
             {
                 await HandleInsufficientQuantityException(ex, shoppingCart, cancellationToken);
                 throw;
@@ -68,14 +71,38 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
 
         }
 
-        private async Task HandleInsufficientQuantityException(InsufficientQuantityException ex, ShoppingCart shoppingCart, CancellationToken cancellationToken)
+        private async Task HandleInsufficientQuantityException(InsufficientBookQuantityException ex, ShoppingCart shoppingCart, CancellationToken cancellationToken)
         {
             foreach (var book in ex.BooksKeyWithQtValue.Keys)
             {
-                shoppingCart.UpdateCartItem(book, book.Quantity);
-                _dbContext.ShoppingCarts.Update(shoppingCart);
+                HandleBookForInsufficientQuantity(book, shoppingCart);
             }
+            shoppingCart.UpdateShoppingCartTotal(_dbContext);
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        private void HandleBookForInsufficientQuantity(Book book, ShoppingCart shoppingCart)
+        {
+            var item = shoppingCart.LineItems.FirstOrDefault(x => x.BookId == book.Id);
+
+            if (book.Quantity > 0)
+            {
+                shoppingCart.UpdateCartItem(book, book.Quantity);
+            }
+            else
+            {
+                RemoveLineItemIfNoStock(item);
+                shoppingCart.LineItems.Remove(item);
+            }
+        }
+
+        private void RemoveLineItemIfNoStock(LineItem item)
+        {
+            if (item != null)
+            {
+                // no more stock for this book, item shouldn't exist anymore in shoppingcart
+                _dbContext.LineItems.Remove(item);
+            }
         }
 
         private async Task<ShoppingCart?> GetShoppingCartWithDetails(Customer? customer, CancellationToken cancellationToken)
@@ -108,6 +135,9 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
             customer.Orders = new List<Order> { order };
             await _dbContext.Orders.AddAsync(order, cancellationToken);
             _dbContext.Customers.Update(customer);
+        }
+        private async Task SaveChangesAsync(CreateOrder request, CancellationToken cancellationToken)
+        {
             await _dbContext.SaveChangesAsync(cancellationToken);
             request.IsSaveChangesAsyncCalled = true;
         }

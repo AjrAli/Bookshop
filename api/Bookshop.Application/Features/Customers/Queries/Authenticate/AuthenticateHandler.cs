@@ -45,7 +45,7 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
             {
                 throw new ValidationException($"Credentials for '{request?.Username} aren't valid'.");
             }
-            var jwtSecurityToken = JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
+            var jwtSecurityToken = await JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
             var customer = await _dbContext.Customers.Include(x => x.IdentityData)
                                                .Where(x => x.IdentityUserDataId == user.Id)
                                                .Select(x => _mapper.Map<CustomerResponseDto>(x))

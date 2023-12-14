@@ -17,11 +17,8 @@ namespace Bookshop.Application.Features.ShoppingCarts.Validation
         public static async Task ValidateUpdateShoppingCartRequest(this ShoppingCartRequestDto? shoppingCartDto, BookshopDbContext context)
         {
             shoppingCartDto.ValidateCommonShoppingCartRequest();
-            if (shoppingCartDto?.Id == 0)
-                throw new ValidationException($"ShoppingCart {shoppingCartDto.Id} doesn't exist");
-            if (!await context.ShoppingCarts.Include(x => x.Customer).AnyAsync(x => x.Customer.IdentityUserDataId == shoppingCartDto.UserId &&
-                                                                                    x.Customer.ShoppingCartId == shoppingCartDto.Id))
-                throw new ValidationException($"ShoppingCart {shoppingCartDto.Id} with current customer not found in Database");
+            if (!await context.ShoppingCarts.Include(x => x.Customer).AnyAsync(x => x.Customer.IdentityUserDataId == shoppingCartDto.UserId))
+                throw new ValidationException($"ShoppingCart of current customer not found in Database");
 
             foreach (var item in shoppingCartDto.Items)
             {

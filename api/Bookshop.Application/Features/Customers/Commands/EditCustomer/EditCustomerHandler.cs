@@ -42,7 +42,7 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
                                    .Where(x => x.Id == editedCustomer.Id)
                                    .Select(x => _mapper.Map<CustomerResponseDto>(x))
                                    .FirstOrDefaultAsync();
-            var jwtSecurityToken = JwtHelper.GenerateToken(_userManager, editedCustomer.IdentityData, _jwtSettings);
+            var jwtSecurityToken = await JwtHelper.GenerateToken(_userManager, editedCustomer.IdentityData, _jwtSettings);
             return new()
             {
                 Customer = editedCustomerDto,

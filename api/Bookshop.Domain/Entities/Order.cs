@@ -49,27 +49,6 @@ namespace Bookshop.Domain.Entities
             }
             return _total;
         }
-        public void UpdateStockQuantities()
-        {
-            Dictionary<Book, int> booksWithInvalidQt = new Dictionary<Book, int>();
-            foreach (var lineItem in LineItems)
-            {
-                if (lineItem.Book != null)
-                {
-                    if (lineItem.Book.Quantity < lineItem.Quantity)
-                    {
-                        booksWithInvalidQt.Add(lineItem.Book, lineItem.Quantity);
-                    }
-                    else
-                        lineItem.Book.Quantity -= lineItem.Quantity;
-
-                }
-            }
-            if (booksWithInvalidQt.Count > 0)
-            {
-                throw new InsufficientQuantityException(booksWithInvalidQt, "ShoppingCart will be updated with correct quantity available");
-            }
-        }
         public enum CreditCards
         {
             AmericanExpress,
@@ -92,21 +71,4 @@ namespace Bookshop.Domain.Entities
         public Customer? Customer { get; set; }
         public ICollection<LineItem> LineItems { get; set; } = new List<LineItem>();
     }
-    public class InsufficientQuantityException : Exception
-    {
-        public Dictionary<Book, int> BooksKeyWithQtValue { get; set; } = new Dictionary<Book, int>();
-        private List<string> Errors { get; set; } = new List<string>();
-
-        public override string Message => $"{base.Message}, (Errors: {string.Join(", ", Errors)})";
-
-        public InsufficientQuantityException(Dictionary<Book, int> booksKeyWithQtValue, string message) : base(message)
-        {
-            BooksKeyWithQtValue = booksKeyWithQtValue;
-            foreach (var keyValuePair in booksKeyWithQtValue)
-            {
-                Errors.Add($"Book : {keyValuePair.Key.Title}, insufficient quantity => Stock value : {keyValuePair.Key.Quantity}, value ordered {keyValuePair.Value}");
-            }
-        }
-    }
-
 }

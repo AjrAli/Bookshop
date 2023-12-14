@@ -4,7 +4,6 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.DeleteShoppingCar
 {
     public class DeleteShoppingCart : ICommand<DeleteShoppingCartResponse>
     {
-        public long ShoppingCartId { get; set; }
         public string? UserId { get; set; }
         public bool IsSaveChangesAsyncCalled { get; set; }
     }

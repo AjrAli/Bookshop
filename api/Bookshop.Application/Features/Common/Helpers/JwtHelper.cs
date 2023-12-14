@@ -10,35 +10,51 @@ namespace Bookshop.Application.Features.Common.Helpers
 {
     public static class JwtHelper
     {
-        public static JwtSecurityToken? GenerateToken(UserManager<IdentityUserData> userManager, IdentityUserData user, JwtSettings jwtSettings)
+        public static async Task<JwtSecurityToken?> GenerateToken(
+            UserManager<IdentityUserData> userManager,
+            IdentityUserData user,
+            JwtSettings jwtSettings)
         {
-            var userRoles = userManager.GetRolesAsync(user).Result;
-            var userClaims = userManager.GetClaimsAsync(user).Result;
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-            }
-            .Union(userClaims)
-            .Union(userRoles.Select(role => new Claim("role", role))); // Add the roles as claims
+            var userRoles = await userManager.GetRolesAsync(user);
+            var userClaims = await userManager.GetClaimsAsync(user);
 
-            if (jwtSettings.Key != null)
+            var claims = BuildClaims(user, userRoles, userClaims);
+
+            if (!string.IsNullOrEmpty(jwtSettings.Key))
             {
-                var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
+                var rawKeyBytesOfBase64EncodedKey = Convert.FromBase64String(jwtSettings.Key);
+                var symmetricSecurityKey = new SymmetricSecurityKey(rawKeyBytesOfBase64EncodedKey);
                 var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
-                // Adjust token expiration as needed (e.g., 1 hour)
                 var jwtSecurityToken = new JwtSecurityToken(
                     issuer: jwtSettings.Issuer,
                     audience: jwtSettings.Audience,
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(10), // Change to your desired expiration time
+                    expires: DateTime.UtcNow.AddMinutes(jwtSettings.DurationInMinutes),
                     signingCredentials: signingCredentials);
 
                 return jwtSecurityToken;
             }
 
             return null;
+        }
+
+        private static IEnumerable<Claim> BuildClaims(
+            IdentityUserData user,
+            IList<string> userRoles,
+            IList<Claim> userClaims)
+        {
+            var standardClaims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+            };
+
+            var roleClaims = userRoles.Select(role => new Claim("role", role));
+
+            return standardClaims
+                .Union(userClaims)
+                .Union(roleClaims);
         }
     }
 }

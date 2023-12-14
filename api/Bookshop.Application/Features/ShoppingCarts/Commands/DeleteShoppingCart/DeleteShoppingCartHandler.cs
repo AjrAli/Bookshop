@@ -18,29 +18,26 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.DeleteShoppingCar
 
         public async Task<DeleteShoppingCartResponse> Handle(DeleteShoppingCart request, CancellationToken cancellationToken)
         {
-            await ValidateRequest(request);
             var shoppingCartToDelete = await _dbContext.ShoppingCarts
                                                        .Include(x => x.Customer)
-                                                       .FirstOrDefaultAsync(x => x.Id == request.ShoppingCartId &&
-                                                                                 x.Customer.IdentityUserDataId == request.UserId, cancellationToken);
+                                                       .Include(x => x.LineItems)
+                                                       .FirstOrDefaultAsync(x => x.Customer.IdentityUserDataId == request.UserId, cancellationToken);
             if (shoppingCartToDelete == null)
             {
-                throw new NotFoundException($"{nameof(ShoppingCart)} : {request.ShoppingCartId} is not found for current user");
+                throw new NotFoundException($"No {nameof(ShoppingCart)} is found for current user");
             }
-            shoppingCartToDelete.RemoveShoppingCartFromCustomer(_dbContext);
             shoppingCartToDelete.RemoveLineItems(_dbContext);
-            _dbContext.ShoppingCarts.Remove(shoppingCartToDelete);
+            shoppingCartToDelete.UpdateShoppingCartTotal(_dbContext);
             return new DeleteShoppingCartResponse
             {
                 Success = true,
                 Message = $"ShoppingCart {shoppingCartToDelete.Id} successfully deleted"
             };
         }
+
         public Task ValidateRequest(DeleteShoppingCart request)
         {
-            if (request.ShoppingCartId == 0)
-                throw new ValidationException($"ShoppingCart id : {request.ShoppingCartId} is invalid.");
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
     }
 }

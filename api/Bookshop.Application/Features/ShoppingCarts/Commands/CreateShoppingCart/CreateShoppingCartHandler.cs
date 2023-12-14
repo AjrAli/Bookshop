@@ -24,11 +24,14 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
             await ValidateRequest(request);
             var newShoppingCart = await CreateNewShoppingCartFromDto(request.ShoppingCart);
             await StoreShoppingCartInDatabase(request, newShoppingCart, cancellationToken);
+            await SaveChangesAsync(request, cancellationToken);
             var shoppingCartCreated = await newShoppingCart.ToMappedShoppingCartDto(_dbContext, _mapper, cancellationToken);
+
             return new()
             {
                 ShoppingCart = shoppingCartCreated,
-                Message = $"ShoppingCart successfully created"
+                Message = $"ShoppingCart successfully created",
+                Details = newShoppingCart.GetQuantityMismatchMessage(request.ShoppingCart.Items)
             };
         }
         private async Task StoreShoppingCartInDatabase(CreateShoppingCart request, ShoppingCart shoppingCart, CancellationToken cancellationToken)
@@ -37,6 +40,9 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCar
             customer.ShoppingCart = shoppingCart;
             await _dbContext.ShoppingCarts.AddAsync(shoppingCart, cancellationToken);
             _dbContext.Customers.Update(customer);
+        }
+        private async Task SaveChangesAsync(CreateShoppingCart request, CancellationToken cancellationToken)
+        {
             await _dbContext.SaveChangesAsync(cancellationToken);
             request.IsSaveChangesAsyncCalled = true;
         }

@@ -7,6 +7,21 @@ namespace Bookshop.Application.Features.ShoppingCarts.Extension
 {
     public static class ShoppingCartExtension
     {
+        public static string? GetQuantityMismatchMessage(this ShoppingCart shoppingCart, IList<ShopItemRequestDto> requestedItems)
+        {
+            var quantityMismatchMessages = requestedItems
+                .Select(item =>
+                {
+                    var lineItem = shoppingCart.LineItems.FirstOrDefault(x => x.BookId == item.BookId && x.Quantity != item.Quantity);
+                    return lineItem != null
+                        ? $"Book {lineItem.Book.Title} quantity ordered: {item.Quantity} but received as max: {lineItem.Quantity}"
+                        : null;
+                })
+                .Where(message => message != null)
+                .ToList();
+
+            return quantityMismatchMessages.Any() ? string.Join(", ", quantityMismatchMessages) : null;
+        }
         public static async Task<ShoppingCartResponseDto?> ToMappedShoppingCartDto(this ShoppingCart shoppingCart, BookshopDbContext context, IMapper mapper, CancellationToken cancellationToken)
         {
             return await context.ShoppingCarts
@@ -33,6 +48,21 @@ namespace Bookshop.Application.Features.ShoppingCarts.Extension
         {
             foreach (var item in shoppingCart.LineItems)
                 context.LineItems.Remove(item);          
+        }
+        public static bool RemoveShoppingCartIfEmpty(this ShoppingCart shoppingCart, BookshopDbContext context)
+        {
+            if (shoppingCart.LineItems.Count == 0)
+            {
+                shoppingCart.RemoveShoppingCartFromCustomer(context);
+                context.ShoppingCarts.Remove(shoppingCart);
+                return true;
+            }
+            return false;
+        }
+        public static void UpdateShoppingCartTotal(this ShoppingCart shoppingCart, BookshopDbContext context)
+        {
+            shoppingCart.CalculateSubtotal();
+            context.ShoppingCarts.Update(shoppingCart);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             var newCustomer = await CreateNewCustomerFromDto(request.Customer);
             await CreateUserAndRole(newCustomer, request.Customer?.Password);
             var user = await _userManager.FindByNameAsync(newCustomer?.IdentityData.UserName);
-            var jwtSecurityToken = JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
+            var jwtSecurityToken = await JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
             await StoreCustomerInDatabase(request, newCustomer, cancellationToken);
             var customerCreated = await _dbContext.Customers.Include(x => x.IdentityData)
                                    .Where(x => x.IdentityUserDataId == user.Id)

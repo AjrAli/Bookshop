@@ -1,10 +1,8 @@
-﻿using Bookshop.Application.Contracts.MediatR.Command;
-using Bookshop.Application.Contracts.MediatR.Query;
-using Bookshop.Application.Features.Common.Queries.GetAll;
+﻿using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
 using Bookshop.Application.Features.PipelineBehaviours;
 using Bookshop.Application.Features.Response;
-using Bookshop.Domain.Common;
+using Bookshop.Application.Features.Service;
 using Bookshop.Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -23,6 +21,7 @@ namespace Bookshop.Application
             RegisterGenericGetAllHandlers(services);
             RegisterGenericGetByIdHandlers(services);
             RegisterPipelineBehaviors(services);
+            services.AddTransient<IStockService, StockService>();
             return services;
         }
 
