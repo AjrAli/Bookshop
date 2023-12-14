@@ -26,6 +26,12 @@ namespace Bookshop.Domain.Entities
                 CalculateSubtotal();
 
         }
+        public LineItem? GetItemStoredWithBookId(long bookId)
+        {
+            if (bookId == 0 || LineItems?.Count == 0)
+                return null;
+            return LineItems?.FirstOrDefault(x => x.BookId == bookId && x.Id != 0);
+        }
         public void UpdateCartItem(Book book, int quantity)
         {
             if (book == null)
@@ -37,9 +43,12 @@ namespace Bookshop.Domain.Entities
 
             if (existingItem != null)
             {
-                UpdateExistingItem(existingItem, quantity);
+                if (book.Quantity > 0)
+                    UpdateExistingItem(existingItem, quantity);
+                else
+                    LineItems?.Remove(existingItem);
             }
-            else
+            else if (book.Quantity > 0)
             {
                 AddNewItem(book, quantity);
             }

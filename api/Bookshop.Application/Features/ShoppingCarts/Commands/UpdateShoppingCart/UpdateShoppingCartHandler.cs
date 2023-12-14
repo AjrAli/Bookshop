@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
-using Bookshop.Application.Features.Service;
 using Bookshop.Application.Features.ShoppingCarts.Extension;
 using Bookshop.Application.Features.ShoppingCarts.Validation;
 using Bookshop.Domain.Entities;
@@ -14,13 +13,11 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
     {
         private readonly BookshopDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly IStockService _stockService;
 
-        public UpdateShoppingCartHandler(BookshopDbContext dbContext, IMapper mapper, IStockService stockService)
+        public UpdateShoppingCartHandler(BookshopDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _stockService = stockService;
         }
         public async Task<UpdateShoppingCartResponse> Handle(UpdateShoppingCart request, CancellationToken cancellationToken)
         {
@@ -33,7 +30,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
             return new()
             {
                 ShoppingCart = shoppingCartUpdated,
-                Message = $"ShoppingCart successfully updated",
+                Message = $"ShoppingCart successfully updated with stock availability",
                 Details = updatedShoppingCart.GetQuantityMismatchMessage(request.ShoppingCart.Items)
             };
         }
@@ -44,19 +41,28 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
         }
         private void UpdateShoppingCartInDatabase(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
         {
-            var itemsToRemove = LineItemsToRemove(shoppingCartDto, shoppingCart);
-            foreach (var item in itemsToRemove)
-                shoppingCart.UpdateCartItem(item.Book, 0);
-            if (shoppingCart.LineItems.Count > 0)
+            LineItemsRemovedByCustomer(shoppingCartDto, shoppingCart);
+            shoppingCart?.UpdateShoppingCartTotal(_dbContext);
+        }
+
+        private void LineItemsRemovedByCustomer(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
+        {
+            if (shoppingCart?.LineItems?.Count > 0)
             {
-                shoppingCart.UpdateShoppingCartTotal(_dbContext);
-                _dbContext.LineItems.RemoveRange(itemsToRemove);
+                var itemsToRemove = ItemsStoredButRemovedFromCustomerRequest(shoppingCartDto, shoppingCart);
+                if (itemsToRemove != null)
+                {
+                    shoppingCart.LineItems = shoppingCart.LineItems.Where(x => !itemsToRemove.Any(y => y == x))?.ToList();
+                    _dbContext.LineItems.RemoveRange(itemsToRemove);
+                }
             }
         }
-        private ICollection<LineItem>? LineItemsToRemove(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
+
+        private static List<LineItem>? ItemsStoredButRemovedFromCustomerRequest(ShoppingCartRequestDto shoppingCartDto, ShoppingCart shoppingCart)
         {
-            return shoppingCart.LineItems.Where(x => (!shoppingCartDto.Items.Any(y => y.BookId == x.BookId)) && x.BookId != 0)?.ToList();
+            return shoppingCart?.LineItems?.Where(x => (!shoppingCartDto.Items.Any(y => y.BookId == x.BookId)) && x.BookId != 0)?.ToList();
         }
+
         private void GroupItemsByBookId(ShoppingCartRequestDto shoppingCartDto)
         {
             // Group if same book in multiple items of ShoppingCartDto
@@ -70,41 +76,11 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
         }
         private async Task<ShoppingCart> UpdateShoppingCartFromDto(ShoppingCartRequestDto shoppingCartDto, CancellationToken cancellationToken)
         {
-            ShoppingCart? shoppingCartExisting = await GetExistingShoppingCartOfUser(shoppingCartDto, cancellationToken);
-            try
-            {
-                var booksIdRequest = shoppingCartDto.Items.Select(x => x.BookId).ToList();
-                var booksRequestedFromDB = _dbContext.Books.Where(x => booksIdRequest.Any(y => y == x.Id)).ToList();
-                if (_stockService.CheckBookStockQuantities(booksRequestedFromDB))
-                {
-                    await UpdateShoppingCartItems(shoppingCartDto, shoppingCartExisting, cancellationToken);
-                }
-            }
-            catch (InsufficientBookQuantityException ex)
-            {
-                if (ex.BooksInvalid.Count > 0 && shoppingCartExisting.LineItems.Count > 0)
-                {
-                    foreach (var book in ex.BooksInvalid)
-                    {
-                        RemoveLineItemOfOutOfStockBook(shoppingCartExisting, book);
-                    }
-                    shoppingCartExisting.UpdateShoppingCartTotal(_dbContext);
-                    await _dbContext.SaveChangesAsync(cancellationToken);
-                }
-                throw;
-            }
+            var shoppingCartExisting = await GetExistingShoppingCartOfUser(shoppingCartDto, cancellationToken);
+            await UpdateShoppingCartItems(shoppingCartDto, shoppingCartExisting, cancellationToken);
             return shoppingCartExisting;
         }
 
-        private void RemoveLineItemOfOutOfStockBook(ShoppingCart? shoppingCartExisting, Book book)
-        {
-            var itemToDelete = shoppingCartExisting.LineItems.FirstOrDefault(x => x.BookId == book.Id);
-            if (itemToDelete != null)
-            {
-                _dbContext.LineItems.Remove(itemToDelete);
-                shoppingCartExisting.LineItems.Remove(itemToDelete);
-            }
-        }
 
         private async Task<ShoppingCart?> GetExistingShoppingCartOfUser(ShoppingCartRequestDto shoppingCartDto, CancellationToken cancellationToken)
         {
@@ -119,9 +95,17 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
         {
             foreach (var item in shoppingCartDto.Items)
             {
-                var book = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == item.BookId, cancellationToken) ?? throw new ValidationException($"BookId: {item.BookId} not found in the database.");
-                shoppingCartExisting.UpdateCartItem(book, item.Quantity);
+                var bookRequested = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == item.BookId, cancellationToken) ?? throw new ValidationException($"BookId: {item.BookId} not found in the database.");
+                var itemOnProcess = shoppingCartExisting.GetItemStoredWithBookId(bookRequested.Id);
+                shoppingCartExisting.UpdateCartItem(bookRequested, item.Quantity);
+                RemoveItemIfOutOfStockOrInvalidQuantityRequested(shoppingCartExisting, itemOnProcess);
             }
+        }
+
+        private void RemoveItemIfOutOfStockOrInvalidQuantityRequested(ShoppingCart? shoppingCartExisting, LineItem? itemToBeRemoved)
+        {
+            if (itemToBeRemoved != null && (shoppingCartExisting.LineItems == null || !shoppingCartExisting.LineItems.Contains(itemToBeRemoved)))
+                _dbContext.LineItems.Remove(itemToBeRemoved);
         }
 
         public async Task ValidateRequest(UpdateShoppingCart request)

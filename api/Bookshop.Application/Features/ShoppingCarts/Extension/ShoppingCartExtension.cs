@@ -59,6 +59,13 @@ namespace Bookshop.Application.Features.ShoppingCarts.Extension
             }
             return false;
         }
+        public static void RemoveShoppingCartReferencesWithLineItems(this ShoppingCart shoppingCart, BookshopDbContext context)
+        {
+            foreach (var lineItem in shoppingCart.LineItems)
+                lineItem.ShoppingCartId = null;
+            shoppingCart.LineItems = null;
+            shoppingCart.UpdateShoppingCartTotal(context);
+        }
         public static void UpdateShoppingCartTotal(this ShoppingCart shoppingCart, BookshopDbContext context)
         {
             shoppingCart.CalculateSubtotal();
