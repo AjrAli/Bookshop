@@ -9,7 +9,7 @@ namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
     //[Authorize]
-    [Route("[controller]")]
+    [Route("author")]
     public class AuthorQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -44,7 +44,7 @@ namespace Bookshop.Api.Controllers.Queries
         }
         private Dictionary<Expression<Func<Author, object>>, List<Expression<Func<object, object>>>> BuildAuthorQueryConfiguration()
         {
-            return new Dictionary<Expression<Func<Author, object>>, List<Expression<Func<object, object>>>>
+            return new()
             {
                 {x => x.Books, new List<Expression<Func<object, object>>>(){ y => (y as Book).Category} }
             };

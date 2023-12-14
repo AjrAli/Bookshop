@@ -9,11 +9,9 @@
             Success = success;
             Message = message;
         }
-
         public bool Success { get; set; }
         public string? Message { get; set; }
         public string? Details { get; set; }
         public IList<string>? ValidationErrors { get; set; }
-        public long Count { get; set; }
     }
 }

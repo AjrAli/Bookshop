@@ -11,7 +11,7 @@ namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+    [Route("shopcart")]
     public class ShoppingCartCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -26,7 +26,7 @@ namespace Bookshop.Api.Controllers.Commands
             _loggedInUserService = loggedInUserService;
         }
 
-        [HttpPost("create-shoppingcart")]
+        [HttpPost("create-user-shopcart")]
         public async Task<IActionResult> CreateShoppingCart([FromBody] ShoppingCartRequestDto shoppingCartDto)
         {
             shoppingCartDto.UserId = _loggedInUserService?.GetUserId();
@@ -36,7 +36,7 @@ namespace Bookshop.Api.Controllers.Commands
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("update-shoppingcart")]
+        [HttpPost("update-user-shopcart")]
         public async Task<IActionResult> UpdateShoppingCart([FromBody] ShoppingCartRequestDto shoppingCartDto)
         {
             shoppingCartDto.UserId = _loggedInUserService?.GetUserId();
@@ -46,7 +46,7 @@ namespace Bookshop.Api.Controllers.Commands
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("delete-shoppingcart")]
+        [HttpPost("delete-user-shopcart")]
         public async Task<IActionResult> DeleteSchool()
         {
             var dataCommandReponse = await _mediator.Send(new DeleteShoppingCart

@@ -28,7 +28,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.DeleteShoppingCar
             }
             shoppingCartToDelete.RemoveLineItems(_dbContext);
             shoppingCartToDelete.UpdateShoppingCartTotal(_dbContext);
-            return new DeleteShoppingCartResponse
+            return new()
             {
                 Success = true,
                 Message = $"ShoppingCart {shoppingCartToDelete.Id} successfully deleted"

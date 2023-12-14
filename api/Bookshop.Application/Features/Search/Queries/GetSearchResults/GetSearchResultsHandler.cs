@@ -40,13 +40,11 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             }
             // Order results by the number of keyword matches
 
-            return new GetSearchResultsResponse
+            return new()
             {
                 SearchResultsDto = allSearchResults
                 .OrderByDescending(x => NumberOfMatches(x, keywords))
-                .ToList(),
-                Count = allSearchResults
-                .OrderByDescending(x => NumberOfMatches(x, keywords)).Count()
+                .ToList()
             };
         }
 

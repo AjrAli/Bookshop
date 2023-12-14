@@ -27,9 +27,9 @@ namespace Bookshop.Application.Exceptions
         {
             if (newValidationErrorStr != null)
             {
-                return new ErrorResponse(Message, newValidationErrorStr);
+                return new(Message, newValidationErrorStr);
             }
-            return new ErrorResponse(Message, ValidationErrors);
+            return new(Message, ValidationErrors);
         }
     }
 }

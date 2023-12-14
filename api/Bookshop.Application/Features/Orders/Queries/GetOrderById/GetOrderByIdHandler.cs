@@ -1,26 +1,26 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Query;
 using Bookshop.Application.Exceptions;
-using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using static Bookshop.Domain.Entities.Order;
 
-namespace Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDetails
+namespace Bookshop.Application.Features.Orders.Queries.GetOrderById
 {
-    public class GetShoppingCartDetailsHandler : IQueryHandler<GetShoppingCartDetails, GetShoppingCartDetailsResponse>
+    public class GetOrderByIdHandler : IQueryHandler<GetOrderById, GetOrderByIdResponse>
     {
         private readonly BookshopDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetShoppingCartDetailsHandler(BookshopDbContext dbContext, IMapper mapper)
+        public GetOrderByIdHandler(BookshopDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
 
-        public async Task<GetShoppingCartDetailsResponse> Handle(GetShoppingCartDetails request, CancellationToken cancellationToken)
+        public async Task<GetOrderByIdResponse> Handle(GetOrderById request, CancellationToken cancellationToken)
         {
-            var shoppingCartDetails = await _dbContext.ShoppingCarts
+            var order = await _dbContext.Orders
                                                .Include(x => x.Customer)
                                                    .ThenInclude(x => x.ShippingAddress)
                                                        .ThenInclude(x => x.LocationPricing)
@@ -30,19 +30,18 @@ namespace Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDet
                                                .Include(x => x.LineItems)
                                                    .ThenInclude(x => x.Book)
                                                        .ThenInclude(x => x.Category)
-                                               .Where(x => x.Customer.IdentityUserDataId == request.UserId)
-                                               .Select(x => _mapper.Map<GetShoppingCartDetailsResponseDto>(x))
+                                               .Where(x => x.Customer.IdentityUserDataId == request.UserId &&
+                                                           x.Id == request.Id &&
+                                                           x.StatusOrder != Status.Cancelled)
+                                               .Select(x => _mapper.Map<OrderResponseDto>(x))
                                                .FirstOrDefaultAsync(cancellationToken);
-            shoppingCartDetails.Total = Math.Round(shoppingCartDetails.SubTotal +
-                                        ((shoppingCartDetails.SubTotal / 100) * shoppingCartDetails.VatRate) +
-                                        shoppingCartDetails.ShippingFee, 2);
-            if (shoppingCartDetails == null)
+            if (order == null)
             {
-                throw new NotFoundException($"No {nameof(ShoppingCart)} is found for current user");
+                throw new NotFoundException($"Order : {request.Id} is not found for current user");
             }
             return new()
             {
-                ShoppingCartDetails = shoppingCartDetails
+                Order = order
             };
         }
     }

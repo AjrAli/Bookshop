@@ -34,7 +34,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCart
             {
                 throw new NotFoundException($"No {nameof(ShoppingCart)} is found for current user");
             }
-            return new GetShoppingCartResponse
+            return new()
             {
                 ShoppingCart = shoppingCart
             };

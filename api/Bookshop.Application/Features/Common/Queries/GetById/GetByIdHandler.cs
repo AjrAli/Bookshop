@@ -31,7 +31,7 @@ namespace Bookshop.Application.Features.Common.Queries.GetById
 
             var dto = _mapper.Map<T>(entity);
 
-            return new GetByIdResponse<T>
+            return new()
             {
                 Dto = dto
             };

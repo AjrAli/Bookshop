@@ -10,7 +10,7 @@ namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
     //[Authorize]
-    [Route("[controller]")]
+    [Route("customer")]
     public class CustomerQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -51,7 +51,7 @@ namespace Bookshop.Api.Controllers.Queries
         }
         private Dictionary<Expression<Func<Customer, object>>, List<Expression<Func<object, object>>>> BuildCustomerQueryConfiguration()
         {
-            return new Dictionary<Expression<Func<Customer, object>>, List<Expression<Func<object, object>>>>
+            return new()
             {
                 { x => x.ShippingAddress, null },
                 { x => x.BillingAddress, null },

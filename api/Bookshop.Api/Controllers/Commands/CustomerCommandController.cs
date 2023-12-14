@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("customer")]
     public class CustomerCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -34,7 +34,7 @@ namespace Bookshop.Api.Controllers.Commands
             return Ok(dataCommandReponse);
         }
         [Authorize]
-        [HttpPost("edit-customer")]
+        [HttpPost("edit-user-customer")]
         public async Task<IActionResult> EditCustomer([FromBody] EditCustomerDto customerDto)
         {
             customerDto.UserId = _loggedInUserService?.GetUserId();

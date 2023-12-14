@@ -50,7 +50,7 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
                                                .Where(x => x.IdentityUserDataId == user.Id)
                                                .Select(x => _mapper.Map<CustomerResponseDto>(x))
                                                .FirstOrDefaultAsync();
-            return new AuthenticateResponse
+            return new()
             {
                 Message = $"User {request?.Username} successfully connected",
                 Customer = customer,

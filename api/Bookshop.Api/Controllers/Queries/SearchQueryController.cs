@@ -1,13 +1,11 @@
 ﻿using Bookshop.Application.Features.Search.Queries.GetSearchResults;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
-    //[Authorize]
-    [Route("[controller]")]
+    [Route("search")]
     public class SearchQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -19,7 +17,7 @@ namespace Bookshop.Api.Controllers.Queries
             _logger = logger;
         }
 
-        [HttpGet("{keyword}")]
+        [HttpGet("book/{keyword}")]
         public async Task<IActionResult> GetSearchResults(string keyword)
         {
             var dataReponse = await _mediator.Send(new GetSearchResults

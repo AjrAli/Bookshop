@@ -30,9 +30,8 @@ namespace Bookshop.Application.Features.Common.Queries.GetAll
                 query.ApplyIncludesAndThenIncludes(request.NavigationPropertyConfigurations) : query;
             var listDto = _mapper.Map<List<T>>(await query.ToListAsync(cancellationToken: cancellationToken));
 
-            return new GetAllResponse<T>
+            return new()
             {
-                Count = count,
                 ListDto = listDto
             };
         }

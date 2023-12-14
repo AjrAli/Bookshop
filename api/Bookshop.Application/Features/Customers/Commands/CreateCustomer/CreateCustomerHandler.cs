@@ -66,7 +66,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 
         private async Task<Customer> CreateNewCustomerFromDto(CustomerRequestDto customerDto)
         {
-            
+
             var shippingAddress = new Address(
                 customerDto?.ShippingAddress.Street,
                 customerDto?.ShippingAddress.City,
@@ -86,7 +86,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
                 customerDto?.BillingAddress.State
             );
 
-            return new Customer(
+            return new(
                 customerDto.FirstName,
                 customerDto.LastName,
                 shippingAddress,

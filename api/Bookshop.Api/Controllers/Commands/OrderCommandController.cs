@@ -9,7 +9,7 @@ namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+    [Route("order")]
     public class OrderCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -24,7 +24,7 @@ namespace Bookshop.Api.Controllers.Commands
             _loggedInUserService = loggedInUserService;
         }
 
-        [HttpPost("create-order")]
+        [HttpPost("create-user-order")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderRequestDto orderDto)
         {
             orderDto.UserId = _loggedInUserService?.GetUserId();

@@ -13,7 +13,7 @@ namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
     //[Authorize]
-    [Route("[controller]")]
+    [Route("shopcart")]
     public class ShoppingCartQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -50,7 +50,7 @@ namespace Bookshop.Api.Controllers.Queries
             return Ok(dataReponse);
         }
         [Authorize]
-        [HttpGet("get-shoppingcart")]
+        [HttpGet("get-user-shopcart")]
         public async Task<IActionResult> GetShoppingCart()
         {
             var dataReponse = await _mediator.Send(new GetShoppingCart
@@ -60,7 +60,7 @@ namespace Bookshop.Api.Controllers.Queries
             return Ok(dataReponse);
         }
         [Authorize]
-        [HttpGet("get-shoppingcart-details")]
+        [HttpGet("get-user-shopcart-details-review")]
         public async Task<IActionResult> GetShoppingCartDetails()
         {
             var dataReponse = await _mediator.Send(new GetShoppingCartDetails
@@ -71,7 +71,7 @@ namespace Bookshop.Api.Controllers.Queries
         }
         private Dictionary<Expression<Func<ShoppingCart, object>>, List<Expression<Func<object, object>>>> BuildShoppingCartQueryConfiguration()
         {
-            return new Dictionary<Expression<Func<ShoppingCart, object>>, List<Expression<Func<object, object>>>>
+            return new()
             {
                 { x => x.LineItems, new List<Expression<Func<object, object>>>
                     {
