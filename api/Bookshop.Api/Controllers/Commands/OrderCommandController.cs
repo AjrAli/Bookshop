@@ -1,4 +1,5 @@
 ﻿using Bookshop.Application.Features.Orders;
+using Bookshop.Application.Features.Orders.Commands.CancelOrder;
 using Bookshop.Application.Features.Orders.Commands.CreateOrder;
 using Bookshop.Persistence.Contracts;
 using MediatR;
@@ -32,6 +33,17 @@ namespace Bookshop.Api.Controllers.Commands
             {
                 Order = orderDto
             });
+            return Ok(dataCommandReponse);
+        }
+        [HttpPost("cancel-user-order/{id}")]
+        public async Task<IActionResult> CancelOrder(long? id)
+        {
+            var dataCommandReponse = await _mediator.Send(new CancelOrder
+            {
+                UserId = _loggedInUserService?.GetUserId(),
+                Id = id
+            });
+
             return Ok(dataCommandReponse);
         }
     }
