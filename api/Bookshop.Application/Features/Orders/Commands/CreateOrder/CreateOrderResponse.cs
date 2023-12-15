@@ -2,7 +2,7 @@
 
 namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
 {
-    public class CreateOrderResponse : BaseResponse
+    public class CreateOrderResponse : CommandResponse
     {
         public CreateOrderResponse() : base()
         {

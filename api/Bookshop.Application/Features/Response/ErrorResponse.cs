@@ -7,18 +7,5 @@
             : base(message, success: false)
         {
         }
-        public ErrorResponse(string message, string validationError)
-            : base(message, success: false)
-        {
-            ValidationErrors = new List<string>
-            {
-                validationError
-            };
-        }
-        public ErrorResponse(string message, IList<string>? validationErrors)
-            : base(message, success: false)
-        {
-            ValidationErrors = validationErrors;
-        }
     }
 }

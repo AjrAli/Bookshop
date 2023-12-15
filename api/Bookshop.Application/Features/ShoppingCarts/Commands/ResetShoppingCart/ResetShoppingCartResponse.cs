@@ -2,7 +2,7 @@
 
 namespace Bookshop.Application.Features.ShoppingCarts.Commands.ResetShoppingCart
 {
-    public class ResetShoppingCartResponse : BaseResponse
+    public class ResetShoppingCartResponse : CommandResponse
     {
 
         public ResetShoppingCartResponse() : base()

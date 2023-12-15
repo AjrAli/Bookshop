@@ -2,7 +2,7 @@
 
 namespace Bookshop.Application.Features.ShoppingCarts.Commands.CreateShoppingCart
 {
-    public class CreateShoppingCartResponse : BaseResponse
+    public class CreateShoppingCartResponse : CommandResponse
     {
         public CreateShoppingCartResponse() : base()
         {

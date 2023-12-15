@@ -2,7 +2,7 @@
 
 namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 {
-    public class CreateCustomerResponse : BaseResponse
+    public class CreateCustomerResponse : CommandResponse
     {
         public CreateCustomerResponse() : base()
         {

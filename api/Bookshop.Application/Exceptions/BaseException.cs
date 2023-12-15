@@ -5,15 +5,10 @@ namespace Bookshop.Application.Exceptions
 {
     public abstract class BaseException : Exception
     {
-        private readonly IList<string>? _validationErrors;
-        protected IList<string>? ValidationErrors { get { return _validationErrors; } }
         protected BaseException(string message) : base(message)
         {
         }
-        protected BaseException(string message, IList<string> validationErrors) : base(message)
-        {
-            _validationErrors = validationErrors;
-        }
+
         protected BaseException(string message, Exception innerException)
             : base(message, innerException)
         {
@@ -21,15 +16,14 @@ namespace Bookshop.Application.Exceptions
         protected BaseException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            _validationErrors = info.GetValue("ValidationErrors", typeof(IList<string>)) as IList<string>;
         }
         public ErrorResponse CreateErrorResponse(string? newValidationErrorStr = null)
         {
             if (newValidationErrorStr != null)
             {
-                return new(Message, newValidationErrorStr);
+                return new(newValidationErrorStr);
             }
-            return new(Message, ValidationErrors);
+            return new(Message);
         }
     }
 }

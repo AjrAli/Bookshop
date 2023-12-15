@@ -1,5 +1,5 @@
 ﻿using Bookshop.Application.Contracts.MediatR.Command;
-using Bookshop.Application.Features.Response;
+using Bookshop.Application.Features.Response.Contracts;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -25,9 +25,8 @@ namespace Bookshop.Application.Features.PipelineBehaviours
             var failures = validationResults?.SelectMany(r => r.Errors)?.Where(f => f != null)?.ToList();
             if (failures is not { Count: > 0 }) return await next();
             var realResponseType = typeof(TResponse);
-            if (Activator.CreateInstance(realResponseType) is not IBaseResponse errorResponse)
+            if (Activator.CreateInstance(realResponseType) is not ICommandResponse errorResponse)
                 return await next();
-            errorResponse.Success = false;
             errorResponse.ValidationErrors = new List<string>();
             foreach (var error in failures)
             {

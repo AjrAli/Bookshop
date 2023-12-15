@@ -2,7 +2,7 @@
 
 namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
 {
-    public class EditCustomerResponse : BaseResponse
+    public class EditCustomerResponse : CommandResponse
     {
         public EditCustomerResponse() : base()
         {

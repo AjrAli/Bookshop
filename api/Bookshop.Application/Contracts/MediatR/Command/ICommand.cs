@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Bookshop.Application.Features.Response.Contracts;
+using MediatR;
 
 namespace Bookshop.Application.Contracts.MediatR.Command;
 

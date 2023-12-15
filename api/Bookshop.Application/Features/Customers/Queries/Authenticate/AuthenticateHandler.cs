@@ -43,7 +43,7 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
             var result = await _userManager.CheckPasswordAsync(user, request?.Password);
             if (!result)
             {
-                throw new ValidationException($"Credentials for '{request?.Username} aren't valid'.");
+                throw new BadRequestException($"Credentials for '{request?.Username} aren't valid'.");
             }
             var jwtSecurityToken = await JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
             var customer = await _dbContext.Customers.Include(x => x.IdentityData)

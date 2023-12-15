@@ -2,6 +2,7 @@
 using Bookshop.Application.Features.Common.Queries.GetById;
 using Bookshop.Application.Features.PipelineBehaviours;
 using Bookshop.Application.Features.Response;
+using Bookshop.Application.Features.Response.Contracts;
 using Bookshop.Application.Features.Service;
 using Bookshop.Domain.Entities;
 using FluentValidation;

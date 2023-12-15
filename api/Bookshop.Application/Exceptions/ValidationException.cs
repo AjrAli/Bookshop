@@ -1,51 +1,45 @@
-﻿using FluentValidation.Results;
-using System.Runtime.Serialization;
+﻿using Bookshop.Application.Features.Response;
 
 namespace Bookshop.Application.Exceptions
 {
-    [Serializable]
     public class ValidationException : BaseException
     {
-
         private readonly IList<string>? _validationErrors;
-
-        public ValidationException(ValidationResult validationResult) : base("Error fields validation!")
-        {
-            _validationErrors = new List<string>();
-
-            foreach (var validationError in validationResult.Errors)
-            {
-                _validationErrors.Add(validationError.ErrorMessage);
-            }
-        }
-
-
-        public ValidationException(string message)
-            : base(message)
-        {
-        }
-
-        public ValidationException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        public ValidationException(string message, IList<string> validationErrors)
-            : base(message)
-        {
-            this._validationErrors = validationErrors;
-        }
-
-        public ValidationException(string message, IList<string> validationErrors, Exception innerException)
-            : base(message, innerException)
+        public IList<string>? ValidationErrors { get { return _validationErrors; } }
+        public ValidationException(string message, IList<string> validationErrors) : base(message)
         {
             _validationErrors = validationErrors;
         }
-        protected ValidationException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
+
+        public ValidationException(string message) : base(message)
         {
-            _validationErrors = info.GetValue("ValidationErrors", typeof(IList<string>)) as IList<string>;
         }
 
+        public ValidationErrorResponse CreateValidationErrorResponse(string? newValidationErrorStr = null)
+        {
+            if (newValidationErrorStr != null)
+            {
+                return new(Message, newValidationErrorStr);
+            }
+            return new(Message, ValidationErrors);
+        }
+    }
+    public class ValidationErrorResponse : ErrorResponse
+    {
+        public IList<string>? ValidationErrors { get; set; }
+        public ValidationErrorResponse(string message) : base(message)
+        {
+        }
+        public ValidationErrorResponse(string message, IList<string>? validationErrors) : base(message)
+        {
+            ValidationErrors = validationErrors;
+        }
+        public ValidationErrorResponse(string message, string validationError) : base(message)
+        {
+            ValidationErrors = new List<string>
+            {
+                validationError
+            };
+        }
     }
 }

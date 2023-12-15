@@ -2,7 +2,7 @@
 
 namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCart
 {
-    public class UpdateShoppingCartResponse : BaseResponse
+    public class UpdateShoppingCartResponse : CommandResponse
     {
         public UpdateShoppingCartResponse() : base()
         {

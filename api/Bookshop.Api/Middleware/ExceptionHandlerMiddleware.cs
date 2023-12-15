@@ -1,5 +1,6 @@
 ﻿using Bookshop.Application.Exceptions;
 using Bookshop.Application.Features.Response;
+using Bookshop.Application.Features.Response.Contracts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net;
@@ -42,7 +43,7 @@ namespace Bookshop.Api.Middleware
             {
                 case ValidationException validationException:
                     httpStatusCode = HttpStatusCode.BadRequest;
-                    result = validationException.CreateErrorResponse();
+                    result = validationException.CreateValidationErrorResponse();
                     break;
                 case BadRequestException badRequestException:
                     httpStatusCode = HttpStatusCode.BadRequest;

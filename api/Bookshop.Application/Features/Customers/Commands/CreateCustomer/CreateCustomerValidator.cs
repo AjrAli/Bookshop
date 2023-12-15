@@ -1,6 +1,4 @@
-﻿using Bookshop.Domain.Entities;
-using FluentValidation;
-using FluentValidation.Validators;
+﻿using FluentValidation;
 
 namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 {
