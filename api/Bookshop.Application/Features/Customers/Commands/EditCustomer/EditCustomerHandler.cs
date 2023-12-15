@@ -33,7 +33,6 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
 
         public async Task<EditCustomerResponse> Handle(EditCustomer request, CancellationToken cancellationToken)
         {
-            await ValidateRequest(request);
             var editedCustomer = await EditCustomerFromDto(request.Customer);
             await ChangeUserPassword(editedCustomer, request.Customer?.Password, request.Customer?.NewPassword);
             EditCustomerInDatabase(editedCustomer);
@@ -59,11 +58,6 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
         {
             _dbContext.Customers.Update(customer);
         }
-        public Task ValidateRequest(EditCustomer request)
-        {
-            _ = request.Customer ?? throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
-            return Task.CompletedTask;
-        }
         private async Task<Customer> EditCustomerFromDto(EditCustomerDto customerDto)
         {
             var customerExisting = await _dbContext.Customers
@@ -87,5 +81,9 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
                 UserCreationExceptionHelper.ThrowUserCreationBadRequestException(result.Errors, customer?.IdentityData.UserName);
         }
 
+        public Task ValidateRequest(EditCustomer request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

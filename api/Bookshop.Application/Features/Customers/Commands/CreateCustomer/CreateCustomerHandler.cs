@@ -34,7 +34,6 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 
         public async Task<CreateCustomerResponse> Handle(CreateCustomer request, CancellationToken cancellationToken)
         {
-            await ValidateRequest(request);
             var newCustomer = await CreateNewCustomerFromDto(request.Customer);
             await CreateUserAndRole(newCustomer, request.Customer?.Password);
             var user = await _userManager.FindByNameAsync(newCustomer?.IdentityData.UserName);
@@ -57,11 +56,6 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
         {
             await _dbContext.Customers.AddAsync(customer, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-        public Task ValidateRequest(CreateCustomer request)
-        {
-            _ = request.Customer ?? throw new ValidationException($"{nameof(request.Customer)}, Customer information is required");
-            return Task.CompletedTask;
         }
 
         private async Task<Customer> CreateNewCustomerFromDto(CustomerRequestDto customerDto)
@@ -115,5 +109,9 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
                 UserCreationExceptionHelper.ThrowUserCreationBadRequestException(resultRole.Errors, customer?.IdentityData.UserName);
         }
 
+        public Task ValidateRequest(CreateCustomer request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
