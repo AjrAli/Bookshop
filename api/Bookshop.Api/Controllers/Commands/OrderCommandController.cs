@@ -1,6 +1,7 @@
 ﻿using Bookshop.Application.Features.Orders;
 using Bookshop.Application.Features.Orders.Commands.CancelOrder;
 using Bookshop.Application.Features.Orders.Commands.CreateOrder;
+using Bookshop.Application.Features.Orders.Commands.UpdateOrder;
 using Bookshop.Persistence.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -35,8 +36,8 @@ namespace Bookshop.Api.Controllers.Commands
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("cancel-user-order/{id}")]
-        public async Task<IActionResult> CancelOrder(long? id)
+        [HttpPost("cancel-user-order")]
+        public async Task<IActionResult> CancelOrder([FromBody] long? id)
         {
             var dataCommandReponse = await _mediator.Send(new CancelOrder
             {
@@ -44,6 +45,16 @@ namespace Bookshop.Api.Controllers.Commands
                 Id = id
             });
 
+            return Ok(dataCommandReponse);
+        }
+        [HttpPost("update-user-order")]
+        public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderRequestDto orderDto)
+        {
+            orderDto.UserId = _loggedInUserService?.GetUserId();
+            var dataCommandReponse = await _mediator.Send(new UpdateOrder
+            {
+                Order = orderDto
+            });
             return Ok(dataCommandReponse);
         }
     }

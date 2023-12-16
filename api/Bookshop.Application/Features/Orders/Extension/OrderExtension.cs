@@ -7,8 +7,11 @@ namespace Bookshop.Application.Features.Orders.Extension
 {
     public static class OrderExtension
     {
-        public static async Task<OrderResponseDto?> ToMappedOrderDto(this Order order, BookshopDbContext context, IMapper mapper, CancellationToken cancellationToken)
+        public static async Task<OrderResponseDto?> ToMappedOrderDto(this Order? order, BookshopDbContext context, IMapper mapper, CancellationToken cancellationToken)
         {
+            if (order == null)
+                return null;
+
             var orderDto = await context.Orders
                                    .Include(x => x.Customer)
                                        .ThenInclude(x => x.ShippingAddress)

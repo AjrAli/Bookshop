@@ -6,7 +6,7 @@ namespace Bookshop.Application.Features.Orders.Commands.CancelOrder
     {
         public CancelOrderValidation()
         {
-            //ShopItem for ShoppingCart
+            //Order id
             RuleFor(x => x.Id)
                 .NotEmpty()
                 .WithMessage("Order empty")

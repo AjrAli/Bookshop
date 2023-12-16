@@ -22,13 +22,13 @@ namespace Bookshop.Application.Features.Orders.Commands.CancelOrder
 
         public async Task<CancelOrderResponse> Handle(CancelOrder request, CancellationToken cancellationToken)
         {
-            await ValidateRequest(request);
             var orderToCancel = await _dbContext.Orders
                                                 .Include(x => x.Customer)
                                                 .Include(x => x.LineItems)
                                                     .ThenInclude(x => x.Book)
                                                 .FirstOrDefaultAsync(x => x.Customer.IdentityUserDataId == request.UserId &&
-                                                                          x.Id == request.Id, cancellationToken);
+                                                                          x.Id == request.Id &&
+                                                                          x.StatusOrder == Status.Pending, cancellationToken);
             if (orderToCancel == null)
             {
                 throw new NotFoundException($"{nameof(Order)} {request.Id} is not found for current user");
@@ -45,11 +45,7 @@ namespace Bookshop.Application.Features.Orders.Commands.CancelOrder
 
         public Task ValidateRequest(CancelOrder request)
         {
-            if (request.Id == null)
-            {
-                throw new ValidationException($"Order id is required.");
-            }
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
     }
 }

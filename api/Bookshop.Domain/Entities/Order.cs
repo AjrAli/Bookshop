@@ -47,6 +47,8 @@ namespace Bookshop.Domain.Entities
                     _total = Math.Round((decimal)total, 2);
                 }
             }
+            else
+                _total = 0;
             return _total;
         }
         public enum CreditCards

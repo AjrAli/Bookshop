@@ -7,7 +7,7 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
     {
         public CreateOrderValidation()
         {
-            //ShopItem for ShoppingCart
+            //Order CreditCards validation
             RuleFor(x => x.Order.MethodOfPayment)
                 .NotEmpty()
                 .WithMessage("{PropertyName} is required.")
