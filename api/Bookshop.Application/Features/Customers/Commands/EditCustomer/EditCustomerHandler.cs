@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
-using Bookshop.Application.Exceptions;
 using Bookshop.Application.Features.Common.Helpers;
 using Bookshop.Application.Features.Customers.Helpers;
 using Bookshop.Application.Settings;
