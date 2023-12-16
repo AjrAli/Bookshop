@@ -1,5 +1,6 @@
 ﻿using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
+using Bookshop.Application.Features.ShoppingCarts;
 using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCart;
 using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDetails;
 using Bookshop.Domain.Entities;
@@ -35,7 +36,8 @@ namespace Bookshop.Api.Controllers.Queries
             var dataReponse = await _mediator.Send(new GetById<ShoppingCart>
             {
                 Id = id,
-                NavigationPropertyConfigurations = queryConfig
+                NavigationPropertyConfigurations = queryConfig,
+                DtoType = typeof(ShoppingCartResponseDto)
             });
             return Ok(dataReponse);
         }
@@ -45,7 +47,8 @@ namespace Bookshop.Api.Controllers.Queries
             var queryConfig = BuildShoppingCartQueryConfiguration();
             var dataReponse = await _mediator.Send(new GetAll<ShoppingCart>
             {
-                NavigationPropertyConfigurations = queryConfig
+                NavigationPropertyConfigurations = queryConfig,
+                DtoType = typeof(ShoppingCartResponseDto)
             });
             return Ok(dataReponse);
         }
@@ -75,7 +78,14 @@ namespace Bookshop.Api.Controllers.Queries
             {
                 { x => x.LineItems, new List<Expression<Func<object, object>>>
                     {
-                        y => (y as LineItem).Book
+                        y => (y as LineItem).Book,                                      
+                        w => (w as Book).Author                 
+                    }
+                },
+                { x => x.LineItems, new List<Expression<Func<object, object>>>
+                    {
+                        y => (y as LineItem).Book,
+                        w => (w as Book).Category
                     }
                 },
                 { x => x.Customer, null }

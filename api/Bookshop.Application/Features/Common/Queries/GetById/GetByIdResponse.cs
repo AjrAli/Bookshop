@@ -2,9 +2,9 @@
 
 namespace Bookshop.Application.Features.Common.Queries.GetById
 {
-    public class GetByIdResponse<T> : BaseResponse where T : class
+    public class GetByIdResponse : BaseResponse
     {
-        public T? Dto { get; set; }
+        public object? Dto { get; set; }
         public GetByIdResponse() : base()
         {
 

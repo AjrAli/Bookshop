@@ -33,7 +33,7 @@ namespace Bookshop.Application.Features.Orders.Commands.CreateOrder
             shoppingCart.RemoveShoppingCartReferencesWithLineItems(_dbContext);
             await StoreOrderInDatabase(request, newOrder, cancellationToken);
             var isSaveChangesAsync = await SaveChangesAsync(cancellationToken);
-            var orderCreated = await newOrder.ToMappedOrderDto(_dbContext, _mapper, cancellationToken);
+            var orderCreated = await newOrder.LastSavedToMappedOrderDto(_dbContext, _mapper, cancellationToken);
             return new()
             {
                 Order = orderCreated,

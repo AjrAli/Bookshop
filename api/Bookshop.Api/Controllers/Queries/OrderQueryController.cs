@@ -1,5 +1,6 @@
 ﻿using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
+using Bookshop.Application.Features.Orders;
 using Bookshop.Application.Features.Orders.Queries.GetOrderById;
 using Bookshop.Application.Features.Orders.Queries.GetOrders;
 using Bookshop.Domain.Entities;
@@ -35,7 +36,8 @@ namespace Bookshop.Api.Controllers.Queries
             var dataReponse = await _mediator.Send(new GetById<Order>
             {
                 Id = id,
-                NavigationPropertyConfigurations = queryConfig
+                NavigationPropertyConfigurations = queryConfig,
+                DtoType = typeof(OrderResponseDto)
             });
             return Ok(dataReponse);
         }
@@ -45,7 +47,8 @@ namespace Bookshop.Api.Controllers.Queries
             var queryConfig = BuildOrderQueryConfiguration();
             var dataReponse = await _mediator.Send(new GetAll<Order>
             {
-                NavigationPropertyConfigurations = queryConfig
+                NavigationPropertyConfigurations = queryConfig,
+                DtoType = typeof(OrderResponseDto)
             });
             return Ok(dataReponse);
         }
@@ -76,10 +79,22 @@ namespace Bookshop.Api.Controllers.Queries
             {
                 { x => x.LineItems, new List<Expression<Func<object, object>>>
                     {
-                        y => (y as LineItem).Book
+                        y => (y as LineItem).Book,
+                        z => (z as Book).Author
                     }
                 },
-                { x => x.Customer, null }
+                { x => x.LineItems, new List<Expression<Func<object, object>>>
+                    {
+                        y => (y as LineItem).Book,
+                        z => (z as Book).Category
+                    }
+                },
+                { x => x.Customer, new List<Expression<Func<object, object>>>
+                    {
+                        y => (y as Customer).ShippingAddress,
+                        z => (z as Address).LocationPricing
+                    } 
+                }
             };
         }
     }

@@ -26,7 +26,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Commands.UpdateShoppingCar
             var updatedShoppingCart = await UpdateShoppingCartFromDto(request.ShoppingCart, cancellationToken);
             UpdateShoppingCartInDatabase(request.ShoppingCart, updatedShoppingCart);
             var isSaveChangesAsync = await SaveChangesAsync(request, cancellationToken);
-            var shoppingCartUpdated = await updatedShoppingCart.ToMappedShoppingCartDto(_dbContext, _mapper, cancellationToken);
+            var shoppingCartUpdated = await updatedShoppingCart.LastSavedToMappedShoppingCartDto(_dbContext, _mapper, cancellationToken);
             return new()
             {
                 ShoppingCart = shoppingCartUpdated,

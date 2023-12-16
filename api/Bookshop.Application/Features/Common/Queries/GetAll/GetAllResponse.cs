@@ -2,9 +2,9 @@
 
 namespace Bookshop.Application.Features.Common.Queries.GetAll
 {
-    public class GetAllResponse<T> : BaseResponse where T : class
+    public class GetAllResponse : BaseResponse
     {
-        public List<T>? ListDto { get; set; }
+        public List<object>? ListDto { get; set; }
         public GetAllResponse() : base()
         {
 

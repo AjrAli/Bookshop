@@ -22,7 +22,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Extension
 
             return quantityMismatchMessages.Any() ? string.Join(", ", quantityMismatchMessages) : null;
         }
-        public static async Task<ShoppingCartResponseDto?> ToMappedShoppingCartDto(this ShoppingCart shoppingCart, BookshopDbContext context, IMapper mapper, CancellationToken cancellationToken)
+        public static async Task<ShoppingCartResponseDto?> LastSavedToMappedShoppingCartDto(this ShoppingCart shoppingCart, BookshopDbContext context, IMapper mapper, CancellationToken cancellationToken)
         {
             return await context.ShoppingCarts
                 .Include(x => x.LineItems)

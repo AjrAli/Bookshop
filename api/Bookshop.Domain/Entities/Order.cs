@@ -10,7 +10,7 @@ namespace Bookshop.Domain.Entities
         {
             get
             {
-                return CalculateTotalOrder();
+                return (_total != 0) ? _total : CalculateTotalOrder();
             }
             set
             {

@@ -42,7 +42,7 @@ namespace Bookshop.Application.Features.Orders.Commands.UpdateOrder
                 orderToUpdate = null;
             }
             await _dbContext.SaveChangesAsync();
-            var orderUpdatedDto = await orderToUpdate.ToMappedOrderDto(_dbContext, _mapper, cancellationToken);
+            var orderUpdatedDto = await orderToUpdate.LastSavedToMappedOrderDto(_dbContext, _mapper, cancellationToken);
             return new()
             {
                 Success = true,
