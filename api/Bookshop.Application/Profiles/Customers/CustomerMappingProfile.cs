@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Features.Customers;
 using Bookshop.Application.Features.Customers.Commands.EditCustomer;
+using Bookshop.Application.Features.Orders;
+using Bookshop.Application.Features.ShoppingCarts;
 using Bookshop.Domain.Entities;
 
 namespace Bookshop.Application.Profiles.Customers

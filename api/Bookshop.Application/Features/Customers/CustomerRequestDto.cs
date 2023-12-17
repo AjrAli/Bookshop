@@ -1,4 +1,6 @@
-﻿namespace Bookshop.Application.Features.Customers
+﻿using System.Text.Json.Serialization;
+
+namespace Bookshop.Application.Features.Customers
 {
     public class CustomerRequestDto
     {
@@ -13,6 +15,7 @@
         public AddressDto? BillingAddress { get; set; }
         public string? Email { get; set; }
         public bool EmailConfirmed { get; set; }
+        [JsonIgnore]
         public string? UserId { get; set; }
     }
 }

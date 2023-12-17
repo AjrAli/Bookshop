@@ -9,7 +9,7 @@ namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
     //[Authorize]
-    [Route("category")]
+    [Route("api/category")]
     public class CategoryQueryController : ControllerBase
     {
         private readonly IMediator _mediator;

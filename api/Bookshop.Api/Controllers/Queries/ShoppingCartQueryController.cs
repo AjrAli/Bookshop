@@ -14,7 +14,7 @@ namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
     //[Authorize]
-    [Route("shopcart")]
+    [Route("api/shopcart")]
     public class ShoppingCartQueryController : ControllerBase
     {
         private readonly IMediator _mediator;

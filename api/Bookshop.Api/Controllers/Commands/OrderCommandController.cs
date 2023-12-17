@@ -11,7 +11,7 @@ namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
     [Authorize]
-    [Route("order")]
+    [Route("api/order")]
     public class OrderCommandController : ControllerBase
     {
         private readonly IMediator _mediator;

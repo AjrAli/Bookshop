@@ -1,4 +1,6 @@
-﻿namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
+﻿using System.Text.Json.Serialization;
+
+namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
 {
     public class EditCustomerDto
     {
@@ -12,6 +14,7 @@
         public AddressDto? ShippingAddress { get; set; }
         public long? BillingAddressId { get; set; }
         public AddressDto? BillingAddress { get; set; }
+        [JsonIgnore]
         public string? UserId { get; set; }
     }
 }

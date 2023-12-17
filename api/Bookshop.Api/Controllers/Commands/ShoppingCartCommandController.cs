@@ -11,7 +11,7 @@ namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
     [Authorize]
-    [Route("shopcart")]
+    [Route("api/shopcart")]
     public class ShoppingCartCommandController : ControllerBase
     {
         private readonly IMediator _mediator;

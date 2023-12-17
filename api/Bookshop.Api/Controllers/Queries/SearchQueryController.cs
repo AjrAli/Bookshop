@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
-    [Route("search")]
+    [Route("api/search")]
     public class SearchQueryController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -9,19 +9,6 @@ namespace Bookshop.Application.Profiles.Orders
     {
         public OrderMappingProfile()
         {
-            // LineItem Response profile
-            CreateMap<LineItem, ShopItemResponseDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.BookId, opt => opt.MapFrom(source => source.BookId))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(source => source.Quantity))
-                .ForMember(dest => dest.Price, opt => opt.MapFrom(source => source.Price))
-                .ForPath(dest => dest.Title, opt => opt.MapFrom(source => source.Book.Title))
-                .ForPath(dest => dest.AuthorName, opt => opt.MapFrom(source => source.Book.Author.Name))
-                .ForPath(dest => dest.CategoryTitle, opt => opt.MapFrom(source => source.Book.Category.Title));
-            CreateMap<ShopItemResponseDto, LineItem>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.BookId, opt => opt.MapFrom(source => source.BookId))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(source => source.Quantity));
             // Order profile
             CreateMap<Order, OrderResponseDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))

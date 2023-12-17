@@ -46,7 +46,16 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
                 throw new BadRequestException($"Credentials for '{request?.Username} aren't valid'.");
             }
             var jwtSecurityToken = await JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
-            var customer = await _dbContext.Customers.Include(x => x.IdentityData)
+            var customer = await _dbContext.Customers
+                                               .Include(x => x.IdentityData)
+                                               .Include(x => x.ShoppingCart)
+                                                   .ThenInclude(x => x.LineItems)
+                                                       .ThenInclude(x => x.Book)
+                                                            .ThenInclude(x => x.Author)
+                                               .Include(x => x.ShoppingCart)
+                                                   .ThenInclude(x => x.LineItems)
+                                                       .ThenInclude(x => x.Book)
+                                                            .ThenInclude(x => x.Category)
                                                .Where(x => x.IdentityUserDataId == user.Id)
                                                .Select(x => _mapper.Map<CustomerResponseDto>(x))
                                                .FirstOrDefaultAsync();

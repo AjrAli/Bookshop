@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
-    [Route("customer")]
+    [Route("api/customer")]
     public class CustomerCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
