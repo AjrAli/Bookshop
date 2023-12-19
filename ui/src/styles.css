@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+.teal{
+    color: var(--teal-300);
+}
+
+.bg-teal{
+    background-color: var(--teal-50);
+}
+.bg-teal-dark{
+    background-color: var(--primary-500);
+}
+.bg-teal-dark a{
+    color:white;
+}
+.bg-teal-dark a:hover{
+    color: black;
+}

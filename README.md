@@ -1,1 +1,1 @@
-Bookshop app using .Net 6 & Angular 15
+Bookshop app using .Net 6 & Angular 17
