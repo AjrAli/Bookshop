@@ -1,17 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
-.teal{
-    color: var(--teal-300);
+.p-menuitem-text, .p-menuitem-icon{
+    color: rgb(250, 245, 245);
+    padding: 0.3em;
+    text-decoration: none;
 }
-
-.bg-teal{
-    background-color: var(--teal-50);
+.p-menubar{
+    padding: 0px;
 }
-.bg-teal-dark{
-    background-color: var(--primary-500);
+.p-menubar .p-menubar-root-list > .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover{
+    background-color: var(--primary-700);
 }
-.bg-teal-dark a{
-    color:white;
+.p-menuitem:hover{
+    background-color: var(--primary-700);
 }
-.bg-teal-dark a:hover{
-    color: black;
+a {
+    text-decoration: none;
+}
+.p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content{
+    background-color: var(--primary-700);
 }

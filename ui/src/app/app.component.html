@@ -1,4 +1,4 @@
-<div class="container-fluid bg-teal text-dark py-1 mb-5 border-bottom">
+<div class="container-fluid bg-teal-50 text-dark py-1 mt-0 mb-5 border-bottom">
     <div class="container">
         <div class="row">
             <div class="col-md-10 d-flex">
@@ -14,23 +14,23 @@
 <div class="container-fluid bg-light bg-opacity-10 py-5">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 d-flex">
-                <i class="pi pi-book teal fst-italic" style="font-size: 3.5rem"></i>
-                <h1 class="teal opacity-75 fst-italic">The Bookshop</h1>
+            <div class="col-md-4 d-flex align-items-center">
+                <i class="pi pi-book text-teal-500 fst-italic" style="font-size: 3.5rem"></i>
+                <h1 class="text-teal-500 opacity-75 fst-italic" style="font-size: 2.2rem;">The Bookshop</h1>                
             </div>
-            <div class="col-md-6 d-flex">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search by title, author, keyword or ISBN">
+            <div class="col-md-5 d-flex align-items-center">
+                <p-inputGroup>
+                    <input type="text" pInputText placeholder="Search by title, author, keyword or ISBN" />
                     <button type="button" pButton icon="pi pi-search" label="Search"></button>
-                </div>
+                </p-inputGroup>
             </div>
-            <div class="col-md-2 d-flex">
+            <div class="col-md-3 d-flex align-items-center">
                 <div class="row text-end">
                     <div class="col-md-8">
-                        <h6 class="teal fw-bold">Shopping cart</h6>
-                        <h6>2 Product(s)</h6>
+                        <h4 class="text-teal-500 fw-bold mt-0 mb-0">Shopping cart</h4>
+                        <p class="mt-0 mb-0">2 Product(s)</p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 d-flex align-items-center">
                         <p-button icon="pi pi-gift" severity="help"></p-button>
                     </div>
                 </div>
@@ -39,70 +39,100 @@
     </div>
 </div>
 
-<nav class="navbar navbar-expand-lg bg-teal-dark mb-3 border-bottom">
-    <div class="container fluid">
-        <div class="row ">
-            <div class="col-md-12 d-flex">
-                <ul class="navbar-nav ">
-                    <li class="nav-item">
-                      <a class="nav-link " href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
-                      </li>
-                </ul>
-            
+
+<div class="container-fluid bg-teal-500 mb-3 border-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p-menubar styleClass="bg-teal-500 text-teal-500 border-teal-500" [model]="items">
+                </p-menubar>
             </div>
         </div>
     </div>
-</nav>
-<div class="container">
+</div>
+<div class="container-fluid mb-3 border-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 d-flex align-items-center">
+                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/black-watch.jpg'"
+                [alt]="'black-watch.jpg'" width="100%" height="100" class="shadow-2" />            
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/blue-t-shirt.jpg'"
+                [alt]="'blue-t-shirt.jpg'" width="100%" height="100" class="shadow-2" />          
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/brown-purse.jpg'"
+                [alt]="'brown-purse.jpg'" width="100%" height="100" class="shadow-2" />            
+            </div>
+        </div>
+    </div>
+</div>
 
-    <p-table [value]="products" [tableStyle]="{'min-width': '60rem'}">
-        <ng-template pTemplate="caption">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-11">
-                        Products
-                    </div>
-                    <div class="col-md-1">
-                        <p-button icon="pi pi-refresh"></p-button>
-                    </div>
-                </div>
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 d-flex">
+                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/black-watch.jpg'"
+                [alt]="'black-watch.jpg'" width="100%" height="100" class="shadow-2" />            
             </div>
-        </ng-template>
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Name</th>
-                <th>Image</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Reviews</th>
-                <th>Status</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-product>
-            <tr>
-                <td>{{product.name}}</td>
-                <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image"
-                        [alt]="product.name" width="100" class="shadow-4" /></td>
-                <td>{{product.price | currency:'USD'}}</td>
-                <td>{{product.category}}</td>
-                <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
-                <td><p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)"></p-tag>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">
-                In total there are {{products ? products.length : 0 }} products.
+            <div class="col-md-9 d-flex">
+                <p-table [value]="products" [tableStyle]="{'min-width': '60rem'}">
+                    <ng-template pTemplate="caption">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    Products
+                                </div>
+                                <div class="col-md-1">
+                                    <p-button icon="pi pi-refresh"></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Reviews</th>
+                            <th>Status</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product>
+                        <tr>
+                            <td>{{product.name}}</td>
+                            <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image"
+                                    [alt]="product.name" width="100" class="shadow-4" /></td>
+                            <td>{{product.price | currency:'USD'}}</td>
+                            <td>{{product.category}}</td>
+                            <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
+                            <td><p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)"></p-tag>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            In total there are {{products ? products.length : 0 }} products.
+                        </div>
+                    </ng-template>
+                </p-table>  
             </div>
-        </ng-template>
-    </p-table>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid bg-bluegray-900 text-bluegray-200 py-1 mt-5 border-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 d-flex">
+                <a href="#" class="nav-link text-bluegray-200 mx-2">CONTACT US</a>
+            </div>
+            <div class="col-md-2 d-flex">
+                <i class="pi pi-user" style="font-size: 1.5rem"></i><a href="#"
+                    class="nav-link  text-bluegray-200 mx-2">Login/Register</a>
+            </div>
+        </div>
+    </div>
 </div>
