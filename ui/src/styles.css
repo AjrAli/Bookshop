@@ -1,20 +1,31 @@
-.p-menuitem-text, .p-menuitem-icon{
+.p-menuitem-text,
+.p-menuitem-icon {
     color: rgb(250, 245, 245);
     padding: 0.3em;
     text-decoration: none;
 }
-.p-menubar{
+
+.p-menubar {
     padding: 0px;
 }
-.p-menubar .p-menubar-root-list > .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover{
+
+.p-menubar .p-menubar-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover {
     background-color: var(--primary-700);
 }
-.p-menuitem:hover{
+
+.p-menuitem:hover {
     background-color: var(--primary-700);
 }
+
 a {
     text-decoration: none;
 }
-.p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content{
+
+.p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus>.p-menuitem-content {
     background-color: var(--primary-700);
+}
+
+body {
+    margin: 0;
+    padding: 0;
 }

@@ -16,7 +16,7 @@
         <div class="row">
             <div class="col-md-4 d-flex align-items-center">
                 <i class="pi pi-book text-teal-500 fst-italic" style="font-size: 3.5rem"></i>
-                <h1 class="text-teal-500 opacity-75 fst-italic" style="font-size: 2.2rem;">The Bookshop</h1>                
+                <h1 class="text-teal-500 opacity-75 fst-italic" style="font-size: 2.2rem;">The Bookshop</h1>
             </div>
             <div class="col-md-5 d-flex align-items-center">
                 <p-inputGroup>
@@ -55,15 +55,15 @@
         <div class="row">
             <div class="col-md-4 d-flex align-items-center">
                 <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/black-watch.jpg'"
-                [alt]="'black-watch.jpg'" width="100%" height="100" class="shadow-2" />            
+                    [alt]="'black-watch.jpg'" width="100%" height="100" class="shadow-2" />
             </div>
             <div class="col-md-4 d-flex align-items-center">
                 <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/blue-t-shirt.jpg'"
-                [alt]="'blue-t-shirt.jpg'" width="100%" height="100" class="shadow-2" />          
+                    [alt]="'blue-t-shirt.jpg'" width="100%" height="100" class="shadow-2" />
             </div>
             <div class="col-md-4 d-flex align-items-center">
                 <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/brown-purse.jpg'"
-                [alt]="'brown-purse.jpg'" width="100%" height="100" class="shadow-2" />            
+                    [alt]="'brown-purse.jpg'" width="100%" height="100" class="shadow-2" />
             </div>
         </div>
     </div>
@@ -74,7 +74,7 @@
         <div class="row">
             <div class="col-md-3 d-flex">
                 <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/black-watch.jpg'"
-                [alt]="'black-watch.jpg'" width="100%" height="100" class="shadow-2" />            
+                    [alt]="'black-watch.jpg'" width="100%" height="100" class="shadow-2" />
             </div>
             <div class="col-md-9 d-flex">
                 <p-table [value]="products" [tableStyle]="{'min-width': '60rem'}">
@@ -108,7 +108,8 @@
                             <td>{{product.price | currency:'USD'}}</td>
                             <td>{{product.category}}</td>
                             <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
-                            <td><p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)"></p-tag>
+                            <td><p-tag [value]="product.inventoryStatus"
+                                    [severity]="getSeverity(product.inventoryStatus)"></p-tag>
                             </td>
                         </tr>
                     </ng-template>
@@ -117,22 +118,58 @@
                             In total there are {{products ? products.length : 0 }} products.
                         </div>
                     </ng-template>
-                </p-table>  
+                </p-table>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container-fluid bg-bluegray-900 text-bluegray-200 py-1 mt-5 border-top">
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-md-3 p-0">
+              <h5>About Us</h5>
+              <p>Best E-Shop For Books.</p>
+            </div>
+            <div class="col-md-3 p-0">
+              <h5>Customer Service</h5>
+              <ul class="list-none p-0">
+                <li><a href="#" class="text-light">Help & FAQs</a></li>
+                <li><a href="#" class="text-light">Orders & Returns</a></li>
+                <li><a href="#" class="text-light">Contact Us</a></li>
+              </ul>
+            </div>
+            <div class="col-md-3 p-0">
+              <h5>Quick Links</h5>
+              <ul class="list-none p-0">
+                <li><a href="#" class="text-light">Best Sellers</a></li>
+                <li><a href="#" class="text-light">New Releases</a></li>
+                <li><a href="#" class="text-light">Gift Ideas</a></li>
+              </ul>
+            </div>
+            <div class="col-md-3 p-0">
+              <h5>Follow Us</h5>
+              <ul class="list-none p-0">
+                <li><a href="#" class="text-light">Facebook</a></li>
+                <li><a href="#" class="text-light">Twitter</a></li>
+                <li><a href="#" class="text-light">Instagram</a></li>
+              </ul>
+            </div>
+          </div>
+    </div>
     <div class="container">
         <div class="row">
-            <div class="col-md-10 d-flex">
-                <a href="#" class="nav-link text-bluegray-200 mx-2">CONTACT US</a>
-            </div>
-            <div class="col-md-2 d-flex">
-                <i class="pi pi-user" style="font-size: 1.5rem"></i><a href="#"
-                    class="nav-link  text-bluegray-200 mx-2">Login/Register</a>
+            <div class="col-md-12 pt-1 pb-1 bg-bluegray-800">
             </div>
         </div>
+    </div>
+
+
+    <div class="container mb-6">
+        <div class="row">
+            <div class="col-md-12 p-0">
+              <h5 class="text-bluegray-600">Copyright © The Bookshop 2023-2024 | All rights reserved. </h5>
+            </div>   
+          </div>
     </div>
 </div>
