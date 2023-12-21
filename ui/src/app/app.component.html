@@ -50,20 +50,20 @@
         </div>
     </div>
 </div>
-<div class="container-fluid mb-3 border-bottom">
+<div class="container-fluid mb-3">
     <div class="container">
         <div class="row">
             <div class="col-md-4 d-flex align-items-center">
-                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/black-watch.jpg'"
-                    [alt]="'black-watch.jpg'" width="100%" height="100" class="shadow-2" />
+                <img [src]="'https://images.pexels.com/photos/1480347/pexels-photo-1480347.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'"
+                    [alt]="'pexels-photo'" width="100%" height="150" class="shadow-2" />
             </div>
             <div class="col-md-4 d-flex align-items-center">
-                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/blue-t-shirt.jpg'"
-                    [alt]="'blue-t-shirt.jpg'" width="100%" height="100" class="shadow-2" />
+                <img [src]="'https://images.pexels.com/photos/2946979/pexels-photo-2946979.jpeg'"
+                    [alt]="'books'" width="100%" height="150" class="shadow-2" />
             </div>
             <div class="col-md-4 d-flex align-items-center">
-                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/brown-purse.jpg'"
-                    [alt]="'brown-purse.jpg'" width="100%" height="100" class="shadow-2" />
+                <img [src]="'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg'"
+                    [alt]="'gift'" width="100%" height="150" class="shadow-2" />
             </div>
         </div>
     </div>
@@ -73,10 +73,19 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3 d-flex">
-                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/black-watch.jpg'"
-                    [alt]="'black-watch.jpg'" width="100%" height="100" class="shadow-2" />
+                <p-panelMenu  [model]="items2" styleClass="" [style]="{'width':'300px'}"></p-panelMenu>
             </div>
-            <div class="col-md-9 d-flex">
+            <div class="col-md-9">
+                <p-galleria [value]="this.images" [autoPlay]="true" [circular]="true" [responsiveOptions]="responsiveOptions" [numVisible]="5"  [containerStyle]="{ 'max-height': '480px' }"> 
+                    <ng-template pTemplate="item" let-item>
+                        <img [src]="item.itemImageSrc" style="width: 100%; height: 380px;" />
+                    </ng-template>
+                    <ng-template pTemplate="thumbnail" let-item>
+                        <div class="grid grid-nogutter justify-content-center">
+                            <img [src]="item.thumbnailImageSrc" />
+                        </div>
+                    </ng-template>
+                </p-galleria>
                 <p-table [value]="products" [tableStyle]="{'min-width': '60rem'}">
                     <ng-template pTemplate="caption">
                         <div class="container">
@@ -128,31 +137,33 @@
     <div class="container mb-5">
         <div class="row">
             <div class="col-md-3 p-0">
-              <h5>About Us</h5>
-              <p>Best E-Shop For Books.</p>
-            </div>
-            <div class="col-md-3 p-0">
-              <h5>Customer Service</h5>
-              <ul class="list-none p-0">
-                <li><a href="#" class="text-light">Help & FAQs</a></li>
-                <li><a href="#" class="text-light">Orders & Returns</a></li>
-                <li><a href="#" class="text-light">Contact Us</a></li>
+              <h4><span class="text-teal-500">About</span> <span class="text-white"> Us</span></h4>
+              <ul class="list-none p-0 text-sm">
+                <li><a href="#" class="footer-link">Best E-Shop For Books.</a></li>
               </ul>
             </div>
             <div class="col-md-3 p-0">
-              <h5>Quick Links</h5>
-              <ul class="list-none p-0">
-                <li><a href="#" class="text-light">Best Sellers</a></li>
-                <li><a href="#" class="text-light">New Releases</a></li>
-                <li><a href="#" class="text-light">Gift Ideas</a></li>
+              <h4><span class="text-teal-500">Customer</span> <span class="text-white"> Service</span></h4>
+              <ul class="list-none p-0 text-sm">
+                <li><a href="#" class="footer-link">Help & FAQs</a></li>
+                <li><a href="#" class="footer-link">Orders & Returns</a></li>
+                <li><a href="#" class="footer-link">Contact Us</a></li>
               </ul>
             </div>
             <div class="col-md-3 p-0">
-              <h5>Follow Us</h5>
-              <ul class="list-none p-0">
-                <li><a href="#" class="text-light">Facebook</a></li>
-                <li><a href="#" class="text-light">Twitter</a></li>
-                <li><a href="#" class="text-light">Instagram</a></li>
+              <h4><span class="text-teal-500">Quick</span> <span class="text-white"> Links</span></h4>
+              <ul class="list-none p-0 text-sm">
+                <li><a href="#" class="footer-link">Best Sellers</a></li>
+                <li><a href="#" class="footer-link">New Releases</a></li>
+                <li><a href="#" class="footer-link">Gift Ideas</a></li>
+              </ul>
+            </div>
+            <div class="col-md-3 p-0">
+              <h4><span class="text-teal-500">Follow</span> <span class="text-white"> Us & Subscribe</span></h4>
+              <ul class="list-none p-0 text-sm">
+                <li><a href="#" class="footer-link">Facebook</a></li>
+                <li><a href="#" class="footer-link">Twitter</a></li>
+                <li><a href="#" class="footer-link">Instagram</a></li>
               </ul>
             </div>
           </div>

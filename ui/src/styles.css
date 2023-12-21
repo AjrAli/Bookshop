@@ -1,3 +1,14 @@
+.p-menuitem-content
+.p-menuitem-link
+.p-menuitem-text,
+.p-menuitem-icon {
+    color: rgb(250, 245, 245);
+    padding: 0.3em;
+    text-decoration: none;
+}
+
+.p-panelmenu-header-content
+.p-panelmenu-header-action
 .p-menuitem-text,
 .p-menuitem-icon {
     color: rgb(250, 245, 245);
@@ -12,10 +23,11 @@
 .p-menubar .p-menubar-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover {
     background-color: var(--primary-700);
 }
-
-.p-menuitem:hover {
-    background-color: var(--primary-700);
+.p-panelmenu .p-panelmenu-content .p-menuitem-text, .p-panelmenu .p-panelmenu-content .p-menuitem-icon{
+    color: black;
 }
+
+
 
 a {
     text-decoration: none;
@@ -28,4 +40,16 @@ a {
 body {
     margin: 0;
     padding: 0;
+}
+.text-bluegray-200:hover{
+    color: white;
+}
+.footer-link{
+    color: var(--bluegray-200);
+}
+.footer-link:hover{
+    color: white;
+}
+.p-panelmenu-header-action{
+    background-color: var(--teal-500);
 }
