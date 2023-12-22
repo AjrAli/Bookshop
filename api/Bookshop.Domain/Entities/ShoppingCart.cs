@@ -1,4 +1,5 @@
 ﻿using Bookshop.Domain.Common;
+using Bookshop.Domain.Extension;
 
 namespace Bookshop.Domain.Entities
 {
@@ -9,7 +10,7 @@ namespace Bookshop.Domain.Entities
         {
             get
             {
-                return CalculateSubtotal();
+                return (_total != 0) ? _total : CalculateSubtotal();
             }
             set
             {
@@ -18,6 +19,10 @@ namespace Bookshop.Domain.Entities
 
         }
         private ShoppingCart() { }
+        private ShoppingCart(Action<object, string> lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
         public ShoppingCart(Customer customer, ICollection<LineItem>? lineItems = null)
         {
             Customer = customer;
@@ -96,6 +101,11 @@ namespace Bookshop.Domain.Entities
         // Relationships
         public long? CustomerId { get; set; }
         public Customer? Customer { get; set; }
-        public ICollection<LineItem>? LineItems { get; set; }
+        private ICollection<LineItem> _lineItems;
+        public ICollection<LineItem> LineItems
+        {
+            get => LazyLoader.Load(this, ref _lineItems);
+            set => _lineItems = value;
+        }
     }
 }

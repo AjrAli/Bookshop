@@ -2,9 +2,8 @@
 
 namespace Bookshop.Application.Features.Categories
 {
-    public record CategoryDto : IBaseDto
+    public record CategoryResponseDto
     {
-        public long Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsVisible { get; set; }

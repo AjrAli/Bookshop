@@ -24,7 +24,10 @@ namespace Bookshop.Domain.Entities
         public Status StatusOrder { get; set; }
 
         private Order() { }
-
+        private Order(Action<object, string> lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
         public Order(CreditCards creditCard, Customer customer, ICollection<LineItem> lineItems)
         {
             MethodOfPayment = creditCard;

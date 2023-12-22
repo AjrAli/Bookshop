@@ -1,9 +1,15 @@
-﻿using Bookshop.Application.Features.Common.Queries.GetAll;
+﻿using Bookshop.Application.Features.Authors;
+using Bookshop.Application.Features.Books;
+using Bookshop.Application.Features.Categories;
+using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
+using Bookshop.Application.Features.Customers;
+using Bookshop.Application.Features.Orders;
 using Bookshop.Application.Features.PipelineBehaviours;
 using Bookshop.Application.Features.Response;
 using Bookshop.Application.Features.Response.Contracts;
 using Bookshop.Application.Features.Service;
+using Bookshop.Application.Features.ShoppingCarts;
 using Bookshop.Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -36,25 +42,21 @@ namespace Bookshop.Application
 
         private static void RegisterGenericGetAllHandlers(IServiceCollection services)
         {
-            services.AddTransient<IRequestHandler<GetAll<Category>, GetAllResponse>, GetAllHandler<Category>>();
-            services.AddTransient<IRequestHandler<GetAll<Address>, GetAllResponse>, GetAllHandler<Address>>();
-            services.AddTransient<IRequestHandler<GetAll<Book>, GetAllResponse>, GetAllHandler<Book>>();
-            services.AddTransient<IRequestHandler<GetAll<Author>, GetAllResponse>, GetAllHandler<Author>>();
-            services.AddTransient<IRequestHandler<GetAll<Customer>, GetAllResponse>, GetAllHandler<Customer>>();
-            services.AddTransient<IRequestHandler<GetAll<LineItem>, GetAllResponse>, GetAllHandler<LineItem>>();
-            services.AddTransient<IRequestHandler<GetAll<Order>, GetAllResponse>, GetAllHandler<Order>>();
-            services.AddTransient<IRequestHandler<GetAll<ShoppingCart>, GetAllResponse>, GetAllHandler<ShoppingCart>>();
+            services.AddTransient<IRequestHandler<GetAll<CategoryResponseDto>, GetAllResponse>, GetAllHandler<CategoryResponseDto, Category>>();
+            services.AddTransient<IRequestHandler<GetAll<BookResponseDto>, GetAllResponse>, GetAllHandler<BookResponseDto, Book>>();
+            services.AddTransient<IRequestHandler<GetAll<AuthorResponseDto>, GetAllResponse>, GetAllHandler<AuthorResponseDto, Author>>();
+            services.AddTransient<IRequestHandler<GetAll<CustomerResponseDto>, GetAllResponse>, GetAllHandler<CustomerResponseDto, Customer>>();
+            services.AddTransient<IRequestHandler<GetAll<OrderResponseDto>, GetAllResponse>, GetAllHandler<OrderResponseDto, Order>>();
+            services.AddTransient<IRequestHandler<GetAll<ShoppingCartResponseDto>, GetAllResponse>, GetAllHandler<ShoppingCartResponseDto, ShoppingCart>>();
         }
         private static void RegisterGenericGetByIdHandlers(IServiceCollection services)
         {
-            services.AddTransient<IRequestHandler<GetById<Category>, GetByIdResponse>, GetByIdHandler<Category>>();
-            services.AddTransient<IRequestHandler<GetById<Address>, GetByIdResponse>, GetByIdHandler<Address>>();
-            services.AddTransient<IRequestHandler<GetById<Book>, GetByIdResponse>, GetByIdHandler<Book>>();
-            services.AddTransient<IRequestHandler<GetById<Author>, GetByIdResponse>, GetByIdHandler<Author>>();
-            services.AddTransient<IRequestHandler<GetById<Customer>, GetByIdResponse>, GetByIdHandler<Customer>>();
-            services.AddTransient<IRequestHandler<GetById<LineItem>, GetByIdResponse>, GetByIdHandler<LineItem>>();
-            services.AddTransient<IRequestHandler<GetById<Order>, GetByIdResponse>, GetByIdHandler<Order>>();
-            services.AddTransient<IRequestHandler<GetById<ShoppingCart>, GetByIdResponse>, GetByIdHandler<ShoppingCart>>();
+            services.AddTransient<IRequestHandler<GetById<CategoryResponseDto>, GetByIdResponse>, GetByIdHandler<CategoryResponseDto, Category>>();
+            services.AddTransient<IRequestHandler<GetById<BookResponseDto>, GetByIdResponse>, GetByIdHandler<BookResponseDto, Book>>();
+            services.AddTransient<IRequestHandler<GetById<AuthorResponseDto>, GetByIdResponse>, GetByIdHandler<AuthorResponseDto, Author>>();
+            services.AddTransient<IRequestHandler<GetById<CustomerResponseDto>, GetByIdResponse>, GetByIdHandler<CustomerResponseDto, Customer>>();
+            services.AddTransient<IRequestHandler<GetById<OrderResponseDto>, GetByIdResponse>, GetByIdHandler<OrderResponseDto, Order>>();
+            services.AddTransient<IRequestHandler<GetById<ShoppingCartResponseDto>, GetByIdResponse>, GetByIdHandler<ShoppingCartResponseDto, ShoppingCart>>();
         }
     }
 }

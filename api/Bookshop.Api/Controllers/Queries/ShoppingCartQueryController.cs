@@ -3,12 +3,10 @@ using Bookshop.Application.Features.Common.Queries.GetById;
 using Bookshop.Application.Features.ShoppingCarts;
 using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCart;
 using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDetails;
-using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace Bookshop.Api.Controllers.Queries
 {
@@ -32,24 +30,16 @@ namespace Bookshop.Api.Controllers.Queries
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
-            var queryConfig = BuildShoppingCartQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetById<ShoppingCart>
+            var dataReponse = await _mediator.Send(new GetById<ShoppingCartResponseDto>
             {
-                Id = id,
-                NavigationPropertyConfigurations = queryConfig,
-                DtoType = typeof(ShoppingCartResponseDto)
+                Id = id
             });
             return Ok(dataReponse);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var queryConfig = BuildShoppingCartQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetAll<ShoppingCart>
-            {
-                NavigationPropertyConfigurations = queryConfig,
-                DtoType = typeof(ShoppingCartResponseDto)
-            });
+            var dataReponse = await _mediator.Send(new GetAll<ShoppingCartResponseDto>());
             return Ok(dataReponse);
         }
         [Authorize]
@@ -71,25 +61,6 @@ namespace Bookshop.Api.Controllers.Queries
                 UserId = _loggedInUserService?.GetUserId()
             });
             return Ok(dataReponse);
-        }
-        private Dictionary<Expression<Func<ShoppingCart, object>>, List<Expression<Func<object, object>>>> BuildShoppingCartQueryConfiguration()
-        {
-            return new()
-            {
-                { x => x.LineItems, new List<Expression<Func<object, object>>>
-                    {
-                        y => (y as LineItem).Book,                                      
-                        w => (w as Book).Author                 
-                    }
-                },
-                { x => x.LineItems, new List<Expression<Func<object, object>>>
-                    {
-                        y => (y as LineItem).Book,
-                        w => (w as Book).Category
-                    }
-                },
-                { x => x.Customer, null }
-            };
         }
     }
 }

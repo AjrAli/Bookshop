@@ -1,4 +1,5 @@
 ﻿using Bookshop.Domain.Common;
+using Bookshop.Domain.Extension;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bookshop.Domain.Entities
@@ -8,6 +9,10 @@ namespace Bookshop.Domain.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         private Customer() { }
+        private Customer(Action<object, string> lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
 
         // Constructor that initializes required fields
         public Customer(string firstName, 
@@ -37,13 +42,31 @@ namespace Bookshop.Domain.Entities
         }
         // Relationships
         public long? ShippingAddressId { get; set; }
-        public Address? ShippingAddress { get; set; }
+        private Address _shippingAddress;
+        public Address ShippingAddress
+        {
+            get => LazyLoader.Load(this, ref _shippingAddress);
+            set => _shippingAddress = value;
+        }
         public long? BillingAddressId { get; set; }
-        public Address? BillingAddress { get; set; }
+        private Address _billingAddress;
+        public Address BillingAddress
+        {
+            get => LazyLoader.Load(this, ref _billingAddress);
+            set => _billingAddress = value;
+        }
+
         public string? IdentityUserDataId { get; set; }
         public IdentityUserData IdentityData { get; set; } = new IdentityUserData();
         public long? ShoppingCartId { get; set; }
-        public ShoppingCart? ShoppingCart { get; set; }
+        private ShoppingCart _shoppingCart;
+        public ShoppingCart ShoppingCart
+        {
+            get => LazyLoader.Load(this, ref _shoppingCart);
+            set => _shoppingCart = value;
+        }
+
+
         public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 

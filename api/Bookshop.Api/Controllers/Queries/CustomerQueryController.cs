@@ -1,10 +1,9 @@
 ﻿using Bookshop.Application.Features.Common.Queries.GetAll;
 using Bookshop.Application.Features.Common.Queries.GetById;
+using Bookshop.Application.Features.Customers;
 using Bookshop.Application.Features.Customers.Queries.Authenticate;
-using Bookshop.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace Bookshop.Api.Controllers.Queries
 {
@@ -25,22 +24,16 @@ namespace Bookshop.Api.Controllers.Queries
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
-            var queryConfig = BuildCustomerQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetById<Customer>
+            var dataReponse = await _mediator.Send(new GetById<CustomerResponseDto>
             {
-                Id = id,
-                NavigationPropertyConfigurations = queryConfig
+                Id = id
             });
             return Ok(dataReponse);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var queryConfig = BuildCustomerQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetAll<Customer>()
-            {
-                NavigationPropertyConfigurations = queryConfig
-            });
+            var dataReponse = await _mediator.Send(new GetAll<CustomerResponseDto>());
             return Ok(dataReponse);
         }
         [HttpPost("authenticate")]
@@ -48,21 +41,6 @@ namespace Bookshop.Api.Controllers.Queries
         {
             var dataReponse = await _mediator.Send(request);
             return Ok(dataReponse);
-        }
-        private Dictionary<Expression<Func<Customer, object>>, List<Expression<Func<object, object>>>> BuildCustomerQueryConfiguration()
-        {
-            return new()
-            {
-                { x => x.ShippingAddress, null },
-                { x => x.BillingAddress, null },
-                { x => x.ShoppingCart, new List<Expression<Func<object, object>>>
-                    {
-                        y => (y as ShoppingCart).LineItems,
-                        z => (z as LineItem).Book,
-                        w => (w as Book).Author,
-                    }
-                }
-            };
         }
     }
 }

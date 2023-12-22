@@ -1,4 +1,5 @@
 ﻿using Bookshop.Domain.Common;
+using Bookshop.Domain.Extension;
 using System.ComponentModel.DataAnnotations;
 
 namespace Bookshop.Domain.Entities
@@ -18,6 +19,10 @@ namespace Bookshop.Domain.Entities
         public Languages Language {  get; set; }
         public DateTime PublishDate { get; set; }
         private Book() { }
+        private Book(Action<object, string> lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
         public Book(string title, 
                     string description, 
                     string publisher, 
@@ -54,8 +59,18 @@ namespace Bookshop.Domain.Entities
 
         // Relationships
         public long? AuthorId { get; set; }
-        public Author? Author { get; set; }
+        private Author _author;
+        public Author Author
+        {
+            get => LazyLoader.Load(this, ref _author);
+            set => _author = value;
+        }
         public long CategoryId { get; set; }
-        public Category? Category { get; set; }
+        private Category _category;
+        public Category Category
+        {
+            get => LazyLoader.Load(this, ref _category);
+            set => _category = value;
+        }
     }
 }

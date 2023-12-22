@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Query;
 using Bookshop.Application.Exceptions;
-using Bookshop.Application.Features.Common.Helpers;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookshop.Application.Features.Common.Queries.GetById
 {
-    public class GetByIdHandler<T> : IQueryHandler<GetById<T>, GetByIdResponse> where T : class
+    public class GetByIdHandler<Dto, T> : IQueryHandler<GetById<Dto>, GetByIdResponse>
+        where Dto : class
+        where T : class
     {
         private readonly BookshopDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -18,11 +19,9 @@ namespace Bookshop.Application.Features.Common.Queries.GetById
             _dbContext = dbContext;
         }
 
-        public async Task<GetByIdResponse> Handle(GetById<T> request, CancellationToken cancellationToken)
+        public async Task<GetByIdResponse> Handle(GetById<Dto> request, CancellationToken cancellationToken)
         {
             var query = _dbContext.Set<T>().AsQueryable();
-            query = (request.NavigationPropertyConfigurations != null) ?
-                query.ApplyIncludesAndThenIncludes(request.NavigationPropertyConfigurations) : query;
             var entity = await query.FirstOrDefaultAsync(x => EF.Property<object>(x, "Id") == request.Id, cancellationToken);
             if (entity == null)
             {
@@ -30,7 +29,7 @@ namespace Bookshop.Application.Features.Common.Queries.GetById
             }
 
             var sourceType = typeof(T);
-            var targetType = request.DtoType ?? typeof(T);
+            var targetType = typeof(Dto);
 
             var dto = _mapper.Map(entity, sourceType, targetType);
 

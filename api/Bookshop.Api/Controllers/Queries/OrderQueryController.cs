@@ -3,12 +3,10 @@ using Bookshop.Application.Features.Common.Queries.GetById;
 using Bookshop.Application.Features.Orders;
 using Bookshop.Application.Features.Orders.Queries.GetOrderById;
 using Bookshop.Application.Features.Orders.Queries.GetOrders;
-using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace Bookshop.Api.Controllers.Queries
 {
@@ -32,24 +30,16 @@ namespace Bookshop.Api.Controllers.Queries
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long? id)
         {
-            var queryConfig = BuildOrderQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetById<Order>
+            var dataReponse = await _mediator.Send(new GetById<OrderResponseDto>
             {
-                Id = id,
-                NavigationPropertyConfigurations = queryConfig,
-                DtoType = typeof(OrderResponseDto)
+                Id = id
             });
             return Ok(dataReponse);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var queryConfig = BuildOrderQueryConfiguration();
-            var dataReponse = await _mediator.Send(new GetAll<Order>
-            {
-                NavigationPropertyConfigurations = queryConfig,
-                DtoType = typeof(OrderResponseDto)
-            });
+            var dataReponse = await _mediator.Send(new GetAll<OrderResponseDto>());
             return Ok(dataReponse);
         }
         [Authorize]
@@ -72,30 +62,6 @@ namespace Bookshop.Api.Controllers.Queries
                 Id = id
             });
             return Ok(dataReponse);
-        }
-        private Dictionary<Expression<Func<Order, object>>, List<Expression<Func<object, object>>>> BuildOrderQueryConfiguration()
-        {
-            return new()
-            {
-                { x => x.LineItems, new List<Expression<Func<object, object>>>
-                    {
-                        y => (y as LineItem).Book,
-                        z => (z as Book).Author
-                    }
-                },
-                { x => x.LineItems, new List<Expression<Func<object, object>>>
-                    {
-                        y => (y as LineItem).Book,
-                        z => (z as Book).Category
-                    }
-                },
-                { x => x.Customer, new List<Expression<Func<object, object>>>
-                    {
-                        y => (y as Customer).ShippingAddress,
-                        z => (z as Address).LocationPricing
-                    } 
-                }
-            };
         }
     }
 }

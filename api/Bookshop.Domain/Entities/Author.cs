@@ -7,6 +7,10 @@ namespace Bookshop.Domain.Entities
         public string Name { get; set; }
         public string About { get; set; }
         private Author() { }
+        private Author(Action<object, string> lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
         public Author (string name, string about)
         {
             Name = name;

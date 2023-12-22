@@ -8,6 +8,10 @@ namespace Bookshop.Domain.Entities
         public string Description { get; set; }
         public bool IsVisible { get; set; } = true;
         private Category() { }
+        private Category(Action<object, string> lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
         public Category(string title, string description) {  Title = title; Description = description; }
 
         // Relationships

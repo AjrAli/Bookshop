@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Bookshop.Domain.Common
 {
@@ -10,6 +11,8 @@ namespace Bookshop.Domain.Common
         public DateTimeOffset CreatedDate { get; set; }
         public string? LastModifiedBy { get; set; }
         public DateTimeOffset LastModifiedDate { get; set; }
+        [JsonIgnore]
+        protected Action<object, string> LazyLoader { get; set; }
     }
 }
 

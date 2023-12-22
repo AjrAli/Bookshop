@@ -10,7 +10,7 @@ namespace Bookshop.Application.Profiles.Categories
         {
 
             // Category profile
-            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, CategoryResponseDto>().ReverseMap();
         }
     }
 }
