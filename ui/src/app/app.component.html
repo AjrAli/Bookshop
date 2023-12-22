@@ -53,120 +53,166 @@
 <div class="container-fluid mb-3">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 d-flex align-items-center">
+            <div class="col-xxl-4 d-flex align-items-center">
                 <img [src]="'https://images.pexels.com/photos/1480347/pexels-photo-1480347.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'"
                     [alt]="'pexels-photo'" width="100%" height="150" class="shadow-2" />
             </div>
-            <div class="col-md-4 d-flex align-items-center">
-                <img [src]="'https://images.pexels.com/photos/2946979/pexels-photo-2946979.jpeg'"
-                    [alt]="'books'" width="100%" height="150" class="shadow-2" />
+            <div class="col-xxl-4 d-flex align-items-center">
+                <img [src]="'https://images.pexels.com/photos/2946979/pexels-photo-2946979.jpeg'" [alt]="'books'"
+                    width="100%" height="150" class="shadow-2" />
             </div>
-            <div class="col-md-4 d-flex align-items-center">
-                <img [src]="'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg'"
-                    [alt]="'gift'" width="100%" height="150" class="shadow-2" />
+            <div class="col-xxl-4 d-flex align-items-center">
+                <img [src]="'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg'" [alt]="'gift'"
+                    width="100%" height="150" class="shadow-2" />
             </div>
         </div>
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 d-flex">
-                <p-panelMenu  [model]="items2" styleClass="" [style]="{'width':'300px'}"></p-panelMenu>
-            </div>
-            <div class="col-md-9">
-                <p-galleria [value]="this.images" [autoPlay]="true" [circular]="true" [responsiveOptions]="responsiveOptions" [numVisible]="5"  [containerStyle]="{ 'max-height': '480px' }"> 
-                    <ng-template pTemplate="item" let-item>
-                        <img [src]="item.itemImageSrc" style="width: 100%; height: 380px;" />
-                    </ng-template>
-                    <ng-template pTemplate="thumbnail" let-item>
-                        <div class="grid grid-nogutter justify-content-center">
-                            <img [src]="item.thumbnailImageSrc" />
-                        </div>
-                    </ng-template>
-                </p-galleria>
-                <p-table [value]="products" [tableStyle]="{'min-width': '60rem'}">
-                    <ng-template pTemplate="caption">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-11">
-                                    Products
-                                </div>
-                                <div class="col-md-1">
-                                    <p-button icon="pi pi-refresh"></p-button>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xxl-3">
+            <p-panelMenu [model]="items2" styleClass="" [style]="{'width':'300px'}"></p-panelMenu>
+        </div>
+        <div class="col-xxl-9">
+            <p-galleria [value]="this.images" [autoPlay]="true" [circular]="true"
+                [responsiveOptions]="responsiveOptions" [numVisible]="5" [containerStyle]="{ 'max-height': '480px' }">
+                <ng-template pTemplate="item" let-item>
+                    <img [src]="item.itemImageSrc" style="width: 100%; height: 380px;" />
+                </ng-template>
+                <ng-template pTemplate="thumbnail" let-item>
+                    <div class="grid grid-nogutter justify-content-center">
+                        <img [src]="item.thumbnailImageSrc" />
+                    </div>
+                </ng-template>
+            </p-galleria>
+            <p-carousel [value]="products" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions2">
+                <ng-template let-product pTemplate="item">
+                    <div class="product-item">
+                        <div class="product-item-content">
+                            <div class="mb-3">
+                                <img src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}"
+                                    [alt]="product.name" class="product-image" />
+                            </div>
+                            <div>
+                                <h4 class="mb-1">{{ product.name }}</h4>
+                                <h6 class="mt-0 mb-3">{{ '$' + product.price }}</h6>
+                                <p-tag [value]="product.inventoryStatus"
+                                    [severity]="getSeverity(product.inventoryStatus)"></p-tag>
+                                <div class="mt-5 flex align-items-center justify-content-center gap-2">
+                                    <p-button icon="pi pi-search" [rounded]="true" />
+                                    <p-button icon="pi pi-star-fill" [rounded]="true" severity="secondary" />
                                 </div>
                             </div>
                         </div>
-                    </ng-template>
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Name</th>
-                            <th>Image</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Reviews</th>
-                            <th>Status</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product>
-                        <tr>
-                            <td>{{product.name}}</td>
-                            <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image"
-                                    [alt]="product.name" width="100" class="shadow-4" /></td>
-                            <td>{{product.price | currency:'USD'}}</td>
-                            <td>{{product.category}}</td>
-                            <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
-                            <td><p-tag [value]="product.inventoryStatus"
-                                    [severity]="getSeverity(product.inventoryStatus)"></p-tag>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="summary">
-                        <div class="flex align-items-center justify-content-between">
-                            In total there are {{products ? products.length : 0 }} products.
-                        </div>
-                    </ng-template>
-                </p-table>
+                    </div>
+                </ng-template>
+            </p-carousel>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p-card *ngFor="let ind of indexes; index as i;" header="Advanced Card"
+                            subheader="Card Subheader" [style]="{ width: '25%', display: 'inline-block' }">
+                            <ng-template pTemplate="header">
+                                <img alt="Card" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
+                            </ng-template>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur
+                                error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis,
+                                culpa ratione quam perferendis esse, cupiditate neque
+                                quas!
+                            </p>
+                            <ng-template pTemplate="footer">
+                                <p-button label="" icon="pi pi-check"></p-button>
+                                <p-button label="" icon="pi pi-times" styleClass="p-button-secondary"></p-button>
+                            </ng-template>
+                        </p-card>
+                    </div>
+                </div>
+
             </div>
+            <p-table [value]="products" [tableStyle]="{'min-width': '60rem'}">
+                <ng-template pTemplate="caption">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-11">
+                                Products
+                            </div>
+                            <div class="col-md-1">
+                                <p-button icon="pi pi-refresh"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Reviews</th>
+                        <th>Status</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td>{{product.name}}</td>
+                        <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image"
+                                [alt]="product.name" width="100" class="shadow-4" /></td>
+                        <td>{{product.price | currency:'USD'}}</td>
+                        <td>{{product.category}}</td>
+                        <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
+                        <td><p-tag [value]="product.inventoryStatus"
+                                [severity]="getSeverity(product.inventoryStatus)"></p-tag>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="flex align-items-center justify-content-between">
+                        In total there are {{products ? products.length : 0 }} products.
+                    </div>
+                </ng-template>
+            </p-table>
         </div>
     </div>
 </div>
+
 
 <div class="container-fluid bg-bluegray-900 text-bluegray-200 py-1 mt-5 border-top">
     <div class="container mb-5">
         <div class="row">
             <div class="col-md-3 p-0">
-              <h4><span class="text-teal-500">About</span> <span class="text-white"> Us</span></h4>
-              <ul class="list-none p-0 text-sm">
-                <li><a href="#" class="footer-link">Best E-Shop For Books.</a></li>
-              </ul>
+                <h4><span class="text-teal-500">About</span> <span class="text-white"> Us</span></h4>
+                <ul class="list-none p-0 text-sm">
+                    <li><a href="#" class="footer-link">Best E-Shop For Books.</a></li>
+                </ul>
             </div>
             <div class="col-md-3 p-0">
-              <h4><span class="text-teal-500">Customer</span> <span class="text-white"> Service</span></h4>
-              <ul class="list-none p-0 text-sm">
-                <li><a href="#" class="footer-link">Help & FAQs</a></li>
-                <li><a href="#" class="footer-link">Orders & Returns</a></li>
-                <li><a href="#" class="footer-link">Contact Us</a></li>
-              </ul>
+                <h4><span class="text-teal-500">Customer</span> <span class="text-white"> Service</span></h4>
+                <ul class="list-none p-0 text-sm">
+                    <li><a href="#" class="footer-link">Help & FAQs</a></li>
+                    <li><a href="#" class="footer-link">Orders & Returns</a></li>
+                    <li><a href="#" class="footer-link">Contact Us</a></li>
+                </ul>
             </div>
             <div class="col-md-3 p-0">
-              <h4><span class="text-teal-500">Quick</span> <span class="text-white"> Links</span></h4>
-              <ul class="list-none p-0 text-sm">
-                <li><a href="#" class="footer-link">Best Sellers</a></li>
-                <li><a href="#" class="footer-link">New Releases</a></li>
-                <li><a href="#" class="footer-link">Gift Ideas</a></li>
-              </ul>
+                <h4><span class="text-teal-500">Quick</span> <span class="text-white"> Links</span></h4>
+                <ul class="list-none p-0 text-sm">
+                    <li><a href="#" class="footer-link">Best Sellers</a></li>
+                    <li><a href="#" class="footer-link">New Releases</a></li>
+                    <li><a href="#" class="footer-link">Gift Ideas</a></li>
+                </ul>
             </div>
             <div class="col-md-3 p-0">
-              <h4><span class="text-teal-500">Follow</span> <span class="text-white"> Us & Subscribe</span></h4>
-              <ul class="list-none p-0 text-sm">
-                <li><a href="#" class="footer-link">Facebook</a></li>
-                <li><a href="#" class="footer-link">Twitter</a></li>
-                <li><a href="#" class="footer-link">Instagram</a></li>
-              </ul>
+                <h4><span class="text-teal-500">Follow</span> <span class="text-white"> Us & Subscribe</span></h4>
+                <ul class="list-none p-0 text-sm">
+                    <li><a href="#" class="footer-link">Facebook</a></li>
+                    <li><a href="#" class="footer-link">Twitter</a></li>
+                    <li><a href="#" class="footer-link">Instagram</a></li>
+                </ul>
             </div>
-          </div>
+        </div>
     </div>
     <div class="container">
         <div class="row">
@@ -179,8 +225,8 @@
     <div class="container mb-6">
         <div class="row">
             <div class="col-md-12 p-0">
-              <h5 class="text-bluegray-600">Copyright © The Bookshop 2023-2024 | All rights reserved. </h5>
-            </div>   
-          </div>
+                <h5 class="text-bluegray-600">Copyright © The Bookshop 2023-2024 | All rights reserved. </h5>
+            </div>
+        </div>
     </div>
 </div>

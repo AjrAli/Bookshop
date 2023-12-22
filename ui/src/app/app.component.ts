@@ -19,6 +19,8 @@ import { PanelModule } from 'primeng/panel';
 import { SharedModule  } from 'primeng/api';
 import { PhotoService } from '../services/photoservice';
 import { GalleriaModule } from 'primeng/galleria';
+import { CarouselModule } from 'primeng/carousel';
+import { CardModule } from 'primeng/card';
 
 
 @Component({
@@ -26,7 +28,7 @@ import { GalleriaModule } from 'primeng/galleria';
     standalone: true,
     imports: [CommonModule, RouterOutlet, TabMenuModule, TableModule, TabViewModule,
         TagModule, RatingModule, FormsModule, ButtonModule, InputGroupModule,
-        MenubarModule, InputTextModule, PanelMenuModule, PanelModule, SharedModule,GalleriaModule],
+        MenubarModule, InputTextModule, PanelMenuModule, PanelModule, SharedModule,GalleriaModule, CarouselModule, CardModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
@@ -37,6 +39,9 @@ export class AppComponent implements OnInit {
     items: MenuItem[] | undefined;
     items2: MenuItem[] | undefined;
     images: any[] | undefined;
+    indexes: number[] = Array.from({ length: 10 }, (_, index) => index + 1);
+    responsiveOptions2: any[] | undefined;
+
     responsiveOptions: any[] = [
         {
             breakpoint: '1024px',
@@ -55,6 +60,23 @@ export class AppComponent implements OnInit {
                 private photoService:PhotoService) { }
 
     ngOnInit() {
+        this.responsiveOptions2 = [
+            {
+                breakpoint: '1400px',
+                numVisible: 3,
+                numScroll: 3
+            },
+            {
+                breakpoint: '1220px',
+                numVisible: 2,
+                numScroll: 2
+            },
+            {
+                breakpoint: '1100px',
+                numVisible: 1,
+                numScroll: 1
+            }
+        ];
         this.items = [
             {
                 label: 'Home',
