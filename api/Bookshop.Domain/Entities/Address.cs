@@ -10,10 +10,6 @@ namespace Bookshop.Domain.Entities
         public string State { get; set; }
         public string Country { get; set; }
         private Address() { }
-        private Address(Action<object, string> lazyLoader)
-        {
-            LazyLoader = lazyLoader;
-        }
         public void EditAdress(Address address, LocationPricing? locationPricing)
         {
             Street = address.Street;

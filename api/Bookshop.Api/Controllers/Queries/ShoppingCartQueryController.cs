@@ -1,6 +1,4 @@
-﻿using Bookshop.Application.Features.Common.Queries.GetAll;
-using Bookshop.Application.Features.Common.Queries.GetById;
-using Bookshop.Application.Features.ShoppingCarts;
+﻿using Bookshop.Application.Features.Common.Queries.ShoppingCarts;
 using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCart;
 using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDetails;
 using Bookshop.Persistence.Contracts;
@@ -28,9 +26,9 @@ namespace Bookshop.Api.Controllers.Queries
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(long? id)
+        public async Task<IActionResult> GetById(long id)
         {
-            var dataReponse = await _mediator.Send(new GetById<ShoppingCartResponseDto>
+            var dataReponse = await _mediator.Send(new GetShoppingCartById
             {
                 Id = id
             });
@@ -39,7 +37,7 @@ namespace Bookshop.Api.Controllers.Queries
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var dataReponse = await _mediator.Send(new GetAll<ShoppingCartResponseDto>());
+            var dataReponse = await _mediator.Send(new GetAllShoppingCarts());
             return Ok(dataReponse);
         }
         [Authorize]

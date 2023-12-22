@@ -1,5 +1,4 @@
 ﻿using Bookshop.Domain.Common;
-using Bookshop.Domain.Extension;
 using System.ComponentModel.DataAnnotations;
 
 namespace Bookshop.Domain.Entities
@@ -16,22 +15,18 @@ namespace Bookshop.Domain.Entities
         public string Dimensions { get; set; }
 
         [EnumDataType(typeof(Languages))]
-        public Languages Language {  get; set; }
+        public Languages Language { get; set; }
         public DateTime PublishDate { get; set; }
         private Book() { }
-        private Book(Action<object, string> lazyLoader)
-        {
-            LazyLoader = lazyLoader;
-        }
-        public Book(string title, 
-                    string description, 
-                    string publisher, 
-                    string isbn, 
-                    decimal price, 
-                    int quantity, 
-                    int pageCount, 
-                    string dimensions, 
-                    Languages language, 
+        public Book(string title,
+                    string description,
+                    string publisher,
+                    string isbn,
+                    decimal price,
+                    int quantity,
+                    int pageCount,
+                    string dimensions,
+                    Languages language,
                     DateTime publishDate,
                     Author author,
                     Category category)
@@ -59,18 +54,8 @@ namespace Bookshop.Domain.Entities
 
         // Relationships
         public long? AuthorId { get; set; }
-        private Author _author;
-        public Author Author
-        {
-            get => LazyLoader.Load(this, ref _author);
-            set => _author = value;
-        }
+        public Author? Author { get; set; }
         public long CategoryId { get; set; }
-        private Category _category;
-        public Category Category
-        {
-            get => LazyLoader.Load(this, ref _category);
-            set => _category = value;
-        }
+        public Category? Category { get; set; }
     }
 }

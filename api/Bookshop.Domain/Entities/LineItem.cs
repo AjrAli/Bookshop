@@ -1,5 +1,4 @@
 ﻿using Bookshop.Domain.Common;
-using Bookshop.Domain.Extension;
 
 namespace Bookshop.Domain.Entities
 {
@@ -23,10 +22,6 @@ namespace Bookshop.Domain.Entities
         }
         public decimal Price { get; private set; }
         private LineItem() { }
-        private LineItem(Action<object, string> lazyLoader)
-        {
-            LazyLoader = lazyLoader;
-        }
         public LineItem(Book book, int quantity)
         {
             Book = book;
@@ -45,14 +40,7 @@ namespace Bookshop.Domain.Entities
         public long? OrderId { get; set; }
         public Order? Order { get; set; }
         public long BookId { get; set; }
-        private Book _book;
-        public Book Book
-        {
-            get => LazyLoader.Load(this, ref _book);
-            set => _book = value;
-        }
-
-
+        public Book? Book { get; set; }
         public long? ShoppingCartId { get; set; }
         public ShoppingCart? ShoppingCart { get; set; }
     }

@@ -1,6 +1,4 @@
-﻿using Bookshop.Application.Features.Books;
-using Bookshop.Application.Features.Common.Queries.GetAll;
-using Bookshop.Application.Features.Common.Queries.GetById;
+﻿using Bookshop.Application.Features.Common.Queries.Books;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,9 +19,9 @@ namespace Bookshop.Api.Controllers.Queries
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(long? id)
+        public async Task<IActionResult> GetById(long id)
         {
-            var dataReponse = await _mediator.Send(new GetById<BookResponseDto>
+            var dataReponse = await _mediator.Send(new GetBookById
             {
                 Id = id,
             });
@@ -32,7 +30,7 @@ namespace Bookshop.Api.Controllers.Queries
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var dataReponse = await _mediator.Send(new GetAll<BookResponseDto>());
+            var dataReponse = await _mediator.Send(new GetAllBooks());
             return Ok(dataReponse);
         }
     }
