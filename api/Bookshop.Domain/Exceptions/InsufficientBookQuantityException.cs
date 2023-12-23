@@ -1,6 +1,7 @@
 ﻿using Bookshop.Domain.Entities;
 
-namespace Bookshop.Application.Exceptions
+
+namespace Bookshop.Domain.Exceptions
 {
     public class InsufficientBookQuantityException : Exception
     {

@@ -1,7 +1,9 @@
-﻿using Bookshop.Application.Features.PipelineBehaviours;
+﻿using Bookshop.Application.Contracts.Seed;
+using Bookshop.Application.Features.PipelineBehaviours;
 using Bookshop.Application.Features.Response;
 using Bookshop.Application.Features.Response.Contracts;
-using Bookshop.Application.Features.Service;
+using Bookshop.Application.Service;
+using Bookshop.Domain.Service;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,7 @@ namespace Bookshop.Application
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             RegisterPipelineBehaviors(services);
             services.AddTransient<IStockService, StockService>();
+            services.AddTransient<ISeedApplicationService, SeedApplicationService>();
             return services;
         }
 

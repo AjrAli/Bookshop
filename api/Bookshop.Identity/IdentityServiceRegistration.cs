@@ -1,4 +1,6 @@
-﻿using Bookshop.Application.Settings;
+﻿using Bookshop.Application.Contracts.Seed;
+using Bookshop.Application.Settings;
+using Bookshop.Identity.Service;
 using Bookshop.Persistence.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -45,6 +47,7 @@ namespace Bookshop.Identity
                         IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(jwtSettings.Key))
                     };
                 });
+            services.AddTransient<ISeedIdentityService, SeedIdentityService>();
         }
     }
 }

@@ -1,18 +1,31 @@
-﻿using Bookshop.Domain.Entities;
+﻿using Bookshop.Application.Contracts.Seed;
+using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookshop.Persistence.Seed
+namespace Bookshop.Application.Service
 {
-    public static class DatabaseSeeder
+    public class SeedApplicationService : ISeedApplicationService
     {
-        public static async Task SeedLocationPricingsAsync(BookshopDbContext context)
+        private readonly BookshopDbContext _dbContext;
+
+        public SeedApplicationService(BookshopDbContext dbContext)
         {
-            if (!context.LocationPricings.Any())
+            _dbContext = dbContext;
+        }
+        public async Task SeedInfrastructureDataAsync()
+        {
+            await SeedLocationPricingsAsync();
+            await SeedCustomerDataAsync();
+        }
+
+
+        public async Task SeedLocationPricingsAsync()
+        {
+            if (!await _dbContext.LocationPricings.AnyAsync() || await _dbContext.LocationPricings.CountAsync() == 1)
             {
                 var listLocationPricing = new List<LocationPricing>
                 {
-                    new LocationPricing("Belgium", 9.99m, 21m),
                     new LocationPricing("Spain", 14.99m, 18m),
                     new LocationPricing("United Kingdom", 19.99m, 11m),
                     new LocationPricing("France", 4.99m, 12m),
@@ -20,15 +33,15 @@ namespace Bookshop.Persistence.Seed
                     new LocationPricing("Italy", 19.99m, 19m),
                     new LocationPricing("OTHERS", 19.99m, 21m)
                 };
-                await context.LocationPricings.AddRangeAsync(listLocationPricing);
-                await context.SaveChangesAsync();
+                await _dbContext.LocationPricings.AddRangeAsync(listLocationPricing);
+                await _dbContext.SaveChangesAsync();
             }
         }
-        public static async Task SeedCustomerDataAsync(BookshopDbContext context)
+        public async Task SeedCustomerDataAsync()
         {
-            if (context.Customers.Any())
+            if (await _dbContext.Customers.AnyAsync())
             {
-                var customer = context.Customers.Include(x => x.Orders).FirstOrDefault();
+                var customer = await _dbContext.Customers.Include(x => x.Orders).FirstOrDefaultAsync();
                 if (customer != null && !customer.Orders.Any())
                 {
                     var author1 = new Author("Jake Paul", "He is a good author!");
@@ -46,11 +59,10 @@ namespace Bookshop.Persistence.Seed
                     customer.ShoppingCart = shoppingCart;
                     var order1 = new Order(Order.CreditCards.Visa, customer, lineItems);
                     customer.Orders.Add(order1);
-                    context.Customers.Update(customer);
-                    await context.SaveChangesAsync();
+                    _dbContext.Customers.Update(customer);
+                    await _dbContext.SaveChangesAsync();
                 }
             }
         }
     }
-
 }

@@ -1,7 +1,7 @@
-﻿using Bookshop.Application.Exceptions;
-using Bookshop.Domain.Entities;
+﻿using Bookshop.Domain.Entities;
+using Bookshop.Domain.Exceptions;
 
-namespace Bookshop.Application.Features.Service
+namespace Bookshop.Domain.Service
 {
     public class StockService : IStockService
     {

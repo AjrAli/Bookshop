@@ -1,10 +1,6 @@
-using Bookshop.Identity.Seed;
-using Bookshop.Persistence.Context;
-using Bookshop.Persistence.Seed;
-using Microsoft.AspNetCore.Identity;
+using Bookshop.Application.Contracts.Seed;
 using Serilog;
 using Serilog.Events;
-using static Bookshop.Domain.Entities.Customer;
 
 namespace Bookshop.Api
 {
@@ -32,13 +28,10 @@ namespace Bookshop.Api
 
                 try
                 {
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await CreateRoles.SeedAsync(roleManager);
-                    var userManager = services.GetRequiredService<UserManager<IdentityUserData>>();
-                    var dbContext = services.GetRequiredService<BookshopDbContext>();
-                    await DatabaseSeeder.SeedLocationPricingsAsync(dbContext);
-                    await CreateFirstUser.SeedAsync(userManager, dbContext);
-                    await DatabaseSeeder.SeedCustomerDataAsync(dbContext);
+                    var seedIdentityService = services.GetRequiredService<ISeedIdentityService>();
+                    var seedApplicationService = services.GetRequiredService<ISeedApplicationService>();
+                    await seedIdentityService.SeedIdentityDataAsync();
+                    await seedApplicationService.SeedInfrastructureDataAsync();
                     Log.Information("Starting web host");
                 }
                 catch (Exception ex)

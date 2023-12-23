@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
-using Bookshop.Application.Exceptions;
 using Bookshop.Application.Features.Orders.Extension;
 using Bookshop.Application.Features.Orders.Validation;
-using Bookshop.Application.Features.Service;
 using Bookshop.Application.Features.ShoppingCarts.Extension;
 using Bookshop.Domain.Entities;
+using Bookshop.Domain.Exceptions;
+using Bookshop.Domain.Service;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using static Bookshop.Domain.Entities.Order;
