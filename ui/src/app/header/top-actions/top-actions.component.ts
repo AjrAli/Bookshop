@@ -3,16 +3,14 @@ import { InputGroupModule } from 'primeng/inputgroup'
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { CarouselModule } from 'primeng/carousel';
-import { TagModule } from 'primeng/tag';
 import { Product } from '../../../domain/product';
 import { ProductService } from '../../../services/productservice';
+import { CarouselComponent } from '../../body/carousel/carousel.component';
 
 @Component({
   selector: 'app-top-actions',
   standalone: true,
-  imports: [InputGroupModule, ButtonModule, InputTextModule, CarouselModule, OverlayPanelModule,
-    TagModule],
+  imports: [InputGroupModule, ButtonModule, InputTextModule, OverlayPanelModule, CarouselComponent],
   templateUrl: './top-actions.component.html',
   styleUrl: './top-actions.component.css'
 })

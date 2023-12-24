@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { GalleriaModule } from 'primeng/galleria';
+import { CommonModule } from '@angular/common'
 import { PhotoService } from '../../../services/photoservice';
-import { CarouselModule } from 'primeng/carousel';
 import { Product } from '../../../domain/product';
 import { ProductService } from '../../../services/productservice';
-import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { TableModule } from 'primeng/table';
-import { TabMenuModule } from 'primeng/tabmenu';
-import { RatingModule } from 'primeng/rating';
-import { TabViewModule } from 'primeng/tabview';
 import { FormsModule } from '@angular/forms';
+import { PanelComponent } from '../../body/panel/panel.component';
+import { FlyerPanelComponent } from '../../body/flyer-panel/flyer-panel.component';
+import { GalleriaComponent } from '../../body/galleria/galleria.component';
+import { CarouselComponent } from '../../body/carousel/carousel.component';
+import { TableComponent } from '../../body/table/table.component';
+import { CardComponent } from '../../body/card/card.component';
 
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [GalleriaModule, CarouselModule, TagModule, ButtonModule, CardModule,
-            TableModule, TabMenuModule, RatingModule, TabViewModule, FormsModule],
+  imports: [ButtonModule, FormsModule,
+    PanelComponent, FlyerPanelComponent, GalleriaComponent, CarouselComponent, 
+    TableComponent, CardComponent, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -30,18 +30,18 @@ export class HomeComponent implements OnInit {
   responsiveOptionsHomeCarousel: any[] | undefined;
   responsiveOptions: any[] = [
     {
-        breakpoint: '1024px',
-        numVisible: 5
+      breakpoint: '1024px',
+      numVisible: 5
     },
     {
-        breakpoint: '768px',
-        numVisible: 3
+      breakpoint: '768px',
+      numVisible: 3
     },
     {
-        breakpoint: '560px',
-        numVisible: 1
+      breakpoint: '560px',
+      numVisible: 1
     }
-];
+  ];
   constructor(private photoService: PhotoService,
     private productService: ProductService) { }
   ngOnInit(): void {
@@ -68,16 +68,5 @@ export class HomeComponent implements OnInit {
     this.productService.getProductsMini().then((data) => {
       this.products = data;
     });
-  }
-  getSeverity(status: string) {
-    switch (status) {
-      case 'INSTOCK':
-        return 'success';
-      case 'LOWSTOCK':
-        return 'warning';
-      case 'OUTOFSTOCK':
-        return 'danger';
-    }
-    return '';
   }
 }
