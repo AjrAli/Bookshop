@@ -30,9 +30,9 @@
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
     <ItemGroup>
+    <Folder Include="Client\img\" />
     <Folder Include="Logs\" />
     <Folder Include="logs\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
     <ItemGroup>
     <ProjectReference Include="..\Bookshop.Application\Bookshop.Application.csproj" />

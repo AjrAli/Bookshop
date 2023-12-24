@@ -6,6 +6,7 @@ using Bookshop.Application.Settings;
 using Bookshop.Identity;
 using Bookshop.Persistence;
 using Bookshop.Persistence.Contracts;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text.Json.Serialization;
@@ -36,11 +37,9 @@ namespace Bookshop.Api
             services.AddHttpContextAccessor();
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAnyOrigin", builder =>
+                options.AddPolicy("BookshopUI", builder =>
                 {
-                    builder.AllowAnyOrigin()  // Allow requests from any origin (website)
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
+                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
                 });
             });
         }
@@ -98,9 +97,14 @@ namespace Bookshop.Api
                 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookshop API"); });
             }
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, @"Client")),
+                RequestPath = "/client"
+            });
             app.UseSerilogRequestLogging();
             app.UseRouting();
-            app.UseCors("AllowAnyOrigin");
+            app.UseCors("BookshopUI");
             app.UseAuthentication();
 
             app.UseAuthorization();
