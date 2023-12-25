@@ -55,7 +55,7 @@ namespace Bookshop.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    About = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    About = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -73,7 +73,7 @@ namespace Bookshop.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsVisible = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
@@ -217,13 +217,14 @@ namespace Bookshop.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Publisher = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Isbn = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Publisher = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Isbn = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     PageCount = table.Column<int>(type: "int", nullable: false),
-                    Dimensions = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Dimensions = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AuthorId = table.Column<long>(type: "bigint", nullable: false),
@@ -236,7 +237,6 @@ namespace Bookshop.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
-                    table.CheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 1000");
                     table.ForeignKey(
                         name: "FK_Books_Authors_AuthorId",
                         column: x => x.AuthorId,
@@ -385,7 +385,7 @@ namespace Bookshop.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LineItems", x => x.Id);
-                    table.CheckConstraint("CK_Quantity_MaxValue1", "[Quantity] <= 100");
+                    table.CheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100");
                     table.ForeignKey(
                         name: "FK_LineItems_Books_BookId",
                         column: x => x.BookId,

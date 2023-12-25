@@ -13,7 +13,7 @@ namespace Bookshop.Persistence.Configurations
             builder.ToTable("Authors");
 
             builder.Property(e => e.Name).IsRequired().HasMaxLength(100);
-            builder.Property(e => e.About).IsRequired().HasMaxLength(100);
+            builder.Property(e => e.About).IsRequired();
 
             // Relationships
             builder.HasMany(e => e.Books).WithOne(e => e.Author)

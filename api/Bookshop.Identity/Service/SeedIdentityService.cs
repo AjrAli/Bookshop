@@ -50,9 +50,9 @@ namespace Bookshop.Identity.Service
 
         private async Task SeedUser()
         {
-            if (!await _userManager.Users.AnyAsync() && !await _dbContext.Customers.AnyAsync())
+            if (!await _userManager.Users.AnyAsync() && !await _dbContext.Customers.AnyAsync() && await _dbContext.LocationPricings.AnyAsync())
             {
-                var locationPricing = new LocationPricing("Belgium", 10m, 21m);
+                var locationPricing = await _dbContext.LocationPricings.FirstOrDefaultAsync();
                 var shippingAddress = new Address("Rue Street", "City", "1000", locationPricing.Country, "Bruxelles")
                 {
                     LocationPricing = locationPricing

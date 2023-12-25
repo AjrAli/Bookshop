@@ -13,6 +13,7 @@ namespace Bookshop.Domain.Entities
         public int Quantity { get; set; }
         public int PageCount { get; set; }
         public string Dimensions { get; set; }
+        public string ImageUrl { get; set; }
 
         [EnumDataType(typeof(Languages))]
         public Languages Language { get; set; }
@@ -26,6 +27,7 @@ namespace Bookshop.Domain.Entities
                     int quantity,
                     int pageCount,
                     string dimensions,
+                    string imageUrl,
                     Languages language,
                     DateTime publishDate,
                     Author author,
@@ -43,13 +45,15 @@ namespace Bookshop.Domain.Entities
             PublishDate = publishDate;
             Author = author;
             Category = category;
+            ImageUrl = imageUrl;
         }
         public enum Languages
         {
             English,
             French,
             Dutch,
-            German
+            German,
+            Spanish
         }
 
         // Relationships

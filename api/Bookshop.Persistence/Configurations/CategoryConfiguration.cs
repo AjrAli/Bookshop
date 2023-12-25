@@ -13,7 +13,7 @@ namespace Bookshop.Persistence.Configurations
             builder.ToTable("Categories");
 
             builder.Property(e => e.Title).IsRequired().HasMaxLength(100);
-            builder.Property(e => e.Description).IsRequired().HasMaxLength(500);
+            builder.Property(e => e.Description).IsRequired();
             builder.Property(e => e.IsVisible).IsRequired().HasDefaultValue(true);
 
             // Relationships

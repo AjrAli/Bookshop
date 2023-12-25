@@ -95,8 +95,7 @@ namespace Bookshop.Persistence.Migrations
 
                     b.Property<string>("About")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -155,18 +154,19 @@ namespace Bookshop.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Dimensions")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Isbn")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Language")
                         .IsRequired()
@@ -193,8 +193,7 @@ namespace Bookshop.Persistence.Migrations
 
                     b.Property<string>("Publisher")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -211,8 +210,6 @@ namespace Bookshop.Persistence.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Books", (string)null);
-
-                    b.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 1000");
                 });
 
             modelBuilder.Entity("Bookshop.Domain.Entities.Category", b =>
@@ -235,8 +232,7 @@ namespace Bookshop.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsVisible")
                         .ValueGeneratedOnAdd()
@@ -448,7 +444,7 @@ namespace Bookshop.Persistence.Migrations
 
                     b.ToTable("LineItems", (string)null);
 
-                    b.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100", c => c.HasName("CK_Quantity_MaxValue1"));
+                    b.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100");
                 });
 
             modelBuilder.Entity("Bookshop.Domain.Entities.LocationPricing", b =>

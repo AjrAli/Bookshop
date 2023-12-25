@@ -9,6 +9,7 @@ namespace Bookshop.Application.Features.ShoppingCarts
         public long BookId { get; set; }
         public decimal Price { get; set; }
         public string? Title { get; set; }
+        public string? ImageUrl { get; set; }
         public string? AuthorName { get; set; }
         public string? CategoryTitle { get; set; }
     }

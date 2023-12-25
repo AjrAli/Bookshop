@@ -15,7 +15,7 @@ namespace Bookshop.Domain.Tests
                 var shoppingCart = new ShoppingCart(null);
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
+                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8","URL", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
                 shoppingCart.UpdateCartItem(book, 2);
@@ -32,7 +32,7 @@ namespace Bookshop.Domain.Tests
                 var shoppingCart = new ShoppingCart(null);
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
+                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
                 shoppingCart.UpdateCartItem(book, 2);
@@ -50,7 +50,7 @@ namespace Bookshop.Domain.Tests
                 var shoppingCart = new ShoppingCart(null);
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
+                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
                 shoppingCart.UpdateCartItem(book, 5);
@@ -68,7 +68,7 @@ namespace Bookshop.Domain.Tests
                 var shoppingCart = new ShoppingCart(null);
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
+                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
                 shoppingCart.UpdateCartItem(book, 2);
@@ -84,7 +84,7 @@ namespace Bookshop.Domain.Tests
                 var shoppingCart = new ShoppingCart(null);
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
+                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
 
                 // Act
                 shoppingCart.UpdateCartItem(book, 2);
@@ -103,7 +103,7 @@ namespace Bookshop.Domain.Tests
                 // Arrange
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
+                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
                 var lineItem = new LineItem(book, 3);
 
                 // Act
@@ -118,7 +118,7 @@ namespace Bookshop.Domain.Tests
                 // Arrange
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
+                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
                 var lineItem = new LineItem(book, 3);
 
                 // Act
@@ -136,7 +136,7 @@ namespace Bookshop.Domain.Tests
                 // Arrange
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 10.0m, 2, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
+                var book = new Book("Test Book", "Description", "Publisher", "ISBN123", 10.0m, 2, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
                 var lineItem = new LineItem(book, 1);
 
                 // Act
@@ -168,8 +168,8 @@ namespace Bookshop.Domain.Tests
                 var customer = new Customer(firstName, lastName, shippingAddress, billingAddress);            
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book1 = new Book("Test Book 1", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
-                var book2 = new Book("Test Book 2", "Description", "Publisher", "ISBN456", 30.0m, 50, 150, "6x9", Book.Languages.French, DateTime.Now, author, category);
+                var book1 = new Book("Test Book 1", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
+                var book2 = new Book("Test Book 2", "Description", "Publisher", "ISBN456", 30.0m, 50, 150, "6x9", "URL", Book.Languages.French, DateTime.Now, author, category);
                 var lineItem1 = new LineItem(book1, 2);
                 var lineItem2 = new LineItem(book2, 1);
 
@@ -214,8 +214,8 @@ namespace Bookshop.Domain.Tests
                 var billingAddress = new Address("billstreetOfUser1", "billcityOfUser1", "billCodeUser1", "billcountryOfUser1", "billstateOfUser1");
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book1 = new Book("Test Book 1", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category);
-                var book2 = new Book("Test Book 2", "Description", "Publisher", "ISBN456", 30.0m, 50, 150, "6x9", Book.Languages.French, DateTime.Now, author, category);
+                var book1 = new Book("Test Book 1", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category);
+                var book2 = new Book("Test Book 2", "Description", "Publisher", "ISBN456", 30.0m, 50, 150, "6x9", "URL", Book.Languages.French, DateTime.Now, author, category);
                 var lineItem1 = new LineItem(book1, 2);
                 var lineItem2 = new LineItem(book2, 1);
                 var customer = new Customer("John", "Doe", shippingAddress, billingAddress);
@@ -246,11 +246,11 @@ namespace Bookshop.Domain.Tests
                 // Simulate adding books to the shopping cart
                 var author = new Author("author1", "best author");
                 var category = new Category("category1", "best category");
-                var book1 = new Book("Test Book 1", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", Book.Languages.English, DateTime.Now, author, category) 
+                var book1 = new Book("Test Book 1", "Description", "Publisher", "ISBN123", 20.0m, 50, 100, "5x8", "URL", Book.Languages.English, DateTime.Now, author, category) 
                 { 
                     Id = 1
                 };
-                var book2 = new Book("Test Book 2", "Description", "Publisher", "ISBN456", 30.0m, 50, 150, "6x9", Book.Languages.French, DateTime.Now, author, category)
+                var book2 = new Book("Test Book 2", "Description", "Publisher", "ISBN456", 30.0m, 50, 150, "6x9", "URL", Book.Languages.French, DateTime.Now, author, category)
                 {
                     Id = 2
                 };

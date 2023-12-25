@@ -11,14 +11,13 @@ namespace Bookshop.Application.Profiles.Orders
         {
             // Order profile
             CreateMap<Order, OrderResponseDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(source => source.LineItems))
-                .ForMember(dest => dest.Total, opt => opt.MapFrom(source => source.Total))
                 .ForPath(dest => dest.VatRate, opt => opt.MapFrom(source => source.Customer.ShippingAddress.LocationPricing.VatRate))
                 .ForPath(dest => dest.ShippingFee, opt => opt.MapFrom(source => source.Customer.ShippingAddress.LocationPricing.ShippingFee));
             CreateMap<OrderResponseDto, ShoppingCart>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items));
+                .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items))
+                .ForAllMembers(x => x.Ignore());
         }
     }
 }

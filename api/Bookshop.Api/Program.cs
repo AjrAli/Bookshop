@@ -30,8 +30,8 @@ namespace Bookshop.Api
                 {
                     var seedIdentityService = services.GetRequiredService<ISeedIdentityService>();
                     var seedApplicationService = services.GetRequiredService<ISeedApplicationService>();
-                    await seedIdentityService.SeedIdentityDataAsync();
                     await seedApplicationService.SeedInfrastructureDataAsync();
+                    await seedIdentityService.SeedIdentityDataAsync();
                     Log.Information("Starting web host");
                 }
                 catch (Exception ex)
