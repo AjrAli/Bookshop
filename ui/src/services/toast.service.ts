@@ -3,9 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ValidationErrorResponse } from '../app/dto/response/error/validation-error-response';
 import { ErrorResponse } from '../app/dto/response/error/error-response';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ToastService {
   constructor(private toastr: ToastrService) { }
 

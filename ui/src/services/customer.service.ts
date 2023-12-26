@@ -7,11 +7,9 @@ import { environment } from "../app/environments/environment";
 import { CustomerDto } from "../app/dto/customer/customer-dto";
 import { jwtDecode } from "jwt-decode";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class CustomerService {
-  private apiUrl = environment.apiUrl + '/customer';
+  private readonly apiUrl = environment.apiUrl + '/customer';
   private userInfo: DecodedToken | undefined;
 
   constructor(private http: HttpClient) { }

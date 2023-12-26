@@ -11,6 +11,10 @@ import { GalleriaComponent } from '../../body/galleria/galleria.component';
 import { CarouselComponent } from '../../body/carousel/carousel.component';
 import { TableComponent } from '../../body/table/table.component';
 import { CardComponent } from '../../body/card/card.component';
+import { ToastService } from '../../../services/toast.service';
+import { BookService } from '../../../services/book.service';
+import { BookResponseDto } from '../../dto/book/book-response-dto';
+import { ErrorResponse } from '../../dto/response/error/error-response';
 
 
 
@@ -18,7 +22,7 @@ import { CardComponent } from '../../body/card/card.component';
   selector: 'app-home',
   standalone: true,
   imports: [ButtonModule, FormsModule,
-    PanelComponent, FlyerPanelComponent, GalleriaComponent, CarouselComponent, 
+    PanelComponent, FlyerPanelComponent, GalleriaComponent, CarouselComponent,
     TableComponent, CardComponent, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -26,6 +30,7 @@ import { CardComponent } from '../../body/card/card.component';
 export class HomeComponent implements OnInit {
   images: any[] | undefined;
   products!: Product[];
+  books: BookResponseDto[] | undefined = [];
   indexes: number[] = Array.from({ length: 10 }, (_, index) => index + 1);
   responsiveOptionsHomeCarousel: any[] | undefined;
   responsiveOptions: any[] = [
@@ -43,8 +48,33 @@ export class HomeComponent implements OnInit {
     }
   ];
   constructor(private photoService: PhotoService,
-    private productService: ProductService) { }
+    private productService: ProductService,
+    private toastService: ToastService,
+    private bookService: BookService) { }
+
+
+  getBooks() {
+    this.bookService.getAll().subscribe({
+      next: (response: any) => {
+        if (!response || response.listDto.length === 0) {
+          this.books = undefined;
+          return;
+        }
+        this.books = response.listDto.map((listDto: any) => {
+          const book = new BookResponseDto();
+          Object.assign(book, listDto);
+          return book;
+        });
+      },
+      error: (error: ErrorResponse) => {
+        this.books = undefined;
+        this.toastService.showError(error);
+      },
+      complete: () => console.info('complete')
+    })
+  }
   ngOnInit(): void {
+    this.getBooks();
     this.responsiveOptionsHomeCarousel = [
       {
         breakpoint: '1400px',
