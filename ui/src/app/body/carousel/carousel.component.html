@@ -7,13 +7,13 @@
             <div class="product-item-content">
                 <div class="mb-3">
                     <img src="{{rootUrl + book.imageUrl}}"
-                        [alt]="book.isbn" class="product-image" width="100px" height="150px"/>
+                        [alt]="book.isbn" class="product-image" width="280px" height="350px"/>
                 </div>
                 <div>
                     <h4 class="mb-1">{{ book.title }}</h4>
                     <h6 class="mt-0">{{ '$' + book.price }}</h6>
                     <p-tag [value]="getStockStatus(book.quantity)" [severity]="getSeverity(getStockStatus(book.quantity))"></p-tag>
-                    <div class="mt-2 align-items-center justify-content-center">
+                    <div class="mb-3 mt-3 align-items-center justify-content-center">
                         <p-button icon="pi pi-search" [rounded]="true" />
                         <p-button icon="pi pi-star-fill" [rounded]="true" severity="secondary" />
                     </div>
