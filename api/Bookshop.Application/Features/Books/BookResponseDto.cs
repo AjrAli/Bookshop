@@ -9,6 +9,8 @@
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public int PageCount { get; set; }
+        public string AuthorName { get; set; }
+        public string CategoryTitle { get; set; }
         public string Dimensions { get; set; }
         public string ImageUrl { get; set; }
         public string Language { get; set; }

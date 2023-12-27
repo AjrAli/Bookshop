@@ -13,6 +13,8 @@ namespace Bookshop.Application.Profiles.Books
             CreateMap<Book, BookResponseDto>()
                 .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.Language.ToString()))
                 .ForMember(dest => dest.PublishDate, opt => opt.MapFrom(src => src.PublishDate.ToShortDateString()))
+                .ForPath(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
+                .ForPath(dest => dest.CategoryTitle, opt => opt.MapFrom(src => src.Category.Title))
                 .ReverseMap();
         }
     }

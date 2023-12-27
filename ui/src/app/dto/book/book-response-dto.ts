@@ -1,5 +1,4 @@
 export class BookResponseDto {
-
     title: string;
     description: string;
     publisher: string;
@@ -11,6 +10,8 @@ export class BookResponseDto {
     imageUrl: string;
     language: string;
     publishDate: string;
+    authorName: string;
+    categoryTitle: string;
     constructor() {
         this.title = '';
         this.description = '';
@@ -23,5 +24,27 @@ export class BookResponseDto {
         this.imageUrl = '';
         this.language = '';
         this.publishDate = '';
+        this.authorName = '';
+        this.categoryTitle = '';
+    }
+    get status(): string {
+        if (this.quantity > 50)
+            return 'INSTOCK';
+        else if (this.quantity < 50)
+            return 'LOWSTOCK';
+        else if (this.quantity === 0)
+            return 'OUTOFSTOCK';
+        return '';
+    }
+    get statusColor(): string {
+        switch (this.status) {
+            case 'INSTOCK':
+                return 'success';
+            case 'LOWSTOCK':
+                return 'warning';
+            case 'OUTOFSTOCK':
+                return 'danger';
+        }
+        return '';
     }
 }

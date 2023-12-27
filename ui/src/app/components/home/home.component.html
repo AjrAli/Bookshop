@@ -6,13 +6,22 @@
         </div>
         <div class="col-xxl-9">
             <!-- <app-galleria [responsiveOptions]="responsiveOptions" [images]="images"></app-galleria> -->
-            <app-carousel [numVisible]="3" [responsiveOptions]="responsiveOptionsHomeCarousel" [books]="books"></app-carousel>
+            <div class="container mb-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <app-carousel [numVisible]="3" [responsiveOptions]="responsiveOptionsHomeCarousel"
+                        [books]="books!.slice(0,5)"></app-carousel>
+                    </div>
+                </div>
+            </div>
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <ng-container *ngFor="let ind of indexes; let i = index">
-                            <app-card></app-card>
+                        <ng-container *ngFor="let book of books!.slice(first, first + rows)">
+                            <app-card [book]="book"></app-card>
                         </ng-container>
+                        <p-paginator [rows]="rows" [totalRecords]="totalRecords" [first]="first"
+                            (onPageChange)="onPageChange($event)"></p-paginator>
                     </div>
                 </div>
             </div>

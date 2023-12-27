@@ -53,3 +53,10 @@ body {
 .p-panelmenu-header-action{
     background-color: var(--teal-500);
 }
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight{
+    color: white;
+}
+.p-card{
+    box-shadow: none;
+}
