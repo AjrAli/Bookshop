@@ -4,7 +4,7 @@ export class ShoppingCartDto {
 
     items: ShopItemDto[]
 
-    constructor() {
-        this.items = [];
+    constructor(items?:ShopItemDto[]) {
+        this.items = items ?? [];
     }
 }

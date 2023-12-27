@@ -1,12 +1,12 @@
 export class CategoryResponseDto {
-    title: string;
-    description: string;
-    isVisible: boolean;
-
-    constructor() {
-
-        this.title = '';
-        this.description = '';
-        this.isVisible = true;
+    title: string = '';
+    description: string = '';
+    isVisible: boolean = true;
+  
+    constructor(title?: string, description?: string, isVisible?: boolean) {
+      // Initialize properties with default values if not provided
+      this.title = title ?? this.title;
+      this.description = description ?? this.description;
+      this.isVisible = isVisible ?? this.isVisible;
     }
 }

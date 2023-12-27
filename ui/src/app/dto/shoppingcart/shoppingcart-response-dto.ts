@@ -4,9 +4,9 @@ export class ShoppingCartResponseDto {
 
     total: number;
     items: ShopItemResponseDto[]
-    constructor() {
-        this.total = 0;
-        this.items = [];
+    constructor(total?: number, items?: ShopItemResponseDto[]) {
+        this.total = total ?? 0;
+        this.items = items ?? [];
     }
 
 }
