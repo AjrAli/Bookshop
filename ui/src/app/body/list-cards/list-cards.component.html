@@ -1,0 +1,7 @@
+<div *ngIf="books && books.length > 0">
+    <ng-container *ngFor="let book of books!.slice(first, first + rows)">
+        <app-card [book]="book"></app-card>
+    </ng-container>
+    <p-paginator [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
+        [rowsPerPageOptions]="[8, 16, 32]"></p-paginator>
+</div>

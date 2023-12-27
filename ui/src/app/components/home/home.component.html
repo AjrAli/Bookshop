@@ -6,7 +6,7 @@
         </div>
         <div class="col-xxl-9">
             <!-- <app-galleria [responsiveOptions]="responsiveOptions" [images]="images"></app-galleria> -->
-            <div class="container mb-5">
+            <div class="container mb-5 border-bottom">
                 <div class="row">
                     <div class="col-md-12">
                         <app-carousel [numVisible]="3" [responsiveOptions]="responsiveOptionsHomeCarousel"
@@ -17,11 +17,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <ng-container *ngFor="let book of books!.slice(first, first + rows)">
-                            <app-card [book]="book"></app-card>
-                        </ng-container>
-                        <p-paginator [rows]="rows" [totalRecords]="totalRecords" [first]="first"
-                            (onPageChange)="onPageChange($event)"></p-paginator>
+                        <app-list-cards [books]="books"> </app-list-cards>
                     </div>
                 </div>
             </div>

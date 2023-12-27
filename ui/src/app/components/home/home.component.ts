@@ -10,12 +10,11 @@ import { FlyerPanelComponent } from '../../body/flyer-panel/flyer-panel.componen
 import { GalleriaComponent } from '../../body/galleria/galleria.component';
 import { CarouselComponent } from '../../body/carousel/carousel.component';
 import { TableComponent } from '../../body/table/table.component';
-import { CardComponent } from '../../body/card/card.component';
 import { ToastService } from '../../../services/toast.service';
 import { BookService } from '../../../services/book.service';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { ErrorResponse } from '../../dto/response/error/error-response';
-import { PaginatorModule } from 'primeng/paginator';
+import { ListCardsComponent } from '../../body/list-cards/list-cards.component';
 
 
 
@@ -24,14 +23,11 @@ import { PaginatorModule } from 'primeng/paginator';
   standalone: true,
   imports: [ButtonModule, FormsModule,
     PanelComponent, FlyerPanelComponent, GalleriaComponent, CarouselComponent,
-    TableComponent, CardComponent, CommonModule, PaginatorModule],
+    TableComponent, CommonModule, ListCardsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  totalRecords: number = 0;
-  rows: number = 8; // Number of items per page
-  first: number = 0; // Initial page index
   images: any[] | undefined;
   products!: Product[];
   books: BookResponseDto[] | undefined = [];
@@ -56,9 +52,6 @@ export class HomeComponent implements OnInit {
     private toastService: ToastService,
     private bookService: BookService) { }
 
-  onPageChange(event: any): void {
-    this.first = event.first;
-  }
   getBooks() {
     this.bookService.getAll().subscribe({
       next: (response: any) => {
@@ -71,7 +64,6 @@ export class HomeComponent implements OnInit {
           Object.assign(book, listDto);
           return book;
         });
-        this.totalRecords = this.books!.length;
       },
       error: (error: ErrorResponse) => {
         this.books = undefined;
