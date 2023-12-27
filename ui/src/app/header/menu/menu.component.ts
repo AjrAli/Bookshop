@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-menu',
   standalone: true,
@@ -11,11 +12,13 @@ import { MenuItem } from 'primeng/api';
 export class MenuComponent implements OnInit {
   items: MenuItem[] | undefined;
 
+  constructor(private router: Router){}
   ngOnInit() {
     this.items = [
       {
         label: 'Home',
-        icon: 'pi pi-fw pi-globe'
+        icon: 'pi pi-fw pi-globe',
+        command: () => this.router.navigate([''])
       },
       {
         label: 'Book1',

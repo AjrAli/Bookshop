@@ -28,10 +28,11 @@ export class ListCardsComponent implements OnChanges {
       this.totalRecords = this.books.length;
     }
   }
-  onPageChange(event: PageEvent): void {
-    if (event) {
-      this.first = event.first;
-      this.rows = event.rows;
+  onPageChange(event: any): void {
+    let eventOfPageEvent = event as PageEvent;
+    if (eventOfPageEvent) {
+      this.first = eventOfPageEvent.first;
+      this.rows = eventOfPageEvent.rows;
     }
   }
 }
