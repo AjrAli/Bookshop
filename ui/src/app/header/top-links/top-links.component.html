@@ -4,9 +4,14 @@
             <div class="col-md-2">
                 <a href="#" class="nav-link link-secondary mx-2">CONTACT US</a>
             </div>
-            <div class="col-md-2">
-                <i class="pi pi-user" style="font-size: 1.5rem"></i><a [routerLink]="['/login']"
-                    class="nav-link link-secondary mx-2">Login/Register</a>
+            <div class="col-md-3">
+                <i class="pi pi-user" style="font-size: 1.5rem"></i>
+                <span class="text-teal-500 fst-italic" *ngIf="isConnected()"> Hey {{customerName}}! </span>
+                <a class="nav-link link-secondary mx-2" *ngIf="isConnected(); else notConnected" (click)="logout()"
+                    routerLink="">Logout</a>
+                <ng-template #notConnected>
+                    <a class="nav-link link-secondary mx-2" [routerLink]="['/login']">Login/Register</a>
+                </ng-template>
             </div>
         </div>
     </div>

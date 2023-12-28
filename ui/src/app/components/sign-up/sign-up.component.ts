@@ -133,6 +133,8 @@ export class SignUpComponent implements OnInit {
         next: (r) => {
           if (r.token) {
             this.customerService.setToken(r.token);
+            if(r.customer)
+              this.customerService.setCustomerInfo(r.customer);
             const returnUrl = this.route.snapshot.queryParams['returnUrl'];
             this.toastService.showSuccess(r.message);
             this.router.navigateByUrl(returnUrl ?? '');

@@ -6,6 +6,7 @@ import { Role } from "../app/enum/role";
 import { environment } from "../app/environments/environment";
 import { CustomerDto } from "../app/dto/customer/customer-dto";
 import { jwtDecode } from "jwt-decode";
+import { CustomerResponseDto } from "../app/dto/customer/customer-response-dto";
 
 @Injectable()
 export class CustomerService {
@@ -22,6 +23,24 @@ export class CustomerService {
   createCustomer(customer: CustomerDto): Observable<AuthenticateResponse> {
     return this.http.post<AuthenticateResponse>(`${this.apiUrl}/create-customer`, customer);
   }
+
+  setCustomerInfo(customerResponseDto: CustomerResponseDto) {
+    const serializedData = JSON.stringify(customerResponseDto);
+    sessionStorage.setItem('customerData', serializedData);
+  }
+
+  getCustomerInfo(): CustomerResponseDto | null {
+    const storedData = sessionStorage.getItem('customerData');
+    if (storedData) {
+      const deserializedCustomer = JSON.parse(storedData) as CustomerResponseDto;
+      //console.log(deserializedCustomer);
+      return deserializedCustomer;
+    } else {
+      console.log('No data found in sessionStorage');
+    }
+    return null;
+  }
+
   setToken(token: string) {
     localStorage.setItem('authToken', token);
   }
@@ -56,6 +75,7 @@ export class CustomerService {
 
   logout() {
     localStorage.removeItem('authToken');
+    sessionStorage.removeItem('customerData');
     this.userInfo = undefined;
   }
 }
