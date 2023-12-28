@@ -1,5 +1,5 @@
 <div *ngIf="books && books.length > 0" class="container text-center">
-    <div *ngFor="let book of books!.slice(first, first + rows)"  [style]="{display: 'inline-block' }">
+    <div *ngFor="let book of books!.slice(first, first + rows)"  style="display: inline-block; vertical-align: top ">
         <app-card [book]="book"></app-card>
     </div>
     <p-paginator [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
