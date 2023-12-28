@@ -1,23 +1,23 @@
-<div class="container-fluid bg-light bg-opacity-10 py-5">
+<div class="container-fluid bg-light bg-opacity-10 py-5 text-center">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 d-flex align-items-center">
-                <i class="pi pi-book text-teal-500 fst-italic" style="font-size: 3.5rem"></i>
-                <h1 class="text-teal-500 opacity-75 fst-italic" style="font-size: 2.2rem;">The Bookshop</h1>
+            <div class="col-md-4 d-flex justify-content-start">
+                <i class="pi pi-book text-teal-500 fst-italic " style="font-size: 3.5rem"></i>
+                <h1 class="text-teal-500 opacity-75 fst-italic mt-0" style="font-size: 2.2rem;">The Bookshop</h1>
             </div>
-            <div class="col-md-5 d-flex align-items-center">
+            <div class="col-md-5 justify-content-around">
                 <p-inputGroup>
                     <input type="text" pInputText placeholder="Search by title, author, keyword or ISBN" />
                     <button type="button" pButton icon="pi pi-search" label="Search"></button>
                 </p-inputGroup>
             </div>
-            <div class="col-md-3 d-flex align-items-center">
-                <div class="row text-end">
+            <div class="col-md-3 d-flex justify-content-center">
+                <div class="row">
                     <div class="col-md-8">
                         <h4 class="text-teal-500 fw-bold mt-0 mb-0">Shopping cart</h4>
                         <p class="mt-0 mb-0">2 Product(s)</p>
                     </div>
-                    <div class="col-md-4 d-flex align-items-center">
+                    <div class="col-md-4">
                         <p-button (click)="op.toggle($event)" icon="pi pi-gift" severity="help"></p-button>
                         <p-overlayPanel #op>
                             <!-- <app-carousel [numVisible]="1" [responsiveOptions]="responsiveOptionsCartCarousel" 

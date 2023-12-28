@@ -21,7 +21,7 @@ export class ListCardsComponent implements OnChanges {
 
   @Input() books!: BookResponseDto[];
   totalRecords: number = 0;
-  rows: number = 8; // Number of items per page
+  rows: number = 10; // Number of items per page
   first: number = 0; // Initial page index
   ngOnChanges(): void {
     if (this.books.length > 0) {
