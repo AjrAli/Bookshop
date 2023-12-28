@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
-import { PhotoService } from '../../../services/photoservice';
-import { Product } from '../../../domain/product';
-import { ProductService } from '../../../services/productservice';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { PanelComponent } from '../../body/panel/panel.component';
@@ -29,7 +26,6 @@ import { ListCardsComponent } from '../../body/list-cards/list-cards.component';
 })
 export class HomeComponent implements OnInit {
   images: any[] | undefined;
-  products!: Product[];
   books: BookResponseDto[] | undefined = [];
   indexes: number[] = Array.from({ length: 10 }, (_, index) => index + 1);
   responsiveOptionsHomeCarousel: any[] | undefined;
@@ -47,9 +43,7 @@ export class HomeComponent implements OnInit {
       numVisible: 1
     }
   ];
-  constructor(private photoService: PhotoService,
-    private productService: ProductService,
-    private toastService: ToastService,
+  constructor(private toastService: ToastService,
     private bookService: BookService) { }
 
   getBooks() {
@@ -91,11 +85,5 @@ export class HomeComponent implements OnInit {
         numScroll: 1
       }
     ];
-    this.photoService.getImages().then(images => {
-      this.images = images;
-    });
-    this.productService.getProductsMini().then((data) => {
-      this.products = data;
-    });
   }
 }

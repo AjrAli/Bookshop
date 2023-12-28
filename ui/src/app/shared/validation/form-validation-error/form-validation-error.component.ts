@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { AbstractControl, FormsModule } from '@angular/forms';
+import { AbstractControl, FormGroup, FormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   standalone: true,
@@ -12,4 +12,21 @@ import { AbstractControl, FormsModule } from '@angular/forms';
 export class FormValidationErrorComponent {
   @Input() control!: AbstractControl | null;
 
+}
+export class PasswordMatchValidator {
+
+  static match(controlName: string, matchingControlName: string): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const control = formGroup.get(controlName);
+      const matchingControl = formGroup.get(matchingControlName);
+
+      if (control?.value !== matchingControl?.value) {
+        matchingControl?.setErrors({ mismatch: true });
+        return { mismatch: true };
+      } else {
+        matchingControl?.setErrors(null);
+        return null;
+      }
+    };
+  }
 }

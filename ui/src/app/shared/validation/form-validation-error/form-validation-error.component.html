@@ -20,4 +20,7 @@
     <div *ngIf="control.errors['pattern']">
         Only alphabets and spaces are allowed.
     </div>
+    <div *ngIf="control.errors['mismatch']">
+        Passwords do not match.
+    </div>
 </div>

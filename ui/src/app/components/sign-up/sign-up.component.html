@@ -1,0 +1,159 @@
+<div class="container mt-5 text-center">
+    <form [formGroup]="loginForm" (submit)="onSubmit()">
+        <div class="row mb-2">
+            <div class="col-xxl-2 mt-2">
+                <label for="username">Username</label>
+            </div>
+            <div class="col-xxl-10">
+                <input pInputText class="w-75" type="text" formControlName="username" required />
+                <app-form-validation-error [control]="loginForm.get('username')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="password">Password</label>
+            </div>
+            <div class="col-xxl-10">
+                <input pInputText class="w-75" type="password" formControlName="password" required />
+                <app-form-validation-error [control]="loginForm.get('password')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="confirmPassword">Confirm Password</label>
+            </div>
+            <div class="col-xxl-10">
+                <input pInputText class="w-75" type="password" formControlName="confirmPassword" required />
+                <app-form-validation-error [control]="loginForm.get('confirmPassword')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="firstName">FirstName</label>
+            </div>
+            <div class="col-xxl-10">
+                <input pInputText class="w-75" type="text" formControlName="firstName" required />
+                <app-form-validation-error [control]="loginForm.get('firstName')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="lastName">LastName</label>
+            </div>
+            <div class="col-xxl-10">
+                <input pInputText class="w-75" type="text" formControlName="lastName" required />
+                <app-form-validation-error [control]="loginForm.get('lastName')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="email">Email</label>
+            </div>
+            <div class="col-xxl-10">
+                <input pInputText class="w-75" type="email" formControlName="email" required />
+                <app-form-validation-error [control]="loginForm.get('email')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-12">
+                <h4>Shipping Address</h4>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="shipstreet">Street</label>
+            </div>
+            <div class="col-xxl-2">
+                <input pInputText class="w-75" type="text" formControlName="shipstreet" required />
+                <app-form-validation-error [control]="loginForm.get('shipstreet')"></app-form-validation-error>
+            </div>
+            <div class="col-xxl-2 mt-2">
+                <label for="shipcity">City</label>
+            </div>
+            <div class="col-xxl-2">
+                <input pInputText class="w-75" type="text" formControlName="shipcity" required />
+                <app-form-validation-error [control]="loginForm.get('shipcity')"></app-form-validation-error>
+            </div>
+            <div class="col-xxl-2 mt-2">
+                <label for="shippostalCode">Postal Code</label>
+            </div>
+            <div class="col-xxl-2">
+                <input pInputText class="w-75" type="text" formControlName="shippostalCode" required />
+                <app-form-validation-error [control]="loginForm.get('shippostalCode')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="shipcountry">Country</label>
+            </div>
+            <div class="col-xxl-4">
+                <input pInputText class="w-75" type="text" formControlName="shipcountry" required />
+                <app-form-validation-error [control]="loginForm.get('shipcountry')"></app-form-validation-error>
+            </div>
+            <div class="col-xxl-2 mt-2">
+                <label for="shipstate">State</label>
+            </div>
+            <div class="col-xxl-4">
+                <input pInputText class="w-75" type="text" formControlName="shipstate" required />
+                <app-form-validation-error [control]="loginForm.get('shipstate')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-12">
+                <h4>Billing Address</h4>
+                <span class="me-2">Same address?</span>
+                <p-checkbox formControlName="isSameAddress" [binary]="true"></p-checkbox>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="billstreet">Street</label>
+            </div>
+            <div class="col-xxl-2">
+                <input pInputText class="w-75" type="text" formControlName="billstreet" required />
+                <app-form-validation-error [control]="loginForm.get('billstreet')"></app-form-validation-error>
+            </div>
+            <div class="col-xxl-2 mt-2">
+                <label for="billcity">City</label>
+            </div>
+            <div class="col-xxl-2">
+                <input pInputText class="w-75" type="text" formControlName="billcity" required />
+                <app-form-validation-error [control]="loginForm.get('billcity')"></app-form-validation-error>
+            </div>
+            <div class="col-xxl-2 mt-2">
+                <label for="billpostalCode">Postal Code</label>
+            </div>
+            <div class="col-xxl-2">
+                <input pInputText class="w-75" type="text" formControlName="billpostalCode" required />
+                <app-form-validation-error [control]="loginForm.get('billpostalCode')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="billcountry">Country</label>
+            </div>
+            <div class="col-xxl-4">
+                <input pInputText class="w-75" type="text" formControlName="billcountry" required />
+                <app-form-validation-error [control]="loginForm.get('billcountry')"></app-form-validation-error>
+            </div>
+            <div class="col-xxl-2 mt-2">
+                <label for="billstate">State</label>
+            </div>
+            <div class="col-xxl-4">
+                <input pInputText class="w-75" type="text" formControlName="billstate" required />
+                <app-form-validation-error [control]="loginForm.get('billstate')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-xxl-12">
+                <div *ngIf="errorResponse" class="row  mb-3 text-danger">
+                    {{errorResponse.message}}
+                </div>
+                <div class="row mb-3 justify-content-center">
+                    <p-button [rounded]="true" styleClass="justify-content-center w-50" type="submit"
+                        [disabled]="!loginForm.valid">Sign Up</p-button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

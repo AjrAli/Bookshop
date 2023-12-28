@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login-proposale.component.html',
   styleUrl: './login-proposale.component.css'
 })
-export class LoginProposaleComponent {
+export class LoginProposaleComponent implements OnInit {
   username: string = '';
   password: string = '';
   loginForm!: FormGroup;
@@ -37,6 +37,9 @@ export class LoginProposaleComponent {
     if (this.customerService.isLoggedIn()) {
       this.router.navigate(['']);
     }
+  }
+  navigateToSignUp(){
+    this.router.navigate(['/sign-up']);
   }
   onSubmit() {
     this.customerService.authenticate(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe({

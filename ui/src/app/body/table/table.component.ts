@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common'
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
-import { Product } from '../../../domain/product';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
+import { BookResponseDto } from '../../dto/book/book-response-dto';
+import { environment } from '../../environments/environment';
 
 
 
@@ -17,7 +18,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './table.component.css'
 })
 export class TableComponent {
-  @Input() products!: Product[];
+  rootUrl = environment.apiRootUrl;
+  @Input() books!: BookResponseDto[];
   getSeverity(status: string) {
     switch (status) {
       case 'INSTOCK':

@@ -3,8 +3,6 @@ import { InputGroupModule } from 'primeng/inputgroup'
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Product } from '../../../domain/product';
-import { ProductService } from '../../../services/productservice';
 import { CarouselComponent } from '../../body/carousel/carousel.component';
 
 @Component({
@@ -15,10 +13,9 @@ import { CarouselComponent } from '../../body/carousel/carousel.component';
   styleUrl: './top-actions.component.css'
 })
 export class TopActionsComponent implements OnInit {
-  products!: Product[];
   responsiveOptionsCartCarousel: any[] | undefined;
 
-  constructor(private productService: ProductService) { }
+  constructor() { }
   ngOnInit() {
     this.responsiveOptionsCartCarousel = [
       {
@@ -37,9 +34,6 @@ export class TopActionsComponent implements OnInit {
         numScroll: 1
       }
     ];
-    this.productService.getProductsMini().then((data) => {
-      this.products = data;
-    });
   }
   getSeverity(status: string) {
     switch (status) {
