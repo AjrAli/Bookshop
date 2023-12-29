@@ -1,4 +1,5 @@
 export class BookResponseDto {
+    id: number = 0;
     title: string = '';
     description: string = '';
     publisher: string = '';
@@ -14,6 +15,7 @@ export class BookResponseDto {
     categoryTitle: string = '';
   
     constructor(
+      id?:number,
       title?: string,
       description?: string,
       publisher?: string,
@@ -29,6 +31,7 @@ export class BookResponseDto {
       categoryTitle?: string
     ) {
       // Initialize properties with default values if not provided
+      this.id = id ?? this.id;
       this.title = title ?? this.title;
       this.description = description ?? this.description;
       this.publisher = publisher ?? this.publisher;

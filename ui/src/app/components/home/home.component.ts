@@ -53,9 +53,9 @@ export class HomeComponent implements OnInit {
           this.books = undefined;
           return;
         }
-        this.books = response.listDto.map((listDto: any) => {
+        this.books = response.listDto.map((dto: any) => {
           const book = new BookResponseDto();
-          Object.assign(book, listDto);
+          Object.assign(book, dto);
           return book;
         });
       },

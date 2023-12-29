@@ -20,8 +20,11 @@
                     <div class="col-md-4">
                         <p-button (click)="op.toggle($event)" icon="pi pi-gift" severity="help"></p-button>
                         <p-overlayPanel #op>
-                            <!-- <app-carousel [numVisible]="1" [responsiveOptions]="responsiveOptionsCartCarousel" 
-                                          [verticalViewPortHeight]="'405px'" [orientation]="'vertical'" [products]="products"></app-carousel> -->
+                            <p-scrollPanel [style]="{ height: '250px'}">
+                                <app-list-shop-items [items]="shoppingcart.items">
+                
+                                </app-list-shop-items>
+                            </p-scrollPanel>
                         </p-overlayPanel>
                     </div>
                 </div>

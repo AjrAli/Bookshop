@@ -9,6 +9,7 @@ import { ToastService } from '../services/toast.service';
 import { BookService } from '../services/book.service';
 import { ToastrModule } from 'ngx-toastr';
 import { CustomerService } from '../services/customer.service';
+import { ShoppingCartService } from '../services/shoppingcart.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     importProvidersFrom(HttpClientModule),
     CustomerService,
+    ShoppingCartService,
     ToastService, BookService, importProvidersFrom(
       ToastrModule.forRoot()
     )

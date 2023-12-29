@@ -1,7 +1,10 @@
-﻿namespace Bookshop.Application.Features.Books
+﻿using Bookshop.Application.Features.Dto;
+
+namespace Bookshop.Application.Features.Books
 {
-    public class BookResponseDto
+    public class BookResponseDto : IBaseDto
     {
+        public long Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Publisher { get; set; }
