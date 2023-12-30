@@ -13,38 +13,23 @@ export class BookResponseDto {
     publishDate: string = '';
     authorName: string = '';
     categoryTitle: string = '';
-  
-    constructor(
-      id?:number,
-      title?: string,
-      description?: string,
-      publisher?: string,
-      isbn?: string,
-      price?: number,
-      quantity?: number,
-      pageCount?: number,
-      dimensions?: string,
-      imageUrl?: string,
-      language?: string,
-      publishDate?: string,
-      authorName?: string,
-      categoryTitle?: string
-    ) {
-      // Initialize properties with default values if not provided
-      this.id = id ?? this.id;
-      this.title = title ?? this.title;
-      this.description = description ?? this.description;
-      this.publisher = publisher ?? this.publisher;
-      this.isbn = isbn ?? this.isbn;
-      this.price = price ?? this.price;
-      this.quantity = quantity ?? this.quantity;
-      this.pageCount = pageCount ?? this.pageCount;
-      this.dimensions = dimensions ?? this.dimensions;
-      this.imageUrl = imageUrl ?? this.imageUrl;
-      this.language = language ?? this.language;
-      this.publishDate = publishDate ?? this.publishDate;
-      this.authorName = authorName ?? this.authorName;
-      this.categoryTitle = categoryTitle ?? this.categoryTitle;
+
+    constructor(data?: Partial<BookResponseDto>) {
+        // Initialize properties with default values if not provided
+        this.id = data?.id ?? this.id;
+        this.title = data?.title ?? this.title;
+        this.description = data?.description ?? this.description;
+        this.publisher = data?.publisher ?? this.publisher;
+        this.isbn = data?.isbn ?? this.isbn;
+        this.price = data?.price ?? this.price;
+        this.quantity = data?.quantity ?? this.quantity;
+        this.pageCount = data?.pageCount ?? this.pageCount;
+        this.dimensions = data?.dimensions ?? this.dimensions;
+        this.imageUrl = data?.imageUrl ?? this.imageUrl;
+        this.language = data?.language ?? this.language;
+        this.publishDate = data?.publishDate ?? this.publishDate;
+        this.authorName = data?.authorName ?? this.authorName;
+        this.categoryTitle = data?.categoryTitle ?? this.categoryTitle;
     }
     get status(): string {
         if (this.quantity > 50)

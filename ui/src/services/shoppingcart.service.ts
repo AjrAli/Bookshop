@@ -20,11 +20,16 @@ export class ShoppingCartService extends CommonApiService {
         this.loadShoppingCart();
     }
     private loadShoppingCart() {
-        const storedShoppingCart = sessionStorage.getItem('shoppingCart');
-        this.shoppingCart = storedShoppingCart ? JSON.parse(storedShoppingCart) : null;
+        this.shoppingCart = this.getStoredShoppingCart();
         this.shoppingCartSubject.next(this.shoppingCart);
     }
-
+    getStoredShoppingCart(): ShoppingCartResponseDto | null {
+        const storedShoppingCart = sessionStorage.getItem('shoppingCart');
+        if (!storedShoppingCart)
+            return null;
+        const instanceShoppingCart = new ShoppingCartResponseDto(JSON.parse(storedShoppingCart));
+        return instanceShoppingCart;
+    }
     private saveShoppingCart() {
         if (this.shoppingCart) {
             const serializedShoppingCart = JSON.stringify(this.shoppingCart);
@@ -34,30 +39,42 @@ export class ShoppingCartService extends CommonApiService {
     }
 
     addItem(newItem: BookResponseDto) {
-        let shopitem = new ShopItemResponseDto(0, 1, newItem.id, newItem.price * 1, newItem.title, newItem.imageUrl, newItem.authorName, newItem.categoryTitle);
+        let shopitem = new ShopItemResponseDto({ id: 0, quantity: 1, bookId: newItem.id, price: newItem.price * 1, title: newItem.title, imageUrl: newItem.imageUrl, authorName: newItem.authorName, categoryTitle: newItem.categoryTitle });
         if (this.shoppingCart) {
             const itemToUpdate = this.shoppingCart.items.find(item => item.bookId === shopitem.bookId);
             if (itemToUpdate) {
-                if (itemToUpdate.quantity < 100)
-                    itemToUpdate.quantity += 1;
-                else
-                    this.toastService.showSimpleError(`Limit quantity of 100 reached for ${shopitem.title}`);
+                const isQuantitySet = (itemToUpdate as ShopItemResponseDto).addQuantityWithLimit(1);
+                if (!isQuantitySet) {
+                    this.toastService.showSimpleError(`Limit quantity of 100 reached for ${itemToUpdate.title}`);
+                    return;
+                }
             } else {
                 this.shoppingCart.items.push(shopitem);
             }
         } else {
-            this.shoppingCart = new ShoppingCartResponseDto(newItem.price, [shopitem]);
+            this.shoppingCart = new ShoppingCartResponseDto({ total: newItem.price, items: [shopitem] });
         }
+        this.toastService.showSuccess(`Successfully added book in ShoppingCart`);
+        this.shoppingCart.updateTotal();
         this.saveShoppingCart();
     }
-
     getShoppingCart(): ShoppingCartResponseDto | null {
         return this.shoppingCart;
     }
-
+    setShoppingCart(shoppingCart: ShoppingCartResponseDto) {
+        if (!shoppingCart) {
+            return;
+        }
+        if (!this.shoppingCart)
+            this.shoppingCart = new ShoppingCartResponseDto();
+        this.shoppingCart.updateItems(shoppingCart.items);
+        this.shoppingCart.updateTotal();
+        this.toastService.showSuccess(`Successfully loaded your previous ShoppingCart`);
+        this.saveShoppingCart();
+    }
     getShoppingCartObservable(): Observable<ShoppingCartResponseDto | null> {
         return this.shoppingCartSubject.asObservable().pipe(
-            map((response: ShoppingCartResponseDto | null) => response ? new ShoppingCartResponseDto(response.total, response.items) : null)
+            map((response: ShoppingCartResponseDto | null) => response ? new ShoppingCartResponseDto({ total: response.total, items: response.items }) : null)
         );
     }
 }

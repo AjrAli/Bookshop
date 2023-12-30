@@ -1,27 +1,55 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, Observer } from "rxjs";
 import { AuthenticateResponse } from "../app/dto/handler-response/customer/authenticate/authenticate-response";
 import { Role } from "../app/enum/role";
 import { environment } from "../app/environments/environment";
 import { CustomerDto } from "../app/dto/customer/customer-dto";
 import { jwtDecode } from "jwt-decode";
 import { CustomerResponseDto } from "../app/dto/customer/customer-response-dto";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ValidationErrorResponse } from "../app/dto/response/error/validation-error-response";
+import { ToastService } from "./toast.service";
 
 @Injectable()
 export class CustomerService {
   private readonly apiUrl = environment.apiUrl + '/customer';
   private userInfo: DecodedToken | undefined;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private toastService: ToastService, private router: Router) { }
 
-  authenticate(username: string, password: string): Observable<AuthenticateResponse> {
+  authenticate(username: string, password: string) {
     const body = { username, password };
-    return this.http.post<AuthenticateResponse>(`${this.apiUrl}/authenticate`, body);
+    this.http.post<AuthenticateResponse>(`${this.apiUrl}/authenticate`, body).subscribe({
+      next: (r) => this.handleAuthenticationResponse(r),
+      error: (e) => this.handleAuthenticationError(e),
+      complete: () => console.info('complete')
+    });
   }
 
-  createCustomer(customer: CustomerDto): Observable<AuthenticateResponse> {
-    return this.http.post<AuthenticateResponse>(`${this.apiUrl}/create-customer`, customer);
+  createCustomer(customer: CustomerDto) {
+    this.http.post<AuthenticateResponse>(`${this.apiUrl}/create-customer`, customer).subscribe({
+      next: (r) => this.handleAuthenticationResponse(r),
+      error: (e) => this.handleAuthenticationError(e),
+      complete: () => console.info('complete')
+    });
+  }
+
+  private handleAuthenticationResponse(response: AuthenticateResponse): void {
+    if (response.token) {
+      this.setToken(response.token);
+      if (response.customer) this.setCustomerInfo(response.customer);
+      const returnUrl = this.route.snapshot.queryParams['returnUrl'];
+      this.toastService.showSuccess(response.message);
+      this.router.navigateByUrl(returnUrl ?? '');
+    } else {
+      this.toastService.showSimpleError('Invalid credentials');
+    }
+  }
+
+  private handleAuthenticationError(error: any): void {
+    this.toastService.showError(error.error as ValidationErrorResponse);
+    this.toastService.showError(error as ValidationErrorResponse);
   }
 
   setCustomerInfo(customerResponseDto: CustomerResponseDto) {
@@ -32,7 +60,7 @@ export class CustomerService {
   getCustomerInfo(): CustomerResponseDto | null {
     const storedData = sessionStorage.getItem('customerData');
     if (storedData) {
-      const deserializedCustomer = JSON.parse(storedData) as CustomerResponseDto;
+      const deserializedCustomer = new CustomerResponseDto(JSON.parse(storedData));
       //console.log(deserializedCustomer);
       return deserializedCustomer;
     } else {

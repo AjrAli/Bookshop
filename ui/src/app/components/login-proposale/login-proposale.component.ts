@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login-proposale',
   standalone: true,
-  imports: [DividerModule, ButtonModule, InputTextModule, FormValidationErrorComponent, ReactiveFormsModule, CommonModule ],
+  imports: [DividerModule, ButtonModule, InputTextModule, FormValidationErrorComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './login-proposale.component.html',
   styleUrl: './login-proposale.component.css'
 })
@@ -27,7 +27,7 @@ export class LoginProposaleComponent implements OnInit {
   constructor(private customerService: CustomerService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastService: ToastService){}
+    private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -38,28 +38,10 @@ export class LoginProposaleComponent implements OnInit {
       this.router.navigate(['']);
     }
   }
-  navigateToSignUp(){
+  navigateToSignUp() {
     this.router.navigate(['/sign-up']);
   }
   onSubmit() {
-    this.customerService.authenticate(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe({
-      next: (r) => {
-        if (r.token) {
-          this.customerService.setToken(r.token);
-          if(r.customer)
-            this.customerService.setCustomerInfo(r.customer);
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'];
-          this.toastService.showSuccess(r.message);
-          this.router.navigateByUrl(returnUrl ?? '');
-        } else {
-          this.toastService.showSimpleError('Invalid credentials');
-        }
-      },
-      error: (e) => {
-        this.toastService.showError(e.error as ValidationErrorResponse);
-        this.toastService.showError(e as ValidationErrorResponse);
-      },
-      complete: () => console.info('complete')
-    });
+    this.customerService.authenticate(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value);
   }
 }

@@ -3,7 +3,6 @@ import { ShopItemResponseDto } from '../../dto/shoppingcart/shopitem-response-dt
 import { CommonModule } from '@angular/common';
 import { ShopItemComponent } from '../shop-item/shop-item.component';
 import { ButtonModule } from 'primeng/button';
-import { Router } from '@angular/router';
 import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
@@ -15,11 +14,6 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 })
 export class ListShopItemsComponent {
   @Input() items: ShopItemResponseDto[] | undefined;
-  @Input() op!: OverlayPanel;
-  constructor(private router: Router){}
+  constructor() { }
 
-  goToShoppingCart(event: any){
-    this.op.toggle(event);
-    this.router.navigate(['/login']);
-  }
 }

@@ -129,25 +129,7 @@ export class SignUpComponent implements OnInit {
       this.billingAddress = new AddressDto(0, billstreet, billcity, billpostalCode, billcountry, billstate);
     if (this.shippingAddress && this.billingAddress) {
       this.newCustomer = new CustomerDto(username, password, confirmPassword, firstName, lastName, 0, this.shippingAddress, 0, this.billingAddress, email, true);
-      this.customerService.createCustomer(this.newCustomer).subscribe({
-        next: (r) => {
-          if (r.token) {
-            this.customerService.setToken(r.token);
-            if(r.customer)
-              this.customerService.setCustomerInfo(r.customer);
-            const returnUrl = this.route.snapshot.queryParams['returnUrl'];
-            this.toastService.showSuccess(r.message);
-            this.router.navigateByUrl(returnUrl ?? '');
-          } else {
-            this.toastService.showSimpleError('Invalid credentials');
-          }
-        },
-        error: (e) => {
-          this.toastService.showError(e.error as ValidationErrorResponse);
-          this.toastService.showError(e as ValidationErrorResponse);
-        },
-        complete: () => console.info('complete')
-      });
+      this.customerService.createCustomer(this.newCustomer);
     }
   }
 }
