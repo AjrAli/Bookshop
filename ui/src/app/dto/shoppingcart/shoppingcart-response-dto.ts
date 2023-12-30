@@ -9,5 +9,11 @@ export class ShoppingCartResponseDto {
         this.total = total ?? 0;
         this.items = items ?? [];
     }
-
+    getTotalItems(): number {
+        if (this.items) {
+            const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
+            return totalItems;
+        }
+        return 0;
+    }
 }

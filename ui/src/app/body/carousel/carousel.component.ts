@@ -4,6 +4,8 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { environment } from "../../../app/environments/environment";
+import { ShoppingCartService } from '../../../services/shoppingcart.service';
+import { ShopItemResponseDto } from '../../dto/shoppingcart/shopitem-response-dto';
 @Component({
   selector: 'app-carousel',
   standalone: true,
@@ -18,4 +20,10 @@ export class CarouselComponent {
   @Input() numVisible!: number;
   @Input() books: BookResponseDto[] | undefined;
   @Input() responsiveOptions: any[] | undefined;
+
+  constructor(private shoppingCartService: ShoppingCartService) { }
+
+  sendToShoppingCart(book: BookResponseDto) {
+    this.shoppingCartService.addItem(book);
+  }
 }

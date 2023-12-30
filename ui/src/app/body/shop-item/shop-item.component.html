@@ -1,5 +1,5 @@
-<div class="container text-center">
-    <div class="pb-5 row mb-5 border-bottom justify-content-center d-flex align-items-center">
+<div *ngIf="shopItem" class="container text-center">
+    <div class="pb-3 row mb-3 border-bottom justify-content-center d-flex align-items-center">
         <div class="col-md-5">
             <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" class="product-image" width="50px"
                 height="75px" />

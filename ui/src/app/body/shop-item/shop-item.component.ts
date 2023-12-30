@@ -13,5 +13,5 @@ import { CommonModule } from '@angular/common';
 export class ShopItemComponent {
 
   rootUrl = environment.apiRootUrl;
-  @Input() shopItem!: ShopItemResponseDto;
+  @Input() shopItem: ShopItemResponseDto | undefined;
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { PaginatorModule } from 'primeng/paginator';
 import { CardComponent } from '../../body/card/card.component';

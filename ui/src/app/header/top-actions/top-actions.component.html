@@ -15,14 +15,15 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h4 class="text-teal-500 fw-bold mt-0 mb-0">Shopping cart</h4>
-                        <p class="mt-0 mb-0">2 Product(s)</p>
+                        <p class="mt-0 mb-0">{{getTotalItems()}} Product(s)</p>
                     </div>
                     <div class="col-md-4">
                         <p-button (click)="op.toggle($event)" icon="pi pi-gift" severity="help"></p-button>
                         <p-overlayPanel #op>
-                            <p-scrollPanel [style]="{ height: '250px'}">
-                                <app-list-shop-items [items]="shoppingcart.items">
-                
+                            <p-scrollPanel *ngIf="shoppingcart && shoppingcart.items"
+                                [style]="{ 'height': '240px', 'max-width': '26rem'}">
+                                <app-list-shop-items [op]="op" [items]="shoppingcart.items">
+
                                 </app-list-shop-items>
                             </p-scrollPanel>
                         </p-overlayPanel>

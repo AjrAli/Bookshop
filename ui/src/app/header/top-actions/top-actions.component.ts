@@ -24,23 +24,25 @@ import { ListShopItemsComponent } from '../../body/list-shop-items/list-shop-ite
 })
 export class TopActionsComponent implements OnInit {
   rootUrl = environment.apiRootUrl;
-  shoppingcart: ShoppingCartResponseDto = new ShoppingCartResponseDto();
+  shoppingcart: ShoppingCartResponseDto | null = new ShoppingCartResponseDto();
   constructor(private bookService: BookService,
     private customerService: CustomerService,
     private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit() {
-    this.shoppingcart.total = 2500;
-    this.bookService.getAll().subscribe({
-      next: (response: any) => {
-        const books: BookResponseDto[] = response.listDto
-        if (books?.length > 0) {
-          for (let book of books) {
-            let shopitem = new ShopItemResponseDto(0, 3, book.id, book.price * 3, book.title, book.imageUrl, book.authorName, book.categoryTitle);
-            this.shoppingcart.items.push(shopitem);
-          }
+    this.shoppingCartService.getShoppingCartObservable().subscribe({
+      next: (response: ShoppingCartResponseDto | null) => {
+        if (!response || response.items.length === 0) {
+          this.shoppingcart = null;
+          return;
         }
+        this.shoppingcart = response;
       }
     })
+  }
+  getTotalItems(): number {
+    if (this.shoppingcart !== null)
+      return this.shoppingcart.getTotalItems();
+    return 0;
   }
 }
