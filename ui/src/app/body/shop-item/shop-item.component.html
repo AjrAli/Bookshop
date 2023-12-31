@@ -1,17 +1,17 @@
 <div *ngIf="shopItem" class="container text-center">
-    <div class="pb-3 row mb-3 border-bottom justify-content-center d-flex align-items-center">
-        <div class="col-md-5">
-            <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" class="product-image" width="50px"
+    <div class="pb-3 row mb-3 border-bottom justify-content-center align-items-center pe-5 ps-5">
+        <div class="col-5">
+            <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px"
                 height="75px" />
         </div>
-        <div class="col-md-4">
-            <span class="text-teal-500 text-xs">{{ shopItem.title }}</span>
+        <div class="col-3">
+            <span class="text-teal-500 text-sm">{{ shopItem.title }}</span>
         </div>
-        <div class="col-md-1">
-            <span class="text-teal-600 text-xs">{{ shopItem.quantity }}</span>
+        <div class="col-2">
+            <span class="text-teal-600 text-sm">{{ shopItem.quantity }}</span>
         </div>
-        <div class="col-md-2">
-            <span class="text-gray-500 text-xs">{{ shopItem.price | currency:'USD':'symbol':'1.2-2'  }}</span>
+        <div class="col-2">
+            <span class="text-gray-500 text-sm">{{ shopItem.price | currency:'USD':'symbol':'1.2-2'  }}</span>
         </div>
     </div>
 </div>
