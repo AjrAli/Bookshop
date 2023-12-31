@@ -76,11 +76,11 @@ export class ShoppingCartService extends CommonApiService {
         localStorage.removeItem('shoppingCart');
     }
     addItem(newItem: BookResponseDto) {
-        let shopitem = new ShopItemResponseDto({ id: 0, quantity: 1, bookId: newItem.id, price: newItem.price * 1, title: newItem.title, imageUrl: newItem.imageUrl, authorName: newItem.authorName, categoryTitle: newItem.categoryTitle });
+        let shopitem = new ShopItemResponseDto({ id: 0, quantity: 1, bookId: newItem.id, price: newItem.price * 1, bookPrice: newItem.price, title: newItem.title, imageUrl: newItem.imageUrl, authorName: newItem.authorName, categoryTitle: newItem.categoryTitle });
         if (this.shoppingCart) {
             const itemToUpdate = this.shoppingCart.items.find(item => item.bookId === shopitem.bookId);
             if (itemToUpdate) {
-                const isQuantitySet = (itemToUpdate as ShopItemResponseDto).addQuantityWithLimit(1);
+                const isQuantitySet = itemToUpdate.addQuantityWithLimit(1);
                 if (!isQuantitySet) {
                     this.toastService.showSimpleError(`Limit quantity of 100 reached for ${itemToUpdate.title}`);
                     return;
@@ -95,6 +95,22 @@ export class ShoppingCartService extends CommonApiService {
         this.toastService.showSuccess(`Successfully added book in ShoppingCart`);
         this.shoppingCart.updateTotal();
         this.saveShoppingCart();
+    }
+    updateItem(shopitem: ShopItemResponseDto) {
+        if (this.shoppingCart) {
+            const itemToUpdate = this.shoppingCart.items.find(item => item.bookId === shopitem.bookId);
+            if (itemToUpdate) {
+                shopitem.setValidQuantity(shopitem.quantity);
+                itemToUpdate.quantity = shopitem.quantity;
+                itemToUpdate.price = itemToUpdate.quantity * shopitem.bookPrice;
+                this.toastService.showSuccess(`Successfully updated item of ShoppingCart`);
+                this.shoppingCart.updateTotal();
+                this.saveShoppingCart();
+            } else {
+                this.toastService.showSimpleError(`Book ${shopitem.title} not found in ShoppingCart`);
+                return;
+            }
+        }
     }
     getShoppingCart(): ShoppingCartResponseDto | null {
         return this.shoppingCart;

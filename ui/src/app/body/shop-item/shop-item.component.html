@@ -16,20 +16,23 @@
     </div>
     <ng-template #myShoppingCart>
         <div class="pb-3 row mb-3 border-bottom justify-content-center align-items-center">
-            <div class="col-3">
+            <div class="col-md-2">
                 <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px" height="75px" />
             </div>
-            <div class="col-3">
-                <span class="text-teal-500">{{ shopItem.title }}</span>
+            <div class="col-md-3">
+                <span class="text-teal-500 text-xs">{{ shopItem.title }}</span>
             </div>
-            <div class="col-2">
-                <span class="text-teal-600">{{ shopItem.quantity }}</span>
+            <div class="col-md-3">
+                <form [formGroup]="quantityForm">
+                    <p-dropdown formControlName="quantity" [options]="quantityOptions"></p-dropdown>
+                    <app-form-validation-error [control]="quantityForm.get('quantity')"></app-form-validation-error>
+                </form>
             </div>
-            <div class="col-2">
-                <span class="text-gray-500">{{ shopItem.price | currency:'USD':'symbol':'1.2-2' }}</span>
+            <div class="col-md-2">
+                <span class="text-gray-500 text-xs">{{ shopItem.price | currency:'USD':'symbol':'1.2-2' }}</span>
             </div>
-            <div class="col-2">
-                <span class="text-sm">TEST</span>
+            <div class="col-md-2">
+                <span class="text-xs">TEST</span>
             </div>
         </div>
     </ng-template>

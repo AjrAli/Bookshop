@@ -1,21 +1,18 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { LoginProposaleComponent } from './components/login-proposale/login-proposale.component';
-import { SignUpComponent } from './components/sign-up/sign-up.component';
-import { StepsComponent } from './components/steps/steps.component';
-import { MyShoppingCartComponent } from './components/steps/my-shoppingcart/my-shoppingcart.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'login', component: LoginProposaleComponent },
-    { path: 'sign-up', component: SignUpComponent },
-    { path: 'my-shoppingcart', component: MyShoppingCartComponent },
+    { path: '', loadComponent: () => import('./components/home/home.component').then(mod => mod.HomeComponent) },
+    { path: 'login', loadComponent: () => import('./components/login-proposale/login-proposale.component').then(mod => mod.LoginProposaleComponent) },
+    { path: 'sign-up', loadComponent: () => import('./components/sign-up/sign-up.component').then(mod => mod.SignUpComponent) },
     {
         path: 'steps',
-        component: StepsComponent,
+        loadComponent: () => import('./components/steps/steps.component').then(mod => mod.StepsComponent),
         children: [
             { path: '', redirectTo: 'my-shoppingcart', pathMatch: 'full' },
-            { path: 'my-shoppingcart', component: MyShoppingCartComponent }
+            {
+                path: 'my-shoppingcart',
+                loadComponent: () => import('./components/steps/my-shoppingcart/my-shoppingcart.component').then(mod => mod.MyShoppingCartComponent)
+            }
         ],
     }
 ];

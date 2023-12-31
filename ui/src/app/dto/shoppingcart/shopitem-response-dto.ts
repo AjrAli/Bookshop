@@ -1,9 +1,10 @@
 export class ShopItemResponseDto {
-  private readonly MAX_QUANTITY: number = 100;
+  readonly MAX_QUANTITY: number = 100;
   id: number = 0;
   quantity: number = 0;
   bookId: number = 0;
   price: number = 0;
+  bookPrice: number = 0;
   title: string = '';
   imageUrl: string = '';
   authorName: string = '';
@@ -13,6 +14,7 @@ export class ShopItemResponseDto {
     this.id = data?.id ?? this.id;
     this.bookId = data?.bookId ?? this.bookId;
     this.price = data?.price ?? this.price;
+    this.bookPrice = data?.bookPrice ?? this.bookPrice;
     this.title = data?.title ?? this.title;
     this.imageUrl = data?.imageUrl ?? this.imageUrl;
     this.authorName = data?.authorName ?? this.authorName;

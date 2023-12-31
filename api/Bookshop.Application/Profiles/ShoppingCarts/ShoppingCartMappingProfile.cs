@@ -15,6 +15,7 @@ namespace Bookshop.Application.Profiles.ShoppingCarts
                 .ForPath(dest => dest.Title, opt => opt.MapFrom(source => source.Book.Title))
                 .ForPath(dest => dest.AuthorName, opt => opt.MapFrom(source => source.Book.Author.Name))
                 .ForPath(dest => dest.CategoryTitle, opt => opt.MapFrom(source => source.Book.Category.Title))
+                .ForPath(dest => dest.BookPrice, opt => opt.MapFrom(source => source.Book.Price))
                 .ForPath(dest => dest.ImageUrl, opt => opt.MapFrom(source => source.Book.ImageUrl));
             CreateMap<ShopItemResponseDto, LineItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
