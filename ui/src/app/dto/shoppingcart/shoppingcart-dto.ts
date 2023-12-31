@@ -4,7 +4,8 @@ export class ShoppingCartDto {
 
     items: ShopItemDto[]
 
-    constructor(items?:ShopItemDto[]) {
-        this.items = items ?? [];
+    constructor(data?: Partial<ShoppingCartDto>) {
+        this.items = data?.items?.map(item => new ShopItemDto(item)) ?? [];
     }
+
 }

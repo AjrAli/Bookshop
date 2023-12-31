@@ -4,11 +4,11 @@ export class ShopItemDto {
     quantity: number = 0;
     bookId: number = 0;
   
-    constructor(id?: number, quantity?: number, bookId?: number) {
+    constructor(data?: Partial<ShopItemDto>) {
       // Initialize properties with default values if not provided
-      this.id = id ?? this.id;
-      this.quantity = quantity ?? this.quantity;
-      this.bookId = bookId ?? this.bookId;
+      this.id = data?.id ?? this.id;
+      this.quantity = data?.quantity ?? this.quantity;
+      this.bookId = data?.bookId ?? this.bookId;
     }
 
 }

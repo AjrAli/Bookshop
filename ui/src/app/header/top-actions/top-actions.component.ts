@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { InputGroupModule } from 'primeng/inputgroup'
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -15,6 +15,7 @@ import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { ErrorResponse } from '../../dto/response/error/error-response';
 import { ListShopItemsComponent } from '../../body/list-shop-items/list-shop-items.component';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-top-actions',
@@ -23,27 +24,33 @@ import { Router } from '@angular/router';
   templateUrl: './top-actions.component.html',
   styleUrl: './top-actions.component.css'
 })
-export class TopActionsComponent implements OnInit {
+export class TopActionsComponent implements OnInit, OnDestroy {
   rootUrl = environment.apiRootUrl;
+  private shoppingCartSubscription: Subscription | undefined;
   shoppingcart: ShoppingCartResponseDto | null = new ShoppingCartResponseDto();
-  totalItems: number = 0;
   @ViewChild('op') op!: OverlayPanel;
   constructor(private bookService: BookService,
     private customerService: CustomerService,
     private shoppingCartService: ShoppingCartService,
     private router: Router) { }
+  ngOnDestroy(): void {
+    if (this.shoppingCartSubscription)
+      this.shoppingCartSubscription.unsubscribe();
+  }
 
   ngOnInit() {
-    this.shoppingCartService.getShoppingCartObservable().subscribe({
+    this.shoppingCartSubscription = this.shoppingCartService.getShoppingCartObservable().subscribe({
       next: (response: ShoppingCartResponseDto | null) => {
         if (!response || response.items.length === 0) {
           this.shoppingcart = null;
           return;
         }
         this.shoppingcart = response;
-        this.totalItems = response.getTotalItems();
       }
     })
+  }
+  getTotalItems() {
+    return this.shoppingcart?.getTotalItems() ?? 0;
   }
   goToShoppingCart(event: any) {
     if (this.op) {

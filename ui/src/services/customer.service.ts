@@ -10,13 +10,20 @@ import { CustomerResponseDto } from "../app/dto/customer/customer-response-dto";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ValidationErrorResponse } from "../app/dto/response/error/validation-error-response";
 import { ToastService } from "./toast.service";
+import { ShoppingCartService } from "./shoppingcart.service";
+import { ShoppingCartResponseDto } from "../app/dto/shoppingcart/shoppingcart-response-dto";
+import { ShoppingCartDto } from "../app/dto/shoppingcart/shoppingcart-dto";
 
 @Injectable()
 export class CustomerService {
   private readonly apiUrl = environment.apiUrl + '/customer';
   private userInfo: DecodedToken | undefined;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private toastService: ToastService, private router: Router) { }
+  constructor(private http: HttpClient,
+    private route: ActivatedRoute,
+    private toastService: ToastService,
+    private router: Router,
+    private shoppingCartService: ShoppingCartService) { }
 
   authenticate(username: string, password: string) {
     const body = { username, password };
@@ -53,6 +60,10 @@ export class CustomerService {
   }
 
   setCustomerInfo(customerResponseDto: CustomerResponseDto) {
+    if (customerResponseDto.shoppingCart) {
+      customerResponseDto.shoppingCart = new ShoppingCartResponseDto(customerResponseDto.shoppingCart);
+      this.shoppingCartService.updateShoppingCart(customerResponseDto.shoppingCart);
+    }
     const serializedData = JSON.stringify(customerResponseDto);
     sessionStorage.setItem('customerData', serializedData);
   }
@@ -102,6 +113,16 @@ export class CustomerService {
   }
 
   logout() {
+    const shoppingCartResponseDto = this.shoppingCartService.getShoppingCart();
+    if (shoppingCartResponseDto && shoppingCartResponseDto.items.length > 0) {
+      const shoppingCart = new ShoppingCartDto(shoppingCartResponseDto)
+      if (this.getCustomerInfo()?.shoppingCart) {
+        this.shoppingCartService.updateShoppingCartToApi(shoppingCart);
+      } else {
+        this.shoppingCartService.createShoppingCartToApi(shoppingCart);
+      }
+      this.shoppingCartService.resetShoppingCart();
+    }
     localStorage.removeItem('authToken');
     sessionStorage.removeItem('customerData');
     this.userInfo = undefined;
