@@ -65,17 +65,17 @@ export class CustomerService {
       this.shoppingCartService.updateShoppingCart(customerResponseDto.shoppingCart);
     }
     const serializedData = JSON.stringify(customerResponseDto);
-    sessionStorage.setItem('customerData', serializedData);
+    localStorage.setItem('customerData', serializedData);
   }
 
   getCustomerInfo(): CustomerResponseDto | null {
-    const storedData = sessionStorage.getItem('customerData');
+    const storedData = localStorage.getItem('customerData');
     if (storedData) {
       const deserializedCustomer = new CustomerResponseDto(JSON.parse(storedData));
       //console.log(deserializedCustomer);
       return deserializedCustomer;
     } else {
-      console.log('No data found in sessionStorage');
+      console.log('No data found in localStorage');
     }
     return null;
   }
@@ -125,7 +125,7 @@ export class CustomerService {
       this.shoppingCartService.resetShoppingCart();
     }
     localStorage.removeItem('authToken');
-    sessionStorage.removeItem('customerData');
+    localStorage.removeItem('customerData');
     this.userInfo = undefined;
   }
 }

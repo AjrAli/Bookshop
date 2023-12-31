@@ -57,7 +57,7 @@ export class ShoppingCartService extends CommonApiService {
     }
 
     getStoredShoppingCart(): ShoppingCartResponseDto | null {
-        const storedShoppingCart = sessionStorage.getItem('shoppingCart');
+        const storedShoppingCart = localStorage.getItem('shoppingCart');
         if (!storedShoppingCart)
             return null;
         const instanceShoppingCart = new ShoppingCartResponseDto(JSON.parse(storedShoppingCart));
@@ -66,14 +66,14 @@ export class ShoppingCartService extends CommonApiService {
     private saveShoppingCart() {
         if (this.shoppingCart) {
             const serializedShoppingCart = JSON.stringify(this.shoppingCart);
-            sessionStorage.setItem('shoppingCart', serializedShoppingCart);
+            localStorage.setItem('shoppingCart', serializedShoppingCart);
             this.shoppingCartSubject.next(this.shoppingCart); // Notify subscribers about the update
         }
     }
     resetShoppingCart() {
         this.shoppingCart = null;
         this.shoppingCartSubject.next(this.shoppingCart);
-        sessionStorage.removeItem('shoppingCart');
+        localStorage.removeItem('shoppingCart');
     }
     addItem(newItem: BookResponseDto) {
         let shopitem = new ShopItemResponseDto({ id: 0, quantity: 1, bookId: newItem.id, price: newItem.price * 1, title: newItem.title, imageUrl: newItem.imageUrl, authorName: newItem.authorName, categoryTitle: newItem.categoryTitle });

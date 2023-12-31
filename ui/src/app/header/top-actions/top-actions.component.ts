@@ -55,7 +55,7 @@ export class TopActionsComponent implements OnInit, OnDestroy {
   goToShoppingCart(event: any) {
     if (this.op) {
       this.op.toggle(event);
-      this.router.navigate(['/login']);
+      this.router.navigate(['/steps']);
     }
   }
 }

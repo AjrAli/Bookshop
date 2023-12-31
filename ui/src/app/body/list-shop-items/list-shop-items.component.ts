@@ -14,6 +14,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 })
 export class ListShopItemsComponent {
   @Input() items: ShopItemResponseDto[] | undefined;
+  @Input() manage: boolean = false;
   constructor() { }
 
 }

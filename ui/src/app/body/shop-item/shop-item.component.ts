@@ -14,4 +14,5 @@ export class ShopItemComponent {
 
   rootUrl = environment.apiRootUrl;
   @Input() shopItem: ShopItemResponseDto | undefined;
+  @Input() manage: boolean = false;
 }

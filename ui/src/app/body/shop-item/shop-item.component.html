@@ -1,8 +1,8 @@
 <div *ngIf="shopItem" class="container text-center">
-    <div class="pb-3 row mb-3 border-bottom justify-content-center align-items-center pe-5 ps-5">
+    <div *ngIf="!manage; else myShoppingCart"
+        class="pb-3 row mb-3 border-bottom justify-content-center align-items-center pe-5 ps-5">
         <div class="col-5">
-            <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px"
-                height="75px" />
+            <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px" height="75px" />
         </div>
         <div class="col-3">
             <span class="text-teal-500 text-sm">{{ shopItem.title }}</span>
@@ -11,7 +11,26 @@
             <span class="text-teal-600 text-sm">{{ shopItem.quantity }}</span>
         </div>
         <div class="col-2">
-            <span class="text-gray-500 text-sm">{{ shopItem.price | currency:'USD':'symbol':'1.2-2'  }}</span>
+            <span class="text-gray-500 text-sm">{{ shopItem.price | currency:'USD':'symbol':'1.2-2' }}</span>
         </div>
     </div>
+    <ng-template #myShoppingCart>
+        <div class="pb-3 row mb-3 border-bottom justify-content-center align-items-center">
+            <div class="col-3">
+                <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px" height="75px" />
+            </div>
+            <div class="col-3">
+                <span class="text-teal-500">{{ shopItem.title }}</span>
+            </div>
+            <div class="col-2">
+                <span class="text-teal-600">{{ shopItem.quantity }}</span>
+            </div>
+            <div class="col-2">
+                <span class="text-gray-500">{{ shopItem.price | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="col-2">
+                <span class="text-sm">TEST</span>
+            </div>
+        </div>
+    </ng-template>
 </div>

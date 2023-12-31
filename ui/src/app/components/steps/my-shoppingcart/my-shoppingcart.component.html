@@ -1,0 +1,14 @@
+<div *ngIf="shoppingcart; else emptyShoppingCart" class="container mt-5 text-center">
+    <h2 class="text-teal-500">My Shopping Cart</h2>
+    <app-list-shop-items [manage]="manage" [items]="shoppingcart.items">
+    </app-list-shop-items>
+    <h5>Total : {{shoppingcart.total | currency:'USD':'symbol':'1.2-2' }}</h5>
+    <p-button (click)="goToShoppingCart($event)" [rounded]="true" styleClass="justify-content-center w-100">Go to
+        my
+        Shopping Cart</p-button>
+</div>
+<ng-template #emptyShoppingCart>
+    <div class="container mt-5 text-center">
+        <h2 class="text-teal-500">Empty Shopping Cart!</h2>
+    </div>
+</ng-template>
