@@ -116,7 +116,8 @@ export class CustomerService {
     const shoppingCartResponseDto = this.shoppingCartService.getShoppingCart();
     if (shoppingCartResponseDto && shoppingCartResponseDto.items.length > 0) {
       const shoppingCart = new ShoppingCartDto(shoppingCartResponseDto)
-      if (this.getCustomerInfo()?.shoppingCart) {
+      const getCustomerPreviousShoppingCart = this.getCustomerInfo()?.shoppingCart;
+      if (getCustomerPreviousShoppingCart && getCustomerPreviousShoppingCart.items?.length > 0) {
         this.shoppingCartService.updateShoppingCartToApi(shoppingCart);
       } else {
         this.shoppingCartService.createShoppingCartToApi(shoppingCart);
