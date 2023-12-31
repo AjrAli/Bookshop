@@ -6,7 +6,7 @@
             </div>
             <div class="col-md-3">
                 <i class="pi pi-user" style="font-size: 1.5rem"></i>
-                <span class="text-teal-500 fst-italic" *ngIf="isConnected()"> Hey {{customerName}}! </span>
+                <span *ngIf="isConnected()"> Hey <span class="text-teal-500 fst-italic">{{customerName}}</span> ! </span>
                 <a class="nav-link link-secondary mx-2" *ngIf="isConnected(); else notConnected" (click)="logout()"
                     routerLink="">Logout</a>
                 <ng-template #notConnected>
