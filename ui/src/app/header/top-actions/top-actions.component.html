@@ -21,7 +21,7 @@
                         <p-button (click)="op.toggle($event)" icon="pi pi-gift" severity="help"></p-button>
                         <p-overlayPanel #op>
                             <p-scrollPanel *ngIf="shoppingcart && shoppingcart.items"
-                                [style]="{ 'height': '240px'}" styleClass="text-center">
+                                [style]="{ 'height': '240px', 'max-width':'40rem'}" styleClass="text-center">
                                 <app-list-shop-items [items]="shoppingcart.items">
                                 </app-list-shop-items>
                                 <h5>Total : {{shoppingcart.total | currency:'USD':'symbol':'1.2-2' }}</h5>
