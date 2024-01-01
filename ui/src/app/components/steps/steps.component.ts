@@ -16,7 +16,7 @@ export class StepsComponent implements OnInit {
   ngOnInit() {
     this.items = [
       {
-        label: 'My Shopping Cart',
+        label: 'Shopping Cart',
         routerLink: 'my-shoppingcart',
       },
       {

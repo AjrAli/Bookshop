@@ -15,12 +15,12 @@
         </div>
     </div>
     <ng-template #myShoppingCart>
-        <div class="pb-3 row mb-3 border-bottom justify-content-center align-items-center">
+        <div class="pb-3 row mb-4 pt-5 border-top justify-content-center align-items-center">
             <div class="col-md-2">
                 <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px" height="75px" />
             </div>
             <div class="col-md-3">
-                <span class="text-teal-500 text-xs">{{ shopItem.title }}</span>
+                <span class="text-teal-500 text-xs mb-2">{{ shopItem.title }}</span>
             </div>
             <div class="col-md-3">
                 <form [formGroup]="quantityForm">

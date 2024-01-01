@@ -1,4 +1,4 @@
-<div *ngIf="items && items.length > 0 && manage" class="container text-center">
+<div *ngIf="items && items.length > 0 && manage" class="container text-center border-bottom">
 
     <div *ngFor="let item of items">
         <app-shop-item [manage]="manage" [shopItem]="item"></app-shop-item>
