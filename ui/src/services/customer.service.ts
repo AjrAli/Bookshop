@@ -16,7 +16,7 @@ import { DecodedToken, TokenService } from "./token.service";
 
 @Injectable()
 export class CustomerService {
-  private userInfo: DecodedToken  | undefined;
+  private userInfo: DecodedToken | undefined;
 
   constructor(private customerApiService: CustomerApiService,
     private customerLocalStorageService: CustomerLocalStorageService,
@@ -95,11 +95,12 @@ export class CustomerService {
     if (shoppingCartResponseDto && shoppingCartResponseDto.items.length > 0) {
       const shoppingCart = new ShoppingCartDto(shoppingCartResponseDto)
       const getCustomerPreviousShoppingCart = this.customerLocalStorageService.getCustomerInfo()?.shoppingCart;
-     
-      if (getCustomerPreviousShoppingCart && getCustomerPreviousShoppingCart.items?.length > 0) {
+      const isShoppingCartOfCustomerNotDifferent = shoppingCartResponseDto.equals(getCustomerPreviousShoppingCart);
+      if (getCustomerPreviousShoppingCart && !isShoppingCartOfCustomerNotDifferent && getCustomerPreviousShoppingCart.items?.length > 0) {
         this.shoppingCartService.updateShoppingCartToApi(shoppingCart);
       } else {
-        this.shoppingCartService.createShoppingCartToApi(shoppingCart);
+        if (!isShoppingCartOfCustomerNotDifferent)
+          this.shoppingCartService.createShoppingCartToApi(shoppingCart);
       }
       this.shoppingCartService.resetFullyShoppingCart();
     }

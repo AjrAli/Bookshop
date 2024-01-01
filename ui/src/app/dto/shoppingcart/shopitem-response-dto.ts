@@ -39,5 +39,8 @@ export class ShopItemResponseDto {
     this.quantity += quantity;
     return true;
   }
+  equals(other: ShopItemResponseDto): boolean {
+    return this.bookId === other.bookId && this.quantity === other.quantity;
+  }
 
 }
