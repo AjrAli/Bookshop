@@ -6,12 +6,10 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
-import { BookService } from '../../../../services/book.service';
-import { CustomerService } from '../../../../services/customer.service';
-import { ShoppingCartService } from '../../../../services/shoppingcart.service';
 import { ListShopItemsComponent } from '../../../body/list-shop-items/list-shop-items.component';
 import { ShoppingCartResponseDto } from '../../../dto/shoppingcart/shoppingcart-response-dto';
 import { environment } from '../../../environments/environment';
+import { ShoppingCartDataService } from '../../../../services/shoppingcart/shoppingcart-data.service';
 
 @Component({
   selector: 'app-my-shoppingcart',
@@ -26,9 +24,7 @@ export class MyShoppingCartComponent {
   private shoppingCartSubscription: Subscription | undefined;
   shoppingcart: ShoppingCartResponseDto | null = new ShoppingCartResponseDto();
   @ViewChild('op') op!: OverlayPanel;
-  constructor(private bookService: BookService,
-    private customerService: CustomerService,
-    private shoppingCartService: ShoppingCartService,
+  constructor(private shoppingCartDataService: ShoppingCartDataService,
     private router: Router) { }
   ngOnDestroy(): void {
     if (this.shoppingCartSubscription)
@@ -36,7 +32,7 @@ export class MyShoppingCartComponent {
   }
 
   ngOnInit() {
-    this.shoppingCartSubscription = this.shoppingCartService.getShoppingCartObservable().subscribe({
+    this.shoppingCartSubscription = this.shoppingCartDataService.getShoppingCartObservable().subscribe({
       next: (response: ShoppingCartResponseDto | null) => {
         if (!response || response.items.length === 0) {
           this.shoppingcart = null;

@@ -10,14 +10,26 @@ import { BookService } from '../services/book.service';
 import { ToastrModule } from 'ngx-toastr';
 import { CustomerService } from '../services/customer.service';
 import { ShoppingCartService } from '../services/shoppingcart.service';
+import { ShoppingCartApiService } from '../services/shoppingcart/shoppingcart-api.service';
+import { ShoppingCartDataService } from '../services/shoppingcart/shoppingcart-data.service';
+import { ShoppingCartLocalStorageService } from '../services/shoppingcart/shoppingcart-local-storage.service';
+import { CustomerLocalStorageService } from '../services/customer/customer-local-storage.service';
+import { CustomerApiService } from '../services/customer/customer-api.service';
+import { TokenService } from '../services/token.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes), provideAnimationsAsync(),
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     importProvidersFrom(HttpClientModule),
+    TokenService,
     CustomerService,
+    CustomerApiService,
+    CustomerLocalStorageService,
     ShoppingCartService,
+    ShoppingCartApiService,
+    ShoppingCartLocalStorageService,
+    ShoppingCartDataService,
     ToastService, BookService, importProvidersFrom(
       ToastrModule.forRoot()
     )

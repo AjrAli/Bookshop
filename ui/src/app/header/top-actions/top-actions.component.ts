@@ -7,15 +7,12 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environment';
 import { CustomerService } from '../../../services/customer.service';
-import { ShoppingCartService } from '../../../services/shoppingcart.service';
 import { ShoppingCartResponseDto } from '../../dto/shoppingcart/shoppingcart-response-dto';
-import { ShopItemResponseDto } from '../../dto/shoppingcart/shopitem-response-dto';
 import { BookService } from '../../../services/book.service';
-import { BookResponseDto } from '../../dto/book/book-response-dto';
-import { ErrorResponse } from '../../dto/response/error/error-response';
 import { ListShopItemsComponent } from '../../body/list-shop-items/list-shop-items.component';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ShoppingCartDataService } from '../../../services/shoppingcart/shoppingcart-data.service';
 
 @Component({
   selector: 'app-top-actions',
@@ -29,9 +26,7 @@ export class TopActionsComponent implements OnInit, OnDestroy {
   private shoppingCartSubscription: Subscription | undefined;
   shoppingcart: ShoppingCartResponseDto | null = new ShoppingCartResponseDto();
   @ViewChild('op') op!: OverlayPanel;
-  constructor(private bookService: BookService,
-    private customerService: CustomerService,
-    private shoppingCartService: ShoppingCartService,
+  constructor(private shoppingCartDataService: ShoppingCartDataService,
     private router: Router) { }
   ngOnDestroy(): void {
     if (this.shoppingCartSubscription)
@@ -39,7 +34,7 @@ export class TopActionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.shoppingCartSubscription = this.shoppingCartService.getShoppingCartObservable().subscribe({
+    this.shoppingCartSubscription = this.shoppingCartDataService.getShoppingCartObservable().subscribe({
       next: (response: ShoppingCartResponseDto | null) => {
         if (!response || response.items.length === 0) {
           this.shoppingcart = null;
