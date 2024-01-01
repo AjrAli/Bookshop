@@ -55,11 +55,11 @@ export class ShoppingCartService {
     }
 
 
-    private saveShoppingCart(shoppingCart: ShoppingCartResponseDto | null) {
+    private saveShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
         if (shoppingCart) {
             this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
             this.shoppingCartDataService.setShoppingCart(shoppingCart);
-            this.toastService.showSuccess(`Successfully updated your ShoppingCart`);
+            this.toastService.showSuccess(message ?? `Successfully updated your ShoppingCart`);
         }
     }
     incrementallyUpdateShoppingCart(shoppingCart: ShoppingCartResponseDto) {
@@ -87,7 +87,7 @@ export class ShoppingCartService {
         } else {
             shoppingCart = new ShoppingCartResponseDto({ total: newItem.price, items: [shopitem] });
         }
-        this.saveShoppingCart(shoppingCart);
+        this.saveShoppingCart(shoppingCart, "item added to shoppingcart");
     }
     updateItem(shopitem: ShopItemResponseDto) {
         let shoppingCart = this.shoppingCartDataService.getShoppingCart();
@@ -103,5 +103,18 @@ export class ShoppingCartService {
                 return;
             }
         }
+    }
+    removeItem(shopitem: ShopItemResponseDto) {
+        const shoppingCart = this.shoppingCartDataService.getShoppingCart();
+        if (!shoppingCart) {
+            return;
+        }
+        const itemToDeleteIndex = shoppingCart.items.findIndex(item => item.bookId === shopitem.bookId);
+        if (itemToDeleteIndex === -1) {
+            this.toastService.showSimpleError(`Book ${shopitem.title} not found in ShoppingCart`);
+            return;
+        }
+        shoppingCart.items.splice(itemToDeleteIndex, 1);
+        this.saveShoppingCart(shoppingCart, "item correctly removed");
     }
 }

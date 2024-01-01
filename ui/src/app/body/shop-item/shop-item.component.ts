@@ -6,11 +6,12 @@ import { ShoppingCartService } from '../../../services/shoppingcart.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { FormValidationErrorComponent } from '../../shared/validation/form-validation-error/form-validation-error.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-shop-item',
   standalone: true,
-  imports: [CommonModule, DropdownModule, ReactiveFormsModule, FormsModule, FormValidationErrorComponent],
+  imports: [CommonModule, DropdownModule, ReactiveFormsModule, FormsModule, FormValidationErrorComponent, ButtonModule],
   templateUrl: './shop-item.component.html',
   styleUrl: './shop-item.component.css'
 })
@@ -40,6 +41,10 @@ export class ShopItemComponent implements OnInit {
         }
       })
     }
+  }
+  removeItem() {
+    if (this.shopItem)
+      this.shoppingCartService.removeItem(this.shopItem);
   }
 
 }

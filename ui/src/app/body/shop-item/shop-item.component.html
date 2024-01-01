@@ -28,11 +28,11 @@
                     <app-form-validation-error [control]="quantityForm.get('quantity')"></app-form-validation-error>
                 </form>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 mb-2">
                 <span class="text-gray-500 text-xs">{{ shopItem.price | currency:'USD':'symbol':'1.2-2' }}</span>
             </div>
             <div class="col-md-2">
-                <span class="text-xs">TEST</span>
+                <p-button (click)="removeItem()" icon="pi pi-times" size="small" severity="danger"></p-button>
             </div>
         </div>
     </ng-template>

@@ -36,6 +36,7 @@ export class MyShoppingCartComponent {
       next: (response: ShoppingCartResponseDto | null) => {
         if (!response || response.items.length === 0) {
           this.shoppingcart = null;
+          this.router.navigate(['']);
           return;
         }
         this.shoppingcart = response;
