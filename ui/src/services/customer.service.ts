@@ -92,14 +92,17 @@ export class CustomerService {
 
   logout() {
     const shoppingCartResponseDto = this.shoppingCartDataService.getShoppingCart();
-    if (shoppingCartResponseDto && shoppingCartResponseDto.items.length > 0) {
+    if (shoppingCartResponseDto) {
       const shoppingCart = new ShoppingCartDto(shoppingCartResponseDto)
       const getCustomerPreviousShoppingCart = this.customerLocalStorageService.getCustomerInfo()?.shoppingCart;
       const isShoppingCartOfCustomerNotDifferent = shoppingCartResponseDto.equals(getCustomerPreviousShoppingCart);
-      if (getCustomerPreviousShoppingCart && !isShoppingCartOfCustomerNotDifferent && getCustomerPreviousShoppingCart.items?.length > 0) {
-        this.shoppingCartService.updateShoppingCartToApi(shoppingCart);
+      if (getCustomerPreviousShoppingCart && !isShoppingCartOfCustomerNotDifferent) {
+        if (shoppingCart.items.length > 0)
+          this.shoppingCartService.updateShoppingCartToApi(shoppingCart);
+        else
+          this.shoppingCartService.resetShoppingCartToApi();
       } else {
-        if (!isShoppingCartOfCustomerNotDifferent)
+        if (!isShoppingCartOfCustomerNotDifferent && shoppingCart.items.length > 0)
           this.shoppingCartService.createShoppingCartToApi(shoppingCart);
       }
       this.shoppingCartService.resetFullyShoppingCart();

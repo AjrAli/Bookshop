@@ -47,7 +47,7 @@ namespace Bookshop.Api.Controllers.Commands
             return Ok(dataCommandReponse);
         }
         [HttpPost("reset-user-shopcart")]
-        public async Task<IActionResult> DeleteSchool()
+        public async Task<IActionResult> ResetShoppingCart()
         {
             var dataCommandReponse = await _mediator.Send(new ResetShoppingCart
             {

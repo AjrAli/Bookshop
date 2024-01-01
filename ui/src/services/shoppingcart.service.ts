@@ -39,6 +39,13 @@ export class ShoppingCartService {
             complete: () => console.info('complete')
         });
     }
+    resetShoppingCartToApi() {
+        this.shoppingcartApiService.resetShoppingCart().subscribe({
+            next: (r) => this.toastService.showSuccess(r.message),
+            error: (e) => this.handleShoppingCartError(e),
+            complete: () => console.info('complete')
+        });
+    }
 
     private handleShoppingCartResponse(response: ShoppingCartResponse): void {
         if (response.shoppingCart) {

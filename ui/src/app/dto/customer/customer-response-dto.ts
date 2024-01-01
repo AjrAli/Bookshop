@@ -5,7 +5,7 @@ export class CustomerResponseDto {
   lastName: string = '';
   shippingAddressId: number = 0;
   billingAddressId: number = 0;
-  shoppingCart: ShoppingCartResponseDto = new ShoppingCartResponseDto();
+  shoppingCart: ShoppingCartResponseDto | undefined = undefined;
 
   constructor(data?: Partial<CustomerResponseDto>) {
     this.firstName = data?.firstName ?? this.firstName;

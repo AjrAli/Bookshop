@@ -22,8 +22,8 @@ namespace Bookshop.Application.Profiles.Customers
                 .ForMember(dest => dest.ShippingAddressId, opt => opt.MapFrom(x => x.ShippingAddressId))
                 .ForMember(dest => dest.BillingAddressId, opt => opt.MapFrom(x => x.BillingAddressId))
                 .ForPath(dest => dest.ShoppingCart.Items, opt => opt.MapFrom(x => x.ShoppingCart.LineItems))
-                .ForPath(dest => dest.ShoppingCart.Total, opt => opt.MapFrom(x => x.ShoppingCart.Total));
-
+                .ForPath(dest => dest.ShoppingCart.Total, opt => opt.MapFrom(x => x.ShoppingCart.Total))
+                .AfterMap((src, dest) => dest.ShoppingCart = src.ShoppingCart != null && src.ShoppingCart.Id != 0 ? dest.ShoppingCart : null);
         }
     }
 }
