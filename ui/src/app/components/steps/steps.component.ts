@@ -20,8 +20,8 @@ export class StepsComponent implements OnInit {
         routerLink: 'my-shoppingcart',
       },
       {
-        label: 'Seat',
-        routerLink: 'seat',
+        label: 'Authentication',
+        routerLink: 'login',
       },
       {
         label: 'Payment',

@@ -3,7 +3,6 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
     { path: '', loadComponent: () => import('./components/home/home.component').then(mod => mod.HomeComponent) },
     { path: 'login', loadComponent: () => import('./components/login-proposale/login-proposale.component').then(mod => mod.LoginProposaleComponent) },
-    { path: 'sign-up', loadComponent: () => import('./components/sign-up/sign-up.component').then(mod => mod.SignUpComponent) },
     {
         path: 'steps',
         loadComponent: () => import('./components/steps/steps.component').then(mod => mod.StepsComponent),
@@ -12,7 +11,10 @@ export const routes: Routes = [
             {
                 path: 'my-shoppingcart',
                 loadComponent: () => import('./components/steps/my-shoppingcart/my-shoppingcart.component').then(mod => mod.MyShoppingCartComponent)
-            }
+            },
+            { path: 'login-form', loadComponent: () => import('./forms/login-form/login-form.component').then(mod => mod.LoginFormComponent) },
+            { path: 'sign-up-form', loadComponent: () => import('./forms/sign-up-form//sign-up-form.component').then(mod => mod.SignUpFormComponent) }
         ],
-    }
+    },
+    { path: '**', redirectTo: ''}
 ];

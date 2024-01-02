@@ -24,6 +24,11 @@ export class TopLinksComponent {
     }
     return false;
   }
+  navigateToLogin() {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/login']);
+    });
+  }
   logout(): void {
     this.customerService.logout();
     this.router.navigate(['']);

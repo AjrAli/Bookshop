@@ -13,6 +13,7 @@ import { ShoppingCartDataService } from "./shoppingcart/shoppingcart-data.servic
 import { CustomerApiService } from "./customer/customer-api.service";
 import { CustomerLocalStorageService } from "./customer/customer-local-storage.service";
 import { DecodedToken, TokenService } from "./token.service";
+import { map, tap } from "rxjs";
 
 @Injectable()
 export class CustomerService {
@@ -20,27 +21,27 @@ export class CustomerService {
 
   constructor(private customerApiService: CustomerApiService,
     private customerLocalStorageService: CustomerLocalStorageService,
-    private route: ActivatedRoute,
     private toastService: ToastService,
-    private router: Router,
     private shoppingCartService: ShoppingCartService,
     private shoppingCartDataService: ShoppingCartDataService,
     private tokenService: TokenService) { }
 
   authenticate(username: string, password: string) {
-    this.customerApiService.authenticate(username, password).subscribe({
+    return this.customerApiService.authenticate(username, password).pipe(tap({
       next: (r) => this.handleAuthenticationResponse(r),
       error: (e) => this.handleAuthenticationError(e),
       complete: () => console.info('complete')
-    });
+    }), map(r => !!r.token)
+    );
   }
 
   createCustomer(customer: CustomerDto) {
-    this.customerApiService.createCustomer(customer).subscribe({
+    return this.customerApiService.createCustomer(customer).pipe(tap({
       next: (r) => this.handleAuthenticationResponse(r),
       error: (e) => this.handleAuthenticationError(e),
       complete: () => console.info('complete')
-    });
+    }), map(r => !!r.token)
+    );
   }
 
   private handleAuthenticationResponse(response: AuthenticateResponse): void {
@@ -50,9 +51,7 @@ export class CustomerService {
         this.setCustomerShoppingCart(response.customer);
         this.customerLocalStorageService.setCustomerInfo(response.customer);
       }
-      const returnUrl = this.route.snapshot.queryParams['returnUrl'];
       this.toastService.showSuccess(response.message);
-      this.router.navigateByUrl(returnUrl ?? '');
     } else {
       this.toastService.showSimpleError('Invalid credentials');
     }

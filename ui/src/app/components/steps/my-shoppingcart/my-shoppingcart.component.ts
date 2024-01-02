@@ -46,10 +46,7 @@ export class MyShoppingCartComponent {
   getTotalItems() {
     return this.shoppingcart?.getTotalItems() ?? 0;
   }
-  goToShoppingCart(event: any) {
-    if (this.op) {
-      this.op.toggle(event);
-      this.router.navigate(['/my-shoppingcart']);
-    }
+  navigateToNext() {
+    this.router.navigate(['/steps/login'])
   }
 }

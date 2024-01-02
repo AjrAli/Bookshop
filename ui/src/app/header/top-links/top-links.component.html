@@ -10,7 +10,7 @@
                 <a class="nav-link link-secondary mx-2" *ngIf="isConnected(); else notConnected" (click)="logout()"
                     routerLink="">Logout</a>
                 <ng-template #notConnected>
-                    <a class="nav-link link-secondary mx-2" [routerLink]="['/login']">Login/Register</a>
+                    <a class="nav-link link-secondary mx-2 cursor-pointer" (click)="navigateToLogin()">Login/Register</a>
                 </ng-template>
             </div>
         </div>

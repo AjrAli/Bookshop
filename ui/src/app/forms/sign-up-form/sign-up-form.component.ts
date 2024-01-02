@@ -1,24 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormsModule, AbstractControl, FormBuilder } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ReactiveFormsModule, FormGroup, Validators, FormsModule, AbstractControl, FormBuilder } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CustomerService } from '../../../services/customer.service';
-import { ToastService } from '../../../services/toast.service';
 import { ValidationErrorResponse } from '../../dto/response/error/validation-error-response';
 import { FormValidationErrorComponent, PasswordMatchValidator } from '../../shared/validation/form-validation-error/form-validation-error.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AddressDto, CustomerDto } from '../../dto/customer/customer-dto';
 
 @Component({
-  selector: 'app-sign-up',
+  selector: 'app-sign-up-form',
   standalone: true,
   imports: [ButtonModule, InputTextModule, FormValidationErrorComponent, ReactiveFormsModule, CommonModule, CheckboxModule, FormsModule],
-  templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  templateUrl: './sign-up-form.component.html',
+  styleUrl: './sign-up-form.component.css'
 })
-export class SignUpComponent implements OnInit {
+export class SignUpFormComponent implements OnInit {
   username: string = '';
   password: string = '';
   confirmPassword: string = '';
@@ -41,19 +39,12 @@ export class SignUpComponent implements OnInit {
   billingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   loginForm!: FormGroup;
   errorResponse!: ValidationErrorResponse;
+  @Output() connected = new EventEmitter<boolean>();
 
   constructor(private customerService: CustomerService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastService: ToastService,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
-
-    if (this.customerService.isLoggedIn()) {
-      this.router.navigate(['']);
-    }
-
     this.loginForm = this.fb.group({
       username: this.createControl(''),
       password: this.createControl('', [Validators.minLength(4)]),
@@ -129,7 +120,11 @@ export class SignUpComponent implements OnInit {
       this.billingAddress = new AddressDto(0, billstreet, billcity, billpostalCode, billcountry, billstate);
     if (this.shippingAddress && this.billingAddress) {
       this.newCustomer = new CustomerDto(username, password, confirmPassword, firstName, lastName, 0, this.shippingAddress, 0, this.billingAddress, email, true);
-      this.customerService.createCustomer(this.newCustomer);
+      this.customerService.createCustomer(this.newCustomer).subscribe({
+        next: (response) => {
+          this.connected.emit(response);
+        }
+      });
     }
   }
 }
