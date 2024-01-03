@@ -33,13 +33,13 @@ namespace Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDet
                                                .Where(x => x.Customer.IdentityUserDataId == request.UserId)
                                                .Select(x => _mapper.Map<GetShoppingCartDetailsResponseDto>(x))
                                                .FirstOrDefaultAsync(cancellationToken);
-            shoppingCartDetails.Total = Math.Round(shoppingCartDetails.SubTotal +
-                                        ((shoppingCartDetails.SubTotal / 100) * shoppingCartDetails.VatRate) +
-                                        shoppingCartDetails.ShippingFee, 2);
             if (shoppingCartDetails == null)
             {
                 throw new NotFoundException($"No {nameof(ShoppingCart)} is found for current user");
             }
+            shoppingCartDetails.Total = Math.Round(shoppingCartDetails.SubTotal +
+                            ((shoppingCartDetails.SubTotal / 100) * shoppingCartDetails.VatRate) +
+                            shoppingCartDetails.ShippingFee, 2);
             return new()
             {
                 ShoppingCartDetails = shoppingCartDetails
