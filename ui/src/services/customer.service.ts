@@ -95,6 +95,7 @@ export class CustomerService {
      */
     return this.syncShoppingCartWithCustomer()?.pipe(switchMap(
       (r) => {
+        // Updated shoppingcart by API
         if (r && typeof r !== 'boolean') {
           const shoppingCart = r as ShoppingCartResponseDto;
           const customer = this.customerLocalStorageService.getCustomerInfo();
@@ -105,7 +106,11 @@ export class CustomerService {
             return of(true);
           }
         }
-        return of(false);
+        // Case no change because same shoppingcart detected
+        if (r === true)
+          return of(true);
+        else
+          return of(false);
       }),
       catchError(() => of(false))
     ) || of(false);
