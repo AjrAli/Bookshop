@@ -14,7 +14,7 @@ export const routes: Routes = [
                 loadComponent: () => import('./components/steps/my-shoppingcart/my-shoppingcart.component').then(mod => mod.MyShoppingCartComponent)
             },
             { path: 'authentication', loadComponent: () => import('./components/steps/authentication/authentication.component').then(mod => mod.AuthenticationComponent) },
-            { path: 'payment', loadComponent: () => import('./components/steps/payment/payment.component').then(mod => mod.PaymentComponent)}
+            { path: 'payment', loadComponent: () => import('./components/steps/payment/payment.component').then(mod => mod.PaymentComponent), canActivate: [AuthGuard]}
         ],
     },
     { path: '**', redirectTo: '' }
