@@ -1,10 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputTextModule } from 'primeng/inputtext';
-import { OverlayPanel } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
 import { ListShopItemsComponent } from '../../../body/list-shop-items/list-shop-items.component';
 import { ShoppingCartResponseDto } from '../../../dto/shoppingcart/shoppingcart-response-dto';
@@ -14,16 +11,15 @@ import { ShoppingCartDataService } from '../../../../services/shoppingcart/shopp
 @Component({
   selector: 'app-my-shoppingcart',
   standalone: true,
-  imports: [CommonModule, InputGroupModule, ButtonModule, InputTextModule, ListShopItemsComponent],
+  imports: [CommonModule, ButtonModule, ListShopItemsComponent],
   templateUrl: './my-shoppingcart.component.html',
   styleUrl: './my-shoppingcart.component.css'
 })
 export class MyShoppingCartComponent {
-  manage = true;
+  manage = 'manage';
   rootUrl = environment.apiRootUrl;
   private shoppingCartSubscription: Subscription | undefined;
   shoppingcart: ShoppingCartResponseDto | null = new ShoppingCartResponseDto();
-  @ViewChild('op') op!: OverlayPanel;
   constructor(private shoppingCartDataService: ShoppingCartDataService,
     private router: Router) { }
   ngOnDestroy(): void {

@@ -3,7 +3,6 @@ import { AuthenticateResponse } from "../app/dto/handler-response/customer/authe
 import { Role } from "../app/enum/role";
 import { CustomerDto } from "../app/dto/customer/customer-dto";
 import { CustomerResponseDto } from "../app/dto/customer/customer-response-dto";
-import { ActivatedRoute, Router } from "@angular/router";
 import { ValidationErrorResponse } from "../app/dto/response/error/validation-error-response";
 import { ToastService } from "./toast.service";
 import { ShoppingCartResponseDto } from "../app/dto/shoppingcart/shoppingcart-response-dto";
@@ -14,6 +13,7 @@ import { CustomerApiService } from "./customer/customer-api.service";
 import { CustomerLocalStorageService } from "./customer/customer-local-storage.service";
 import { DecodedToken, TokenService } from "./token.service";
 import { Observable, catchError, map, of, switchMap, tap } from "rxjs";
+import { CustomerDataService } from "./customer/customer-data.service";
 
 @Injectable()
 export class CustomerService {
@@ -21,10 +21,18 @@ export class CustomerService {
 
   constructor(private customerApiService: CustomerApiService,
     private customerLocalStorageService: CustomerLocalStorageService,
+    private customerDataService: CustomerDataService,
     private toastService: ToastService,
     private shoppingCartService: ShoppingCartService,
     private shoppingCartDataService: ShoppingCartDataService,
-    private tokenService: TokenService) { }
+    private tokenService: TokenService) {
+    this.loadCustomer();
+  }
+  private loadCustomer() {
+    const customer = this.customerLocalStorageService.getCustomerInfo();
+    if (customer)
+      this.customerDataService.setCustomer(customer);
+  }
 
   authenticate(username: string, password: string): Observable<boolean> {
     return this.customerApiService.authenticate(username, password).pipe(tap({
@@ -49,6 +57,7 @@ export class CustomerService {
       this.customerLocalStorageService.setToken(response.token);
       if (response.customer) {
         this.setCustomerShoppingCart(response.customer);
+        this.customerDataService.setCustomer(response.customer);
         this.customerLocalStorageService.setCustomerInfo(response.customer);
       }
       this.toastService.showSuccess(response.message);
@@ -98,10 +107,11 @@ export class CustomerService {
         // Updated shoppingcart by API
         if (r && typeof r !== 'boolean') {
           const shoppingCart = r as ShoppingCartResponseDto;
-          const customer = this.customerLocalStorageService.getCustomerInfo();
+          const customer = this.customerDataService.getCustomer();
           if (customer && shoppingCart) {
             customer.shoppingCart = shoppingCart
             this.setCustomerShoppingCart(customer);
+            this.customerDataService.setCustomer(customer);
             this.customerLocalStorageService.setCustomerInfo(customer);
             return of(true);
           }
@@ -120,7 +130,7 @@ export class CustomerService {
     const shoppingCartResponseDto = this.shoppingCartDataService.getShoppingCart();
     if (shoppingCartResponseDto) {
       const shoppingCart = new ShoppingCartDto(shoppingCartResponseDto)
-      const getCustomerPreviousShoppingCart = this.customerLocalStorageService.getCustomerInfo()?.shoppingCart;
+      const getCustomerPreviousShoppingCart = this.customerDataService.getCustomer()?.shoppingCart;
       const isShoppingCartOfCustomerNotDifferent = shoppingCartResponseDto.equals(getCustomerPreviousShoppingCart);
       if (getCustomerPreviousShoppingCart && !isShoppingCartOfCustomerNotDifferent) {
         if (shoppingCart.items.length > 0)
@@ -134,13 +144,16 @@ export class CustomerService {
     }
     return of(true);
   }
-
+  resetFullyCustomer() {
+    this.customerDataService.resetCustomer();
+    this.customerLocalStorageService.removeCustomerDataStored();
+  }
   logout() {
     this.syncShoppingCartWithCustomer()?.subscribe({
       next: (r) => {
         if (r) {
           this.shoppingCartService.resetFullyShoppingCart();
-          this.customerLocalStorageService.removeCustomerDataStored();
+          this.resetFullyCustomer();
           this.userInfo = undefined;
         }
       }

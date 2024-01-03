@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CustomerService } from '../../../services/customer.service';
-import { CustomerLocalStorageService } from '../../../services/customer/customer-local-storage.service';
+import { CustomerDataService } from '../../../services/customer/customer-data.service';
 
 @Component({
   selector: 'app-top-links',
@@ -14,12 +14,12 @@ import { CustomerLocalStorageService } from '../../../services/customer/customer
 export class TopLinksComponent {
   customerName: string | undefined;
   constructor(private customerService: CustomerService,
-    private customerLocalStorageService: CustomerLocalStorageService,
+    private customerDataService: CustomerDataService,
     private router: Router) { }
 
   isConnected() {
     if (this.customerService.isLoggedIn()) {
-      this.customerName = this.customerLocalStorageService.getCustomerInfo()?.firstName;
+      this.customerName = this.customerDataService.getCustomer()?.firstName;
       return true;
     }
     return false;

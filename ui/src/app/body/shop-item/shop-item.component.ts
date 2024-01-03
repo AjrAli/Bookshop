@@ -19,7 +19,7 @@ export class ShopItemComponent implements OnInit {
 
   rootUrl = environment.apiRootUrl;
   @Input() shopItem: ShopItemResponseDto | undefined;
-  @Input() manage: boolean = false;
+  @Input() manage: string | null= null;
   quantityForm!: FormGroup;
   quantity: number = 0;
   quantityOptions: { label: string, value: number }[] = [];

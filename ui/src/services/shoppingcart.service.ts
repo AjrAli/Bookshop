@@ -10,6 +10,7 @@ import { ShoppingCartApiService } from "./shoppingcart/shoppingcart-api.service"
 import { ShoppingCartLocalStorageService } from "./shoppingcart/shoppingcart-local-storage.service";
 import { ShoppingCartDataService } from "./shoppingcart/shoppingcart-data.service";
 import { Observable, map, tap } from "rxjs";
+import { ShoppingCartDetailsResponse } from "../app/dto/handler-response/shoppingcart/shoppingcart-details-response";
 
 @Injectable()
 export class ShoppingCartService {
@@ -25,22 +26,24 @@ export class ShoppingCartService {
         if (shoppingCart)
             this.shoppingCartDataService.setShoppingCart(shoppingCart);
     }
-
-    createShoppingCartToApi(shoppingCart: ShoppingCartDto) : Observable<ShoppingCartResponseDto> {
+    getShoppingCartDetailsToApi(): Observable<ShoppingCartDetailsResponse> {
+        return this.shoppingcartApiService.getShoppingCartDetails();
+    }
+    createShoppingCartToApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
         return this.shoppingcartApiService.createShoppingCart(shoppingCart).pipe(tap({
             next: (r) => this.handleShoppingCartResponse(r),
             error: (e) => this.handleShoppingCartError(e),
             complete: () => console.info('complete')
         }), map(response => response.shoppingCart));
     }
-    updateShoppingCartToApi(shoppingCart: ShoppingCartDto) : Observable<ShoppingCartResponseDto> {
+    updateShoppingCartToApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
         return this.shoppingcartApiService.updateShoppingCart(shoppingCart).pipe(tap({
             next: (r) => this.handleShoppingCartResponse(r),
             error: (e) => this.handleShoppingCartError(e),
             complete: () => console.info('complete')
         }), map(response => response.shoppingCart));
     }
-    resetShoppingCartToApi() : Observable<boolean> {
+    resetShoppingCartToApi(): Observable<boolean> {
         return this.shoppingcartApiService.resetShoppingCart().pipe(tap({
             next: (r) => this.toastService.showSuccess(r.message),
             error: (e) => this.handleShoppingCartError(e),

@@ -26,7 +26,13 @@ export class AuthenticationComponent implements OnInit {
   ngOnInit(): void {
     this.signUp = false;
     if (this.customerService.isLoggedIn()) {
-      this.router.navigate(['/steps/payment']);
+      this.customerService.updateCustomerShoppingCart()?.subscribe({
+        next: (r) => {
+          if (r) {
+            this.router.navigate(['/steps/payment']);
+          }
+        }
+      })
     }
   }
   navigateToNext(connected: any) {

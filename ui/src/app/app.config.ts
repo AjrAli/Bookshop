@@ -16,6 +16,7 @@ import { ShoppingCartLocalStorageService } from '../services/shoppingcart/shoppi
 import { CustomerLocalStorageService } from '../services/customer/customer-local-storage.service';
 import { CustomerApiService } from '../services/customer/customer-api.service';
 import { TokenService } from '../services/token.service';
+import { CustomerDataService } from '../services/customer/customer-data.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
     TokenService,
     CustomerService,
     CustomerApiService,
+    CustomerDataService,
     CustomerLocalStorageService,
     ShoppingCartService,
     ShoppingCartApiService,

@@ -32,7 +32,6 @@ export class ShoppingCartResponseDto {
     equals(other: ShoppingCartResponseDto | undefined): boolean {
         // Check if total and items are the same
         return (
-          this.total === other?.total &&
           this.items.length === other?.items.length &&
           this.items.every((item, index) => item.equals(other?.items[index]))
         );
