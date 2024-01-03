@@ -1,0 +1,35 @@
+<div class="container text-center mt-4">
+    <div class="row border-bottom">
+        <div class="col-xxl-12">
+            <div *ngIf="!signUp;" class="container mt-5">
+                <div class="row">
+                    <div class="col-xxl-5">
+                        <div class="container mt-3 align-baseline">
+                            <app-login-form (connected)="navigateToNext($event)"></app-login-form>
+                        </div>
+                    </div>
+                    <div class="col-xxl-2">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p-divider layout="vertical" styleClass="lh-lg mt-3 p-5"><b>OR</b></p-divider>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-5 mt-5">
+                        <p-button label="Sign Up" (click)="showSignUp()" icon="pi pi-user-plus"
+                            styleClass=" lh-lg w-100 mt-4 p-button-success"></p-button>
+                    </div>
+                </div>
+            </div>
+            <app-sign-up-form *ngIf="signUp" (connected)="navigateToNext($event)"></app-sign-up-form>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-xxl-12 d-flex justify-content-start">
+            <p-button (click)="navigateToPrevious()" styleClass="ps-2 pe-2 w-100"><i class="pi pi-arrow-left pe-3"
+                    style="font-size: 1rem"></i> Previous</p-button>
+        </div>
+    </div>
+</div>

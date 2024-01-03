@@ -24,9 +24,7 @@ export class ShoppingCartResponseDto {
     updateItems(newItems: ShopItemResponseDto[]): void {
         for (const newItem of newItems) {
             const existingItem = this.items.find(x => x.bookId === newItem.bookId);
-            if (existingItem) {
-                existingItem.addQuantityWithLimit(newItem.quantity);
-            } else {
+            if (!existingItem) {
                 this.items.push(newItem);
             }
         }

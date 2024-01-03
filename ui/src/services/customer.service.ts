@@ -13,7 +13,7 @@ import { ShoppingCartDataService } from "./shoppingcart/shoppingcart-data.servic
 import { CustomerApiService } from "./customer/customer-api.service";
 import { CustomerLocalStorageService } from "./customer/customer-local-storage.service";
 import { DecodedToken, TokenService } from "./token.service";
-import { map, tap } from "rxjs";
+import { Observable, catchError, map, of, switchMap, tap } from "rxjs";
 
 @Injectable()
 export class CustomerService {
@@ -26,7 +26,7 @@ export class CustomerService {
     private shoppingCartDataService: ShoppingCartDataService,
     private tokenService: TokenService) { }
 
-  authenticate(username: string, password: string) {
+  authenticate(username: string, password: string): Observable<boolean> {
     return this.customerApiService.authenticate(username, password).pipe(tap({
       next: (r) => this.handleAuthenticationResponse(r),
       error: (e) => this.handleAuthenticationError(e),
@@ -35,7 +35,7 @@ export class CustomerService {
     );
   }
 
-  createCustomer(customer: CustomerDto) {
+  createCustomer(customer: CustomerDto): Observable<boolean> {
     return this.customerApiService.createCustomer(customer).pipe(tap({
       next: (r) => this.handleAuthenticationResponse(r),
       error: (e) => this.handleAuthenticationError(e),
@@ -88,8 +88,30 @@ export class CustomerService {
     }
     return false;
   }
+  updateCustomerShoppingCart(): Observable<boolean> {
+    /**
+     *     Use switchMap when you need to switch to a new observable based on the values emitted by the source observable.
+           Use tap when you want to perform side effects without modifying the observable's flow.
+     */
+    return this.syncShoppingCartWithCustomer()?.pipe(switchMap(
+      (r) => {
+        if (r && typeof r !== 'boolean') {
+          const shoppingCart = r as ShoppingCartResponseDto;
+          const customer = this.customerLocalStorageService.getCustomerInfo();
+          if (customer && shoppingCart) {
+            customer.shoppingCart = shoppingCart
+            this.setCustomerShoppingCart(customer);
+            this.customerLocalStorageService.setCustomerInfo(customer);
+            return of(true);
+          }
+        }
+        return of(false);
+      }),
+      catchError(() => of(false))
+    ) || of(false);
+  }
 
-  logout() {
+  syncShoppingCartWithCustomer(): Observable<ShoppingCartResponseDto | boolean> {
     const shoppingCartResponseDto = this.shoppingCartDataService.getShoppingCart();
     if (shoppingCartResponseDto) {
       const shoppingCart = new ShoppingCartDto(shoppingCartResponseDto)
@@ -97,16 +119,27 @@ export class CustomerService {
       const isShoppingCartOfCustomerNotDifferent = shoppingCartResponseDto.equals(getCustomerPreviousShoppingCart);
       if (getCustomerPreviousShoppingCart && !isShoppingCartOfCustomerNotDifferent) {
         if (shoppingCart.items.length > 0)
-          this.shoppingCartService.updateShoppingCartToApi(shoppingCart);
+          return this.shoppingCartService.updateShoppingCartToApi(shoppingCart);
         else
-          this.shoppingCartService.resetShoppingCartToApi();
+          return this.shoppingCartService.resetShoppingCartToApi();
       } else {
         if (!isShoppingCartOfCustomerNotDifferent && shoppingCart.items.length > 0)
-          this.shoppingCartService.createShoppingCartToApi(shoppingCart);
+          return this.shoppingCartService.createShoppingCartToApi(shoppingCart);
       }
-      this.shoppingCartService.resetFullyShoppingCart();
     }
-    this.customerLocalStorageService.removeCustomerDataStored();
-    this.userInfo = undefined;
+    return of(true);
+  }
+
+  logout() {
+    this.syncShoppingCartWithCustomer()?.subscribe({
+      next: (r) => {
+        if (r) {
+          this.shoppingCartService.resetFullyShoppingCart();
+          this.customerLocalStorageService.removeCustomerDataStored();
+          this.userInfo = undefined;
+        }
+      }
+    })
   }
 }
+

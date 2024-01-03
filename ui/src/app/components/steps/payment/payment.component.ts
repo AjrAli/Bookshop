@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
+import { ShoppingCartDataService } from '../../../../services/shoppingcart/shoppingcart-data.service';
 import { ListShopItemsComponent } from '../../../body/list-shop-items/list-shop-items.component';
 import { ShoppingCartResponseDto } from '../../../dto/shoppingcart/shoppingcart-response-dto';
 import { environment } from '../../../environments/environment';
-import { ShoppingCartDataService } from '../../../../services/shoppingcart/shoppingcart-data.service';
 
 @Component({
-  selector: 'app-my-shoppingcart',
+  selector: 'app-payment',
   standalone: true,
   imports: [CommonModule, InputGroupModule, ButtonModule, InputTextModule, ListShopItemsComponent],
-  templateUrl: './my-shoppingcart.component.html',
-  styleUrl: './my-shoppingcart.component.css'
+  templateUrl: './payment.component.html',
+  styleUrl: './payment.component.css'
 })
-export class MyShoppingCartComponent {
+export class PaymentComponent implements OnInit {
   manage = true;
   rootUrl = environment.apiRootUrl;
   private shoppingCartSubscription: Subscription | undefined;
@@ -46,7 +46,10 @@ export class MyShoppingCartComponent {
   getTotalItems() {
     return this.shoppingcart?.getTotalItems() ?? 0;
   }
+  navigateToPrevious() {
+    this.router.navigate(['/steps/my-shoppingcart'])
+  }
   navigateToNext() {
-    this.router.navigate(['/steps/authentication'])
+    this.router.navigate(['/steps/confirmation'])
   }
 }

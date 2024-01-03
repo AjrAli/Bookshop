@@ -20,16 +20,13 @@ namespace Bookshop.Application.Profiles.ShoppingCarts
             CreateMap<ShopItemResponseDto, LineItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
                 .ForMember(dest => dest.BookId, opt => opt.MapFrom(source => source.BookId))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(source => source.Quantity))
-                .ForAllMembers(x => x.Ignore());
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(source => source.Quantity));
             // ShoppingCart Response profile
             CreateMap<ShoppingCart, ShoppingCartResponseDto>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(source => source.LineItems))
-                .ForMember(dest => dest.Total, opt => opt.MapFrom(source => source.Total))
-                .ForAllMembers(x => x.Ignore());
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(source => source.Total));
             CreateMap<ShoppingCartResponseDto, ShoppingCart>()
-                .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items))
-                .ForAllMembers(x => x.Ignore());
+                .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items));
 
             // ShoppingCart Full details profile
             CreateMap<ShoppingCart, GetShoppingCartDetailsResponseDto>()
@@ -39,23 +36,20 @@ namespace Bookshop.Application.Profiles.ShoppingCarts
                 .ForPath(dest => dest.ShippingFee, opt => opt.MapFrom(source => source.Customer.ShippingAddress.LocationPricing.ShippingFee));
             CreateMap<GetShoppingCartDetailsResponseDto, ShoppingCart>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items))
-                .ForAllMembers(x => x.Ignore());
+                .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items));
 
             // LineItem Request profile
             CreateMap<LineItem, ShopItemRequestDto>();
             CreateMap<ShopItemRequestDto, LineItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
                 .ForMember(dest => dest.BookId, opt => opt.MapFrom(source => source.BookId))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(source => source.Quantity))
-                .ForAllMembers(x => x.Ignore());
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(source => source.Quantity));
 
             // ShoppingCart Request profile
             CreateMap<ShoppingCart, ShoppingCartRequestDto>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(source => source.LineItems));
             CreateMap<ShoppingCartRequestDto, ShoppingCart>()
-                .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items))
-                .ForAllMembers(x => x.Ignore());
+                .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items));
         }
     }
 }

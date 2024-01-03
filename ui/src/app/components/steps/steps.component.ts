@@ -21,12 +21,16 @@ export class StepsComponent implements OnInit {
       },
       {
         label: 'Authentication',
-        routerLink: 'login',
+        routerLink: 'authentication',
       },
       {
         label: 'Payment',
         routerLink: 'payment',
       },
+      {
+        label: 'Confirmation',
+        routerLink: 'confirmation',
+      }
     ];
   }
 }

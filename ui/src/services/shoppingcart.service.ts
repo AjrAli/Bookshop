@@ -9,6 +9,7 @@ import { ValidationErrorResponse } from "../app/dto/response/error/validation-er
 import { ShoppingCartApiService } from "./shoppingcart/shoppingcart-api.service";
 import { ShoppingCartLocalStorageService } from "./shoppingcart/shoppingcart-local-storage.service";
 import { ShoppingCartDataService } from "./shoppingcart/shoppingcart-data.service";
+import { Observable, map, tap } from "rxjs";
 
 @Injectable()
 export class ShoppingCartService {
@@ -25,26 +26,26 @@ export class ShoppingCartService {
             this.shoppingCartDataService.setShoppingCart(shoppingCart);
     }
 
-    createShoppingCartToApi(shoppingCart: ShoppingCartDto) {
-        this.shoppingcartApiService.createShoppingCart(shoppingCart).subscribe({
+    createShoppingCartToApi(shoppingCart: ShoppingCartDto) : Observable<ShoppingCartResponseDto> {
+        return this.shoppingcartApiService.createShoppingCart(shoppingCart).pipe(tap({
             next: (r) => this.handleShoppingCartResponse(r),
             error: (e) => this.handleShoppingCartError(e),
             complete: () => console.info('complete')
-        });
+        }), map(response => response.shoppingCart));
     }
-    updateShoppingCartToApi(shoppingCart: ShoppingCartDto) {
-        this.shoppingcartApiService.updateShoppingCart(shoppingCart).subscribe({
+    updateShoppingCartToApi(shoppingCart: ShoppingCartDto) : Observable<ShoppingCartResponseDto> {
+        return this.shoppingcartApiService.updateShoppingCart(shoppingCart).pipe(tap({
             next: (r) => this.handleShoppingCartResponse(r),
             error: (e) => this.handleShoppingCartError(e),
             complete: () => console.info('complete')
-        });
+        }), map(response => response.shoppingCart));
     }
-    resetShoppingCartToApi() {
-        this.shoppingcartApiService.resetShoppingCart().subscribe({
+    resetShoppingCartToApi() : Observable<boolean> {
+        return this.shoppingcartApiService.resetShoppingCart().pipe(tap({
             next: (r) => this.toastService.showSuccess(r.message),
             error: (e) => this.handleShoppingCartError(e),
             complete: () => console.info('complete')
-        });
+        }), map(response => !!response.success));
     }
 
     private handleShoppingCartResponse(response: ShoppingCartResponse): void {

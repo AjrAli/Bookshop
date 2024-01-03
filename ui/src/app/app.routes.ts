@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', loadComponent: () => import('./components/home/home.component').then(mod => mod.HomeComponent) },
@@ -12,9 +13,9 @@ export const routes: Routes = [
                 path: 'my-shoppingcart',
                 loadComponent: () => import('./components/steps/my-shoppingcart/my-shoppingcart.component').then(mod => mod.MyShoppingCartComponent)
             },
-            { path: 'login-form', loadComponent: () => import('./forms/login-form/login-form.component').then(mod => mod.LoginFormComponent) },
-            { path: 'sign-up-form', loadComponent: () => import('./forms/sign-up-form//sign-up-form.component').then(mod => mod.SignUpFormComponent) }
+            { path: 'authentication', loadComponent: () => import('./components/steps/authentication/authentication.component').then(mod => mod.AuthenticationComponent) },
+            { path: 'payment', loadComponent: () => import('./components/steps/payment/payment.component').then(mod => mod.PaymentComponent)}
         ],
     },
-    { path: '**', redirectTo: ''}
+    { path: '**', redirectTo: '' }
 ];

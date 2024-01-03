@@ -36,7 +36,7 @@ export class ShoppingCartDataService {
     }
     resetShoppingCart(){
         this.shoppingCart = null;
-        this.shoppingCartSubject.next(this.shoppingCart);
+        this.shoppingCartSubject.next(null as ShoppingCartResponseDto | null);
     }
 
 }
