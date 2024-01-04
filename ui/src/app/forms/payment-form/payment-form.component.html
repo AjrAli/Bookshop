@@ -1,0 +1,49 @@
+<div class="container mt-5 text-center">
+    <form [formGroup]="paymentForm">
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="cardholderName">Card Holder Name</label>
+            </div>
+            <div class="col-xxl-10">
+                <input pInputText class="w-75" type="text" formControlName="cardholderName" required />
+                <app-form-validation-error [control]="paymentForm.get('cardholderName')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="methodOfPayment">Method Of Payment</label>
+            </div>
+            <div class="col-xxl-10">
+                <p-dropdown styleClass="w-75" formControlName="methodOfPayment"
+                    [options]="creditCardsOptions"></p-dropdown>
+                <app-form-validation-error [control]="paymentForm.get('methodOfPayment')"></app-form-validation-error>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-xxl-2 mt-2">
+                <label for="cardholderNumber">Number</label>
+            </div>
+            <div class="col-xxl-2">
+                <p-inputMask inputId="number" mask="9999-9999-9999-9999" formControlName="cardholderNumber"
+                    [required]="true"></p-inputMask>
+                <app-form-validation-error [control]="paymentForm.get('cardholderNumber')"></app-form-validation-error>
+            </div>
+            <div class="col-xxl-2 mt-2">
+                <label for="date">Date</label>
+            </div>
+            <div class="col-xxl-2">
+                <p-inputMask styleClass="w-50" inputId="date" mask="99/99" formControlName="date"
+                    [required]="true"></p-inputMask>
+                <app-form-validation-error [control]="paymentForm.get('date')"></app-form-validation-error>
+            </div>
+            <div class="col-xxl-2 mt-2">
+                <label for="cvv">CVV</label>
+            </div>
+            <div class="col-xxl-2">
+                <p-inputMask id="cvv" styleClass="w-50" mask="999" formControlName="cvv"
+                    [required]="true"></p-inputMask>
+                <app-form-validation-error [control]="paymentForm.get('cvv')"></app-form-validation-error>
+            </div>
+        </div>
+    </form>
+</div>

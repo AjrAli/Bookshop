@@ -85,7 +85,7 @@ export class CustomerService {
     }
     this.userInfo = this.tokenService.decodeToken(token);
     if (this.tokenService.isTokenExpired(token)) {
-      this.logout();
+      this.resetFullyCustomer();
       return false;
     }
     return true;
