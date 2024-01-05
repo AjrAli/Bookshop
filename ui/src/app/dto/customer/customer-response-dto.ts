@@ -3,15 +3,15 @@ import { ShoppingCartResponseDto } from "../shoppingcart/shoppingcart-response-d
 export class CustomerResponseDto {
   firstName: string = '';
   lastName: string = '';
-  shippingAddressId: number = 0;
-  billingAddressId: number = 0;
+  shippingAddress: string = '';
+  billingAddress: string = '';
   shoppingCart: ShoppingCartResponseDto | undefined = undefined;
 
   constructor(data?: Partial<CustomerResponseDto>) {
     this.firstName = data?.firstName ?? this.firstName;
     this.lastName = data?.lastName ?? this.lastName;
-    this.shippingAddressId = data?.shippingAddressId ?? this.shippingAddressId;
-    this.billingAddressId = data?.billingAddressId ?? this.billingAddressId;
+    this.shippingAddress = data?.shippingAddress ?? this.shippingAddress;
+    this.billingAddress = data?.billingAddress ?? this.billingAddress;
     this.shoppingCart = data?.shoppingCart ?? this.shoppingCart;
   }
 }

@@ -38,10 +38,12 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             var user = await _userManager.FindByNameAsync(newCustomer?.IdentityData.UserName);
             var jwtSecurityToken = await JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
             await StoreCustomerInDatabase(request, newCustomer, cancellationToken);
-            var customerCreated = await _dbContext.Customers.Include(x => x.IdentityData)
-                                   .Where(x => x.IdentityUserDataId == user.Id)
-                                   .Select(x => _mapper.Map<CustomerResponseDto>(x))
-                                   .FirstOrDefaultAsync();
+            var customerCreated = await _dbContext.Customers.Include(x => x.BillingAddress)
+                                                            .Include(x => x.ShippingAddress)
+                                                            .Include(x => x.IdentityData)
+                                                            .Where(x => x.IdentityUserDataId == user.Id)
+                                                            .Select(x => _mapper.Map<CustomerResponseDto>(x))
+                                                            .FirstOrDefaultAsync();
             return new()
             {
                 Customer = customerCreated,

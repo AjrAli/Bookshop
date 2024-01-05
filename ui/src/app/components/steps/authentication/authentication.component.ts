@@ -19,13 +19,14 @@ import { ShoppingCartResponseDto } from '../../../dto/shoppingcart/shoppingcart-
 })
 export class AuthenticationComponent implements OnInit {
   signUp = false
-
+  connected = false;
   constructor(private customerService: CustomerService,
     private router: Router) { }
 
   ngOnInit(): void {
     this.signUp = false;
-    if (this.customerService.isLoggedIn()) {
+    this.connected = this.customerService.isLoggedIn();
+    if (this.connected) {
       this.customerService.updateCustomerShoppingCart()?.subscribe({
         next: (r) => {
           if (r) {

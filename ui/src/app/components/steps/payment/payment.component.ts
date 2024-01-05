@@ -8,6 +8,9 @@ import { ShoppingCartDetailsResponseDto } from '../../../dto/shoppingcart/shoppi
 import { ShoppingCartService } from '../../../../services/shoppingcart.service';
 import { ShoppingCartDetailsResponse } from '../../../dto/handler-response/shoppingcart/shoppingcart-details-response';
 import { PaymentFormComponent } from '../../../forms/payment-form/payment-form.component';
+import { ToastService } from '../../../../services/toast.service';
+import { CustomerDataService } from '../../../../services/customer/customer-data.service';
+import { ShoppingCartDataService } from '../../../../services/shoppingcart/shoppingcart-data.service';
 
 @Component({
   selector: 'app-payment',
@@ -22,7 +25,9 @@ export class PaymentComponent implements OnInit {
   rootUrl = environment.apiRootUrl;
   shoppingcartDetails: ShoppingCartDetailsResponseDto | null = null;
   constructor(private shoppingCartService: ShoppingCartService,
-    private router: Router) { }
+    private shoppingCartDataService: ShoppingCartDataService,
+    private customerDataService: CustomerDataService,
+    private router: Router, private toastService: ToastService) { }
 
 
   ngOnInit() {
@@ -34,13 +39,20 @@ export class PaymentComponent implements OnInit {
           return;
         }
         this.shoppingcartDetails = response.shoppingCartDetails;
+        this.shoppingCartDataService.setShoppingCartDetails(response.shoppingCartDetails);
       }
-    })
+    });
   }
   navigateToPrevious() {
     this.router.navigate(['/steps/my-shoppingcart'])
   }
   navigateToNext() {
-    this.router.navigate(['/steps/confirmation'])
+    const paymentForm = this.paymentForm.getFormData();
+    if (this.paymentForm.paymentForm.valid && paymentForm) {
+      this.customerDataService.setPaymentInformation(paymentForm)
+      this.router.navigate(['/steps/confirmation'])
+    } else {
+      this.toastService.showSimpleError('Valid payment form is required');
+    }
   }
 }

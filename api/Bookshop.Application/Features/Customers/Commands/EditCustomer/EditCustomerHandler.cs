@@ -36,10 +36,12 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
             await ChangeUserPassword(editedCustomer, request.Customer?.Password, request.Customer?.NewPassword);
             EditCustomerInDatabase(editedCustomer);
             await SaveChangesAsync(request, cancellationToken);
-            var editedCustomerDto = await _dbContext.Customers.Include(x => x.IdentityData)
-                                   .Where(x => x.Id == editedCustomer.Id)
-                                   .Select(x => _mapper.Map<CustomerResponseDto>(x))
-                                   .FirstOrDefaultAsync();
+            var editedCustomerDto = await _dbContext.Customers.Include(x => x.BillingAddress)
+                                                              .Include(x => x.ShippingAddress)
+                                                              .Include(x => x.IdentityData)
+                                                              .Where(x => x.Id == editedCustomer.Id)
+                                                              .Select(x => _mapper.Map<CustomerResponseDto>(x))
+                                                              .FirstOrDefaultAsync();
             var jwtSecurityToken = await JwtHelper.GenerateToken(_userManager, editedCustomer.IdentityData, _jwtSettings);
             return new()
             {

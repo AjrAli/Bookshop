@@ -1,0 +1,113 @@
+<div *ngIf="customer && customer.shoppingCart && paymentInfo && shoppingcartDetails" class="container text-center mt-4">
+    <div class="row mb-4">
+        <div class="col-xxl-12">
+            <div class="container mt-5 text-left">
+                <div class="row justify-content-center ">
+                    <div class="col-xxl-4">
+                        <span class="font-bold">FirstName: </span> <span
+                            class="text-teal-500">{{customer.firstName}}</span>
+                    </div>
+                    <div class="col-xxl-2">
+                        <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+                    </div>
+                    <div class="col-xxl-4">
+                        <span class="font-bold">LastName: </span> <span
+                            class="text-teal-500">{{customer.lastName}}</span>
+                    </div>
+                </div>
+                <div class="row justify-content-center ">
+                    <div class="col-xxl-4">
+                        <span class="font-bold">Shipping Address: </span> <span
+                            class="text-teal-500">{{customer.shippingAddress}}</span>
+                    </div>
+                    <div class="col-xxl-2">
+                        <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+                    </div>
+                    <div class="col-xxl-4">
+                        <span class="font-bold">Billing Address: </span> <span
+                            class="text-teal-500">{{customer.billingAddress}}</span>
+                    </div>
+                </div>
+                <div class="row justify-content-center ">
+                    <div class="col-xxl-4">
+                        <span class="font-bold">Card Holder Name: </span> <span
+                            class="text-teal-500">{{paymentInfo.cardholderName}}</span>
+                    </div>
+                    <div class="col-xxl-2">
+                        <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+                    </div>
+                    <div class="col-xxl-4">
+                        <span class="font-bold">Method Of Payment: </span> <span
+                            class="text-teal-500">{{paymentInfo.methodOfPayment}}</span>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-2">
+                    <div class="col-xxl-4">
+                        <span class="font-bold">Card Holder Number: </span> <span
+                            class="text-teal-500">{{paymentInfo.cardholderNumber}}</span>
+                    </div>
+                    <div class="col-xxl-2">
+                        <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+                    </div>
+                    <div class="col-xxl-4">
+                        <span class="font-bold">Date: </span> <span class="text-teal-500">{{paymentInfo.date}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xxl-12">
+            <app-list-shop-items [manage]="manage" [items]="shoppingcartDetails.items">
+            </app-list-shop-items>
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col-xxl-6">
+                        <span>Sub Total</span>
+                    </div>
+                    <div class="col-xxl-6">
+                        <span>{{shoppingcartDetails.subTotal | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xxl-6">
+                        <span>Shipping Fee</span>
+                    </div>
+                    <div class="col-xxl-6">
+                        <span>+ {{shoppingcartDetails.shippingFee | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xxl-6">
+                        <span>Vat Rate</span>
+                    </div>
+                    <div class="col-xxl-6">
+                        <span>+ {{(shoppingcartDetails.subTotal / 100) * shoppingcartDetails.vatRate |
+                            currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                </div>
+                <div class="row text-teal-500 ">
+                    <div class="col-xxl-6">
+                        <h3>Total</h3>
+                    </div>
+                    <div class="col-xxl-6">
+                        <h3>{{shoppingcartDetails.total | currency:'USD':'symbol':'1.2-2' }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xxl-12">
+            <p-button (click)="navigateToPrevious()" styleClass="ps-2 pe-2 d-inline float-start"><i
+                    class="pi pi-arrow-left pe-3" style="font-size: 1rem"></i> Previous</p-button>
+            <p-button (click)="orderConfirmation()"
+                styleClass="p-button-success ps-2 pe-2 d-inline float-end">Complete<i class="pi pi-arrow-right ps-3"
+                    style="font-size: 1rem"></i></p-button>
+        </div>
+    </div>
+</div>

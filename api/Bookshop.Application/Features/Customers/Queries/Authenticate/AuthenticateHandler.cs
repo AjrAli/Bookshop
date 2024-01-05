@@ -47,6 +47,8 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
             }
             var jwtSecurityToken = await JwtHelper.GenerateToken(_userManager, user, _jwtSettings);
             var customer = await _dbContext.Customers
+                                               .Include(x => x.BillingAddress)
+                                               .Include(x => x.ShippingAddress)
                                                .Include(x => x.IdentityData)
                                                .Include(x => x.ShoppingCart)
                                                    .ThenInclude(x => x.LineItems)

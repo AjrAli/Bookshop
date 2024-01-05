@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -18,7 +18,6 @@ import { InputMaskModule } from 'primeng/inputmask';
   styleUrl: './payment-form.component.css'
 })
 export class PaymentFormComponent implements OnInit {
-  @Output() getFormDataEvent = new EventEmitter<PaymentInformation>();
   cardholderName: string = '';
   methodOfPayment: string = CreditCards.AmericanExpress;
   cardholderNumber: string = '';
@@ -42,7 +41,7 @@ export class PaymentFormComponent implements OnInit {
     });
   }
 
-  getFormData(): void {
+  getFormData(): PaymentInformation | undefined {
     if (this.paymentForm.valid) {
       const cardholderName = this.paymentForm.get('cardholderName')?.value;
       const methodOfPayment = this.paymentForm.get('methodOfPayment')?.value;
@@ -56,7 +55,8 @@ export class PaymentFormComponent implements OnInit {
         date: date,
         cvv: cvv
       }
-      this.getFormDataEvent.emit(paymentInformation);
+      return paymentInformation;
     }
+    return;
   }
 }
