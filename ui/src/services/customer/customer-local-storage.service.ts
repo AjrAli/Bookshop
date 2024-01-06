@@ -21,14 +21,6 @@ export class CustomerLocalStorageService {
     }
 
     removeCustomerDataStored() {
-        localStorage.removeItem('authToken');
         localStorage.removeItem('customerData');
-    }
-    setToken(token: string) {
-        localStorage.setItem('authToken', token);
-    }
-
-    getToken(): string | null {
-        return localStorage.getItem('authToken');
     }
 }

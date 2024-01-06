@@ -54,7 +54,7 @@ export class CustomerService {
 
   private handleAuthenticationResponse(response: AuthenticateResponse): void {
     if (response.token) {
-      this.customerLocalStorageService.setToken(response.token);
+      this.tokenService.setToken(response.token);
       if (response.customer) {
         this.setCustomerShoppingCart(response.customer);
         this.customerDataService.setCustomer(response.customer);
@@ -74,12 +74,12 @@ export class CustomerService {
   private setCustomerShoppingCart(customerResponseDto: CustomerResponseDto) {
     if (customerResponseDto.shoppingCart) {
       customerResponseDto.shoppingCart = new ShoppingCartResponseDto(customerResponseDto.shoppingCart);
-      this.shoppingCartService.incrementallyUpdateShoppingCart(customerResponseDto.shoppingCart);
+      this.shoppingCartDataService.updateShoppingCart(customerResponseDto.shoppingCart);
     }
   }
 
   isLoggedIn(): boolean {
-    const token = this.customerLocalStorageService.getToken();
+    const token = this.tokenService.getToken();
     if (!token) {
       return false;
     }
@@ -134,12 +134,12 @@ export class CustomerService {
       const isShoppingCartOfCustomerNotDifferent = shoppingCartResponseDto.equals(getCustomerPreviousShoppingCart);
       if (getCustomerPreviousShoppingCart && !isShoppingCartOfCustomerNotDifferent) {
         if (shoppingCart.items.length > 0)
-          return this.shoppingCartService.updateShoppingCartToApi(shoppingCart);
+          return this.shoppingCartService.updateShoppingCartFromApi(shoppingCart);
         else
-          return this.shoppingCartService.resetShoppingCartToApi();
+          return this.shoppingCartService.resetShoppingCartFromApi();
       } else {
         if (!isShoppingCartOfCustomerNotDifferent && shoppingCart.items.length > 0)
-          return this.shoppingCartService.createShoppingCartToApi(shoppingCart);
+          return this.shoppingCartService.createShoppingCartFromApi(shoppingCart);
       }
     }
     return of(true);
@@ -147,6 +147,7 @@ export class CustomerService {
   resetFullyCustomer() {
     this.customerDataService.resetCustomer();
     this.customerLocalStorageService.removeCustomerDataStored();
+    this.tokenService.removeTokenStored();
   }
   resetFullyLocalShoppingCart() {
     this.shoppingCartService.resetLocalShoppingCart();

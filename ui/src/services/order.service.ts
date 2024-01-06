@@ -17,21 +17,21 @@ export class OrderService {
         private toastService: ToastService,
     ) { }
 
-    createOrderToApi(order: OrderDto): Observable<OrderResponseDto> {
+    createOrderFromApi(order: OrderDto): Observable<OrderResponseDto> {
         return this.orderApiService.createOrder(order).pipe(tap({
             next: (r) => this.handleOrderResponse(r),
             error: (e) => this.handleOrderError(e),
             complete: () => console.info('complete')
         }), map(response => response.order));
     }
-    updateOrderToApi(updateOrder: UpdateOrderDto): Observable<OrderResponseDto> {
+    updateOrderFromApi(updateOrder: UpdateOrderDto): Observable<OrderResponseDto> {
         return this.orderApiService.updateOrder(updateOrder).pipe(tap({
             next: (r) => this.handleOrderResponse(r),
             error: (e) => this.handleOrderError(e),
             complete: () => console.info('complete')
         }), map(response => response.order));
     }
-    cancelOrderToApi(id: number): Observable<boolean> {
+    cancelOrderFromApi(id: number): Observable<boolean> {
         return this.orderApiService.cancelOrder(id).pipe(tap({
             next: (r) => this.toastService.showSuccess(r.message),
             error: (e) => this.handleOrderError(e),

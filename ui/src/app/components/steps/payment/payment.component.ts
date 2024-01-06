@@ -11,6 +11,7 @@ import { PaymentFormComponent } from '../../../forms/payment-form/payment-form.c
 import { ToastService } from '../../../../services/toast.service';
 import { CustomerDataService } from '../../../../services/customer/customer-data.service';
 import { ShoppingCartDataService } from '../../../../services/shoppingcart/shoppingcart-data.service';
+import { ShoppingCartApiService } from '../../../../services/shoppingcart/shoppingcart-api.service';
 
 @Component({
   selector: 'app-payment',
@@ -24,14 +25,14 @@ export class PaymentComponent implements OnInit {
   manage = 'show';
   rootUrl = environment.apiRootUrl;
   shoppingcartDetails: ShoppingCartDetailsResponseDto | null = null;
-  constructor(private shoppingCartService: ShoppingCartService,
+  constructor(private shoppingCartApiService: ShoppingCartApiService,
     private shoppingCartDataService: ShoppingCartDataService,
     private customerDataService: CustomerDataService,
     private router: Router, private toastService: ToastService) { }
 
 
   ngOnInit() {
-    this.shoppingCartService.getShoppingCartDetailsToApi().subscribe({
+    this.shoppingCartApiService.getShoppingCartDetails().subscribe({
       next: (response: ShoppingCartDetailsResponse | null) => {
         if (!response || !response.shoppingCartDetails) {
           this.shoppingcartDetails = null;

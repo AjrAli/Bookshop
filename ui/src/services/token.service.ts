@@ -14,6 +14,16 @@ export class TokenService {
         const decodedToken = this.decodeToken(token);
         return decodedToken.exp * 1000 < Date.now();
     }
+    setToken(token: string) {
+        localStorage.setItem('authToken', token);
+    }
+
+    getToken(): string | null {
+        return localStorage.getItem('authToken');
+    }
+    removeTokenStored() {
+        localStorage.removeItem('authToken');
+    }
 }
 
 export interface DecodedToken {

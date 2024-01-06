@@ -54,7 +54,7 @@ export class ConfirmationComponent implements OnInit {
     if (this.customer && this.customer.shoppingCart && this.paymentInfo && this.shoppingcartDetails) {
       const orderDto = new OrderDto(this.paymentInfo);
       if (orderDto.methodOfPayment) {
-        this.orderService.createOrderToApi(orderDto).subscribe({
+        this.orderService.createOrderFromApi(orderDto).subscribe({
           next: (r) => {
             if (r) {
               this.order = r;
