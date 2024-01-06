@@ -17,6 +17,8 @@ import { CustomerLocalStorageService } from '../services/customer/customer-local
 import { CustomerApiService } from '../services/customer/customer-api.service';
 import { TokenService } from '../services/token.service';
 import { CustomerDataService } from '../services/customer/customer-data.service';
+import { OrderApiService } from '../services/order/order-api.service';
+import { OrderService } from '../services/order.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,6 +34,8 @@ export const appConfig: ApplicationConfig = {
     ShoppingCartApiService,
     ShoppingCartLocalStorageService,
     ShoppingCartDataService,
+    OrderApiService,
+    OrderService,
     ToastService, BookService, importProvidersFrom(
       ToastrModule.forRoot()
     )

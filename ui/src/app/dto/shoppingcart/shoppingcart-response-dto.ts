@@ -19,6 +19,8 @@ export class ShoppingCartResponseDto {
     updateTotal() {
         if (this.items && this.items.length > 0) {
             this.total = this.items.reduce((total, item) => total + item.price, 0);
+        }else{
+            this.total = 0 ;
         }
     }
     updateItems(newItems: ShopItemResponseDto[]): void {

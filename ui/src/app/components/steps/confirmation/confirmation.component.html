@@ -1,4 +1,5 @@
-<div *ngIf="customer && customer.shoppingCart && paymentInfo && shoppingcartDetails" class="container text-center mt-4">
+<div *ngIf="customer && paymentInfo && shoppingcartDetails; else orderCreated"
+    class="container text-center mt-4">
     <div class="row mb-4">
         <div class="col-xxl-12">
             <div class="container mt-5 text-left">
@@ -9,7 +10,8 @@
                     </div>
                     <div class="col-xxl-2">
                         <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
-                        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden"
+                            [align]="'center'"><b></b></p-divider>
                     </div>
                     <div class="col-xxl-4">
                         <span class="font-bold">LastName: </span> <span
@@ -23,7 +25,8 @@
                     </div>
                     <div class="col-xxl-2">
                         <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
-                        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden"
+                            [align]="'center'"><b></b></p-divider>
                     </div>
                     <div class="col-xxl-4">
                         <span class="font-bold">Billing Address: </span> <span
@@ -37,7 +40,8 @@
                     </div>
                     <div class="col-xxl-2">
                         <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
-                        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden"
+                            [align]="'center'"><b></b></p-divider>
                     </div>
                     <div class="col-xxl-4">
                         <span class="font-bold">Method Of Payment: </span> <span
@@ -51,7 +55,8 @@
                     </div>
                     <div class="col-xxl-2">
                         <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
-                        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden"
+                            [align]="'center'"><b></b></p-divider>
                     </div>
                     <div class="col-xxl-4">
                         <span class="font-bold">Date: </span> <span class="text-teal-500">{{paymentInfo.date}}</span>
@@ -111,3 +116,82 @@
         </div>
     </div>
 </div>
+
+
+<ng-template #orderCreated>
+    <div *ngIf="customer && order" class="container text-center mt-4">
+        <h3 class="text-teal-500">Order Review</h3>
+        <div class="row mb-4">
+            <div class="col-xxl-12">
+                <div class="container mt-5 text-left">
+                    <div class="row justify-content-center ">
+                        <div class="col-xxl-4">
+                            <span class="font-bold">FirstName: </span> <span
+                                class="text-teal-500">{{customer.firstName}}</span>
+                        </div>
+                        <div class="col-xxl-2">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-xxl-4">
+                            <span class="font-bold">LastName: </span> <span
+                                class="text-teal-500">{{customer.lastName}}</span>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center ">
+                        <div class="col-xxl-4">
+                            <span class="font-bold">Shipping Address: </span> <span
+                                class="text-teal-500">{{customer.shippingAddress}}</span>
+                        </div>
+                        <div class="col-xxl-2">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-xxl-4">
+                            <span class="font-bold">Billing Address: </span> <span
+                                class="text-teal-500">{{customer.billingAddress}}</span>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mb-2">
+                        <div class="col-xxl-4">
+                            <span class="font-bold">Date Order: </span> <span
+                                class="text-teal-500">{{order.dateOrder}}</span>
+                        </div>
+                        <div class="col-xxl-2">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-xxl-4">
+                            <span class="font-bold">Method Of Payment: </span> <span
+                                class="text-teal-500">{{order.methodOfPayment}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xxl-12">
+                <app-list-shop-items [manage]="manage" [items]="order.items">
+                </app-list-shop-items>
+                <div class="container mt-3">
+                    <div class="row text-teal-500 ">
+                        <div class="col-xxl-6">
+                            <h3>Total</h3>
+                        </div>
+                        <div class="col-xxl-6">
+                            <h3>{{order.total | currency:'USD':'symbol':'1.2-2' }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xxl-12 text-center">
+                <p-button (click)="returnToIndex()" styleClass="p-button-success ps-2 pe-2">Back to Index</p-button>
+            </div>
+        </div>
+    </div>
+</ng-template>

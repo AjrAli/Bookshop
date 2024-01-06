@@ -4,12 +4,15 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CustomerResponseDto } from '../../../dto/customer/customer-response-dto';
 import { CustomerDataService, PaymentInformation } from '../../../../services/customer/customer-data.service';
-import { combineLatest } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ListShopItemsComponent } from '../../../body/list-shop-items/list-shop-items.component';
 import { ShoppingCartDataService } from '../../../../services/shoppingcart/shoppingcart-data.service';
 import { ShoppingCartDetailsResponseDto } from '../../../dto/shoppingcart/shoppingcart-details-response-dto';
 import { DividerModule } from 'primeng/divider';
+import { OrderResponseDto } from '../../../dto/order/order-response-dto';
+import { OrderDto } from '../../../dto/order/order-dto';
+import { OrderService } from '../../../../services/order.service';
+import { CustomerService } from '../../../../services/customer.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -25,31 +28,47 @@ export class ConfirmationComponent implements OnInit {
   customer: CustomerResponseDto | null = null;
   shoppingcartDetails: ShoppingCartDetailsResponseDto | null = null;
   paymentInfo: PaymentInformation | null = null;
-  constructor(private router: Router, private customerDataService: CustomerDataService, private shoppingCartDataService: ShoppingCartDataService) { }
+  order: OrderResponseDto | null = null;
+  constructor(private router: Router,
+    private customerDataService: CustomerDataService,
+    private customerService: CustomerService,
+    private shoppingCartDataService: ShoppingCartDataService,
+    private orderService: OrderService) { }
 
   ngOnInit(): void {
-    const customer$ = this.customerDataService.getCustomerObservable();
-    const paymentInfo$ = this.customerDataService.getPaymentInformationObservable();
-    const shoppingcartDetails = this.shoppingCartDataService.getShoppingCartDetails();
-    // forjoin is used for join two observable into one
-    const customerAndpaymentInfo$ = combineLatest({ customer: customer$, paymentInfo: paymentInfo$ });
-    customerAndpaymentInfo$.subscribe({
-      next: (r) => {
-        if (r.customer && r.customer.shoppingCart && r.paymentInfo && shoppingcartDetails) {
-          this.customer = r.customer;
-          this.paymentInfo = r.paymentInfo;
-          this.shoppingcartDetails = shoppingcartDetails;
-        } else {
-          this.router.navigate(['/steps/payment']);
-        }
-      }
-    })
-
+    this.paymentInfo = this.customerDataService.getPaymentInformation();
+    this.shoppingcartDetails = this.shoppingCartDataService.getShoppingCartDetails();
+    this.customer = this.customerDataService.getCustomer();
+    if (!this.paymentInfo && !this.shoppingcartDetails) {
+      this.router.navigate(['/steps/payment']);
+    }
   }
+
   navigateToPrevious() {
     this.router.navigate(['/steps/payment'])
   }
+  returnToIndex() {
+    this.router.navigate(['']);
+  }
   orderConfirmation() {
-    console.log(this.customer);
+    if (this.customer && this.customer.shoppingCart && this.paymentInfo && this.shoppingcartDetails) {
+      const orderDto = new OrderDto(this.paymentInfo);
+      if (orderDto.methodOfPayment) {
+        this.orderService.createOrderToApi(orderDto).subscribe({
+          next: (r) => {
+            if (r) {
+              this.order = r;
+              this.resetAllDataRelatedToPreviousOrder();
+            }
+          }
+        })
+      }
+    }
+  }
+  resetAllDataRelatedToPreviousOrder() {
+    this.customerService.resetFullyLocalShoppingCart();
+    this.customerDataService.resetPaymentInformation();
+    this.paymentInfo = null;
+    this.shoppingcartDetails = null;
   }
 }

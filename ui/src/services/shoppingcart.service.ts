@@ -76,7 +76,7 @@ export class ShoppingCartService {
     incrementallyUpdateShoppingCart(shoppingCart: ShoppingCartResponseDto) {
         this.shoppingCartDataService.updateShoppingCart(shoppingCart);
     }
-    resetFullyShoppingCart() {
+    resetLocalShoppingCart() {
         this.shoppingCartDataService.resetShoppingCart();
         this.shoppingCartLocalStorageService.removeStoredShoppingCart();
     }

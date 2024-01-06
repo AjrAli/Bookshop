@@ -30,7 +30,7 @@ namespace Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDet
                                                .Include(x => x.LineItems)
                                                    .ThenInclude(x => x.Book)
                                                        .ThenInclude(x => x.Category)
-                                               .Where(x => x.Customer.IdentityUserDataId == request.UserId)
+                                               .Where(x => x.Customer.IdentityUserDataId == request.UserId && x.LineItems.Count() > 0)
                                                .Select(x => _mapper.Map<GetShoppingCartDetailsResponseDto>(x))
                                                .FirstOrDefaultAsync(cancellationToken);
             if (shoppingCartDetails == null)

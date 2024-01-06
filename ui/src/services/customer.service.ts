@@ -148,11 +148,20 @@ export class CustomerService {
     this.customerDataService.resetCustomer();
     this.customerLocalStorageService.removeCustomerDataStored();
   }
+  resetFullyLocalShoppingCart() {
+    this.shoppingCartService.resetLocalShoppingCart();
+    const customer = this.customerDataService.getCustomer();
+    if (customer) {
+      customer.shoppingCart = new ShoppingCartResponseDto();
+      this.customerDataService.setCustomer(customer);
+      this.customerLocalStorageService.setCustomerInfo(customer);
+    }
+  }
   logout() {
     this.syncShoppingCartWithCustomer()?.subscribe({
       next: (r) => {
         if (r) {
-          this.shoppingCartService.resetFullyShoppingCart();
+          this.shoppingCartService.resetLocalShoppingCart();
           this.resetFullyCustomer();
           this.userInfo = undefined;
         }

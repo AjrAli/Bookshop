@@ -50,6 +50,7 @@ export class ShoppingCartDataService {
     }
     resetShoppingCart() {
         this.shoppingCart = null;
+        this.shoppingCartDetails = null;
         this.shoppingCartSubject.next(null as ShoppingCartResponseDto | null);
     }
 

@@ -50,6 +50,10 @@ export class CustomerDataService {
         this.paymentInformation = paymentInformation;
         this.paymentInformationSubject.next(this.paymentInformation);
     }
+    resetPaymentInformation() {
+        this.paymentInformation = null;
+        this.paymentInformationSubject.next(null as PaymentInformation | null);
+    }
     resetCustomer() {
         this.customer = null;
         this.customerSubject.next(null as CustomerResponseDto | null);

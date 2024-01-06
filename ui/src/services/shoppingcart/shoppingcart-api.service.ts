@@ -30,7 +30,6 @@ export class ShoppingCartApiService extends CommonApiService {
     }
 
     resetShoppingCart(): Observable<BaseResponse> {
-        // API call to update an existing shopping cart
         return this.http.post<BaseResponse>(`${this.apiUrl}/reset-user-shopcart`, {});
     }
 
