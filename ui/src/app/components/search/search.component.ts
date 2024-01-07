@@ -50,6 +50,7 @@ export class SearchComponent implements OnInit {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: (keyword: string) => {
+              keyword = keyword.trim();
               if (!keyword)
                 this.router.navigate(['/home']);
               this.books = [];
