@@ -1,23 +1,23 @@
 <div *ngIf="shopItem" class="container text-center">
     <div *ngIf="!manage; else myShoppingCart"
         class="pb-3 row mb-3 border-bottom justify-content-center align-items-center pe-5 ps-5">
-        <div class="col-5">
-            <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px" height="75px" />
+        <div class="col-md-5">
+            <img class="cursor-pointer" (click)="navigateToDetails(shopItem.bookId)" src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px" height="75px" />
         </div>
-        <div class="col-3">
+        <div class="col-md-3">
             <span class="text-teal-500 text-sm">{{ shopItem.title }}</span>
         </div>
-        <div class="col-2">
+        <div class="col-md-2">
             <span class="text-teal-600 text-sm">{{ shopItem.quantity }}</span>
         </div>
-        <div class="col-2">
+        <div class="col-md-2">
             <span class="text-gray-500 text-sm">{{ shopItem.price | currency:'USD':'symbol':'1.2-2' }}</span>
         </div>
     </div>
     <ng-template #myShoppingCart>
         <div class="pb-3 row mb-4 pt-5 border-top justify-content-center align-items-center">
             <div class="col-md-2">
-                <img src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px" height="75px" />
+                <img class="cursor-pointer" (click)="navigateToDetails(shopItem.bookId)" src="{{rootUrl + shopItem.imageUrl}}" [alt]="shopItem.title" width="50px" height="75px" />
             </div>
             <div class="col-md-3">
                 <span class="text-teal-500 text-xs mb-2">{{ shopItem.title }}</span>

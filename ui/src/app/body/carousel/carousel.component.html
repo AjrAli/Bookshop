@@ -6,8 +6,7 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col-md-12">
-                    <img src="{{rootUrl + book.imageUrl}}"
-                    [alt]="book.isbn" class="product-image" width="200px" height="300px"/>
+                    <p-image src="{{rootUrl + book.imageUrl}}" appendTo="body" width="200px" height="300px" [alt]="book.isbn" [preview]="true"></p-image>
                 </div>
             </div>
             <div class="row">

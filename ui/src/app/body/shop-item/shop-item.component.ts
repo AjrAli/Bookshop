@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { FormValidationErrorComponent } from '../../shared/validation/form-validation-error/form-validation-error.component';
 import { ButtonModule } from 'primeng/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shop-item',
@@ -19,12 +20,12 @@ export class ShopItemComponent implements OnInit {
 
   rootUrl = environment.apiRootUrl;
   @Input() shopItem: ShopItemResponseDto | undefined;
-  @Input() manage: string | null= null;
+  @Input() manage: string | null = null;
   quantityForm!: FormGroup;
   quantity: number = 0;
   quantityOptions: { label: string, value: number }[] = [];
 
-  constructor(private shoppingCartService: ShoppingCartService) { }
+  constructor(private shoppingCartService: ShoppingCartService, private router: Router) { }
   ngOnInit(): void {
     this.quantityForm = new FormGroup({
       quantity: new FormControl(this.quantity, [Validators.required, Validators.max(100)])
@@ -41,6 +42,9 @@ export class ShopItemComponent implements OnInit {
         }
       })
     }
+  }
+  navigateToDetails(id: number) {
+    this.router.navigate([`/book/${id}`]);
   }
   removeItem() {
     if (this.shopItem)

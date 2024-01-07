@@ -3,13 +3,13 @@ import { ButtonModule } from 'primeng/button';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { environment } from '../../environments/environment';
 import { TagModule } from 'primeng/tag';
-import { ShopItemResponseDto } from '../../dto/shoppingcart/shopitem-response-dto';
 import { ShoppingCartService } from '../../../services/shoppingcart.service';
 import { Router } from '@angular/router';
+import { ImageModule } from 'primeng/image';
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [ButtonModule, TagModule],
+  imports: [ButtonModule, TagModule, ImageModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })

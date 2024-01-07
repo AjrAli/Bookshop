@@ -1,8 +1,8 @@
 <div class="container max-w-min ps-3 pe-3 me-3 ms-3">
     <div class="row">
         <div class="col-md-12">
-            <img src="{{rootUrl + book.imageUrl}}"
-            [alt]="book.isbn" class="product-image" width="100px" height="150px"/>
+            <p-image src="{{rootUrl + book.imageUrl}}" class="product-image" appendTo="body" width="100px"
+                height="150px" [alt]="book.isbn" [preview]="true"></p-image>
         </div>
     </div>
     <div class="row">

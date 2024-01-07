@@ -5,12 +5,12 @@ import { TagModule } from 'primeng/tag';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { environment } from "../../../app/environments/environment";
 import { ShoppingCartService } from '../../../services/shoppingcart.service';
-import { ShopItemResponseDto } from '../../dto/shoppingcart/shopitem-response-dto';
 import { Router } from '@angular/router';
+import { ImageModule } from 'primeng/image';
 @Component({
   selector: 'app-carousel',
   standalone: true,
-  imports: [CarouselModule, ButtonModule, TagModule],
+  imports: [CarouselModule, ButtonModule, TagModule, ImageModule],
   templateUrl: './carousel.component.html',
   styleUrl: './carousel.component.css'
 })
