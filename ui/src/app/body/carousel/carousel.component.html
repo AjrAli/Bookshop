@@ -20,7 +20,7 @@
                     <h2 class="text-teal-500">{{ '$' + book.price }}</h2>
                     <p-tag [value]="book.status" [severity]="book.statusColor"></p-tag>
                     <div class="mb-3 mt-3 align-items-center justify-content-center">
-                        <p-button icon="pi pi-cart-plus" [rounded]="true" (click)="sendToShoppingCart(book)"/>
+                        <p-button icon="pi pi-cart-plus" [disabled]="book.quantity < 0" [rounded]="true" (click)="sendToShoppingCart(book)"/>
                         <p-button icon="pi pi-search" [rounded]="true" severity="secondary" (click)="navigateToDetails(book)" />
                     </div>
                 </div>

@@ -10,7 +10,7 @@
         <div class="col-xxl-7">
             <h1 class="text-teal-500 underline">{{book.title}}</h1>
             <h5 class="text-gray-500">{{book.authorName}} (Author)</h5>
-            <p-button (click)="sendToShoppingCart(book)"><i class="pi pi-cart-plus me-3" style="font-size: 2rem"></i>Add
+            <p-button [disabled]="book.quantity < 0" (click)="sendToShoppingCart(book)"><i class="pi pi-cart-plus me-3" style="font-size: 2rem"></i>Add
                 to shopping cart</p-button>
             <div class="text-left">
                 <h2 class="text-gray-500">Description</h2>
