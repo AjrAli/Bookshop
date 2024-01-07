@@ -21,8 +21,9 @@ export class MenuComponent implements OnInit {
         command: () => this.router.navigate([''])
       },
       {
-        label: 'Book1',
-        icon: 'pi pi-fw pi-book'
+        label: 'Books',
+        icon: 'pi pi-fw pi-book',
+        command: () => this.router.navigate(['/books'])
       }
     ];
   }

@@ -5,6 +5,9 @@ import { ShoppingGuard } from './guards/shopping.guard';
 export const routes: Routes = [
     { path: '', loadComponent: () => import('./components/home/home.component').then(mod => mod.HomeComponent) },
     { path: 'search', loadComponent: () => import('./components/search/search.component').then(mod => mod.SearchComponent) },
+    { path: 'books', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent) },
+    { path: 'books/author/:id', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent), data: { type: 'author' } },
+    { path: 'books/category/:id', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent), data: { type: 'category' } },
     { path: 'book/:id', loadComponent: () => import('./components/book-details/book-details.component').then(mod => mod.BookDetailsComponent) },
     { path: 'login', loadComponent: () => import('./components/login-proposale/login-proposale.component').then(mod => mod.LoginProposaleComponent) },
     {
@@ -17,8 +20,8 @@ export const routes: Routes = [
                 loadComponent: () => import('./components/steps/my-shoppingcart/my-shoppingcart.component').then(mod => mod.MyShoppingCartComponent)
             },
             { path: 'authentication', loadComponent: () => import('./components/steps/authentication/authentication.component').then(mod => mod.AuthenticationComponent) },
-            { path: 'payment', loadComponent: () => import('./components/steps/payment/payment.component').then(mod => mod.PaymentComponent), canActivate: [ShoppingGuard]},
-            { path: 'confirmation', loadComponent: () => import('./components/steps/confirmation/confirmation.component').then(mod => mod.ConfirmationComponent), canActivate: [ShoppingGuard]}
+            { path: 'payment', loadComponent: () => import('./components/steps/payment/payment.component').then(mod => mod.PaymentComponent), canActivate: [ShoppingGuard] },
+            { path: 'confirmation', loadComponent: () => import('./components/steps/confirmation/confirmation.component').then(mod => mod.ConfirmationComponent), canActivate: [ShoppingGuard] }
         ],
     },
     { path: '**', redirectTo: '' }
