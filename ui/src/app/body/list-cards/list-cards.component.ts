@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'
 import { PaginatorModule } from 'primeng/paginator';
 import { CardComponent } from '../../body/card/card.component';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 interface PageEvent {
   first: number;
@@ -13,18 +14,18 @@ interface PageEvent {
 @Component({
   selector: 'app-list-cards',
   standalone: true,
-  imports: [PaginatorModule, CardComponent, CommonModule],
+  imports: [PaginatorModule, CardComponent, CommonModule, ProgressSpinnerModule],
   templateUrl: './list-cards.component.html',
   styleUrl: './list-cards.component.css'
 })
 export class ListCardsComponent implements OnChanges {
-
-  @Input() books!: BookResponseDto[];
+  @Input() searchEngine = false;
+  @Input() books: BookResponseDto[] | undefined;
   totalRecords: number = 0;
   rows: number = 10; // Number of items per page
   first: number = 0; // Initial page index
   ngOnChanges(): void {
-    if (this.books.length > 0) {
+    if (this.books && this.books.length > 0) {
       this.totalRecords = this.books.length;
     }
   }

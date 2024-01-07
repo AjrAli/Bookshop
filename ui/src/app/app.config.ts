@@ -19,6 +19,8 @@ import { TokenService } from '../services/token.service';
 import { CustomerDataService } from '../services/customer/customer-data.service';
 import { OrderApiService } from '../services/order/order-api.service';
 import { OrderService } from '../services/order.service';
+import { SearchService } from '../services/search/search.service';
+import { SearchStateService } from '../services/search/search-state.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,6 +38,8 @@ export const appConfig: ApplicationConfig = {
     ShoppingCartDataService,
     OrderApiService,
     OrderService,
+    SearchService,
+    SearchStateService,
     ToastService, BookService, importProvidersFrom(
       ToastrModule.forRoot()
     )

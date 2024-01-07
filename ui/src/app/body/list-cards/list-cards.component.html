@@ -1,7 +1,21 @@
-<div *ngIf="books && books.length > 0" class="container text-center">
-    <div *ngFor="let book of books!.slice(first, first + rows)" style="display: inline-block; vertical-align: top ">
-        <app-card [book]="book"></app-card>
+<div *ngIf="books else notfound" class="container text-center">
+    <div *ngIf="books.length > 0; else loading">
+        <div *ngFor="let book of books!.slice(first, first + rows)" style="display: inline-block; vertical-align: top ">
+            <app-card [searchEngine]="searchEngine" [book]="book"></app-card>
+        </div>
+        <p-paginator [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
+            [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
     </div>
-    <p-paginator [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
-        [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
 </div>
+<ng-template #loading>
+    <div class="container mt-5 mb-5 p-5">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>
+<ng-template #notfound>
+    <div class="container mt-5 mb-5 p-4 border">
+        <h1 class="text-gray-500 underline font-italic"> <i class="pi pi-spin pi-exclamation-triangle me-3"
+                style="font-size: 2rem; color:red;"></i> No Book found! <i
+                class="pi pi-spin pi-exclamation-triangle ms-3" style="font-size: 2rem; color:red;"></i></h1>
+    </div>
+</ng-template>

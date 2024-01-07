@@ -4,6 +4,7 @@ import { ShoppingGuard } from './guards/shopping.guard';
 
 export const routes: Routes = [
     { path: '', loadComponent: () => import('./components/home/home.component').then(mod => mod.HomeComponent) },
+    { path: 'search', loadComponent: () => import('./components/search/search.component').then(mod => mod.SearchComponent) },
     { path: 'book/:id', loadComponent: () => import('./components/book-details/book-details.component').then(mod => mod.BookDetailsComponent) },
     { path: 'login', loadComponent: () => import('./components/login-proposale/login-proposale.component').then(mod => mod.LoginProposaleComponent) },
     {

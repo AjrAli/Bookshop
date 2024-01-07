@@ -1,4 +1,5 @@
 ﻿using Bookshop.Application.Contracts.MediatR.Query;
+using Bookshop.Application.Features.Books;
 using Bookshop.Application.Features.Common.Helpers;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
@@ -22,7 +23,7 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
         {
             var stringWithoutExtraSpaces = Regex.Replace(request.Keyword, @"\s{2,}", " ");
             var keywords = stringWithoutExtraSpaces.Trim().Split();
-            var allSearchResults = new HashSet<GetSearchResultsDto>(new GetSearchResultsDtoComparer());
+            var allSearchResults = new HashSet<BookResponseDto>(new GetBookSearchResultsDtoComparer());
 
             foreach (var keyword in keywords)
             {
@@ -34,21 +35,21 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             // Filter results if multiple keywords were provided
             if (keywords.Length > 1)
             {
-                allSearchResults = new HashSet<GetSearchResultsDto>(allSearchResults
+                allSearchResults = new HashSet<BookResponseDto>(allSearchResults
                     .Where(r => FullKeywordMatch(r, keywords)),
-                    new GetSearchResultsDtoComparer());
+                    new GetBookSearchResultsDtoComparer());
             }
             // Order results by the number of keyword matches
 
             return new()
             {
-                SearchResultsDto = allSearchResults
+                Books = allSearchResults
                 .OrderByDescending(x => NumberOfMatches(x, keywords))
                 .ToList()
             };
         }
 
-        private async Task<IEnumerable<GetSearchResultsDto>> SearchBooks(string keyword, CancellationToken cancellationToken)
+        private async Task<IEnumerable<BookResponseDto>> SearchBooks(string keyword, CancellationToken cancellationToken)
         {
             var query = _dbContext.Books.Include(b => b.Author).Include(b => b.Category).AsQueryable();
             // Build OR conditions using Expression
@@ -66,13 +67,15 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
                 predicate = predicate.Or(x => x.Language == Enum.Parse<Languages>(languageStrFromKeyword));
 
             // Apply the dynamic OR conditions
-            var results = await query.Where(predicate).Select(x => new GetSearchResultsDto
+            var results = await query.Where(predicate).Select(x => new BookResponseDto
             {
                 Id = x.Id,
                 Title = x.Title,
+                ImageUrl = x.ImageUrl,
+                Quantity = x.Quantity,
                 Description = x.Description.Substring(0, 50),
-                Details = $"{x.Publisher} - {x.Isbn} - {x.PublishDate.ToShortDateString()}",
-                Price = x.Price.ToString(),
+                Isbn = x.Isbn,
+                Price = x.Price,
                 AuthorName = x.Author.Name,
                 CategoryTitle = x.Category.Title,
                 Language = x.Language.ToString()
@@ -80,14 +83,13 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 
             return results;
         }
-        private static bool FullKeywordMatch(GetSearchResultsDto result, string[] keywords)
+        private static bool FullKeywordMatch(BookResponseDto result, string[] keywords)
         {
             foreach (var keyword in keywords)
             {
                 if (result.Title?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
-                if (result.Description?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
-                if (result.Details?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
-                if (result.Price?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
+                if (result.Isbn?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
+                if (result.Price.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
                 if (result.AuthorName?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
                 if (result.CategoryTitle?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
                 if (result.Language?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true) continue;
@@ -97,7 +99,7 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             return true;
         }
 
-        private static int NumberOfMatches(GetSearchResultsDto result, IEnumerable<string> keywords)
+        private static int NumberOfMatches(BookResponseDto result, IEnumerable<string> keywords)
         {
             var counter = 0;
 
@@ -107,11 +109,9 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 
                 if (result.Title?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     match = true;
-                else if (result.Description?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                else if (result.Isbn?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     match = true;
-                else if (result.Details?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
-                    match = true;
-                else if (result.Price?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                else if (result.Price.ToString().IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     match = true;
                 else if (result.AuthorName?.IndexOf(keyword, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     match = true;
@@ -128,9 +128,9 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
         }
     }
     // Custom comparer to handle duplicates in the list
-    public class GetSearchResultsDtoComparer : IEqualityComparer<GetSearchResultsDto>
+    public class GetBookSearchResultsDtoComparer : IEqualityComparer<BookResponseDto>
     {
-        public bool Equals(GetSearchResultsDto? x, GetSearchResultsDto? y)
+        public bool Equals(BookResponseDto? x, BookResponseDto? y)
         {
             if (x == null && y == null)
                 return true;
@@ -140,7 +140,7 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             return x.Id == y.Id;
         }
 
-        public int GetHashCode(GetSearchResultsDto obj)
+        public int GetHashCode(BookResponseDto obj)
         {
             unchecked
             {
