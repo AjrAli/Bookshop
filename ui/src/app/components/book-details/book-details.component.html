@@ -1,0 +1,138 @@
+<div *ngIf="book" class="container justify-content-center text-center mt-4">
+    <div class="row mb-4">
+        <div class="col-xxl-4">
+
+
+            <p-image src="{{rootUrl + book.imageUrl}}" alt="Image" [preview]="true"></p-image>
+
+
+        </div>
+        <div class="col-xxl-1">
+            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+            <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b></b></p-divider>
+        </div>
+        <div class="col-xxl-7">
+            <h1 class="text-teal-500 underline">{{book.title}}</h1>
+            <h5 class="text-gray-500">{{book.authorName}} (Author)</h5>
+            <p-button (click)="sendToShoppingCart(book)"><i class="pi pi-cart-plus me-3" style="font-size: 2rem"></i>Add
+                to shopping cart</p-button>
+            <div class="text-left">
+                <h2 class="text-gray-500">Description</h2>
+                {{book.description}}
+            </div>
+            <div class="text-left">
+                <h2 class="text-gray-500">Product Details</h2>
+                <div class="container text-xs">
+                    <div class="row">
+                        <div class="col-sm-2 text-left">
+                            Price
+                        </div>
+                        <div class="col-sm-1">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-sm-5 mb-5">
+                            {{ book.price | currency:'USD':'symbol':'1.2-2' }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 text-left">
+                            Publisher
+                        </div>
+                        <div class="col-sm-1">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-sm-5 mb-5">
+                            {{ book.publisher}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 text-left">
+                            Publish Date
+                        </div>
+                        <div class="col-sm-1">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-sm-5 mb-5">
+                            {{ book.publishDate}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 text-left">
+                            Pages
+                        </div>
+                        <div class="col-sm-1">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-sm-5 mb-5">
+                            {{ book.pageCount}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 text-left">
+                            Dimensions
+                        </div>
+                        <div class="col-sm-1">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-sm-5 mb-5">
+                            {{ book.dimensions}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 text-left">
+                            Language
+                        </div>
+                        <div class="col-sm-1">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-sm-5 mb-5">
+                            {{ book.language}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 text-left">
+                            ISBN
+                        </div>
+                        <div class="col-sm-1">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-sm-5 mb-5">
+                            {{ book.isbn}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 text-left">
+                            Category
+                        </div>
+                        <div class="col-sm-1">
+                            <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                            <p-divider layout="horizontal" styleClass="flex md:hidden"
+                                [align]="'center'"><b></b></p-divider>
+                        </div>
+                        <div class="col-sm-5 mb-5">
+                            {{ book.categoryTitle}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-left">
+                <h2 class="text-gray-500">About the Author</h2>
+                {{book.authorAbout}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,6 +13,7 @@ namespace Bookshop.Application.Features.Books
         public int Quantity { get; set; }
         public int PageCount { get; set; }
         public string AuthorName { get; set; }
+        public string AuthorAbout { get; set; }
         public string CategoryTitle { get; set; }
         public string Dimensions { get; set; }
         public string ImageUrl { get; set; }

@@ -12,6 +12,7 @@ export class BookResponseDto {
     language: string = '';
     publishDate: string = '';
     authorName: string = '';
+    authorAbout: string = '';
     categoryTitle: string = '';
 
     constructor(data?: Partial<BookResponseDto>) {
@@ -29,6 +30,7 @@ export class BookResponseDto {
         this.language = data?.language ?? this.language;
         this.publishDate = data?.publishDate ?? this.publishDate;
         this.authorName = data?.authorName ?? this.authorName;
+        this.authorAbout = data?.authorAbout ?? this.authorAbout;
         this.categoryTitle = data?.categoryTitle ?? this.categoryTitle;
     }
     get status(): string {

@@ -6,6 +6,7 @@ import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { environment } from "../../../app/environments/environment";
 import { ShoppingCartService } from '../../../services/shoppingcart.service';
 import { ShopItemResponseDto } from '../../dto/shoppingcart/shopitem-response-dto';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-carousel',
   standalone: true,
@@ -21,9 +22,12 @@ export class CarouselComponent {
   @Input() books: BookResponseDto[] | undefined;
   @Input() responsiveOptions: any[] | undefined;
 
-  constructor(private shoppingCartService: ShoppingCartService) { }
+  constructor(private shoppingCartService: ShoppingCartService, private router: Router) { }
 
   sendToShoppingCart(book: BookResponseDto) {
     this.shoppingCartService.addItem(book);
+  }
+  navigateToDetails(book: BookResponseDto){
+    this.router.navigate([`/book/${book.id}`]);
   }
 }
