@@ -1,22 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerDataService } from '../../../services/customer/customer-data.service';
+import { ButtonModule } from 'primeng/button';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-top-links',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ButtonModule, TieredMenuModule],
   templateUrl: './top-links.component.html',
   styleUrl: './top-links.component.css'
 })
-export class TopLinksComponent {
+export class TopLinksComponent implements OnInit {
   customerName: string | undefined;
+  items: MenuItem[] | undefined;
   constructor(private customerService: CustomerService,
     private customerDataService: CustomerDataService,
     private router: Router) { }
-
+  ngOnInit() {
+    this.items = [
+      {
+        label: 'Orders',
+        icon: 'pi pi-file'
+      },
+      {
+        label: 'Profile',
+        icon: 'pi pi-file-edit'
+      }
+    ]
+  }
   isConnected() {
     if (this.customerService.isLoggedIn()) {
       this.customerName = this.customerDataService.getCustomer()?.firstName;

@@ -1,16 +1,21 @@
 <div class="container-fluid bg-teal-50 text-dark py-1 mt-0 mb-5 border-bottom text-center">
     <div class="container">
         <div class="row justify-content-around">
-            <div class="col-md-2">
-                <a href="#" class="nav-link link-secondary mx-2">CONTACT US</a>
+            <div class="col-xxl-2">
+                <p-button [link]="true" styleClass="text-gray-500">CONTACT US</p-button>
             </div>
-            <div class="col-md-3">
-                <i class="pi pi-user" style="font-size: 1.5rem"></i>
-                <span *ngIf="isConnected()"> Hey <span class="text-teal-500 fst-italic">{{customerName}}</span> ! </span>
-                <a class="nav-link link-secondary mx-2" *ngIf="isConnected(); else notConnected" (click)="logout()"
-                    routerLink="">Logout</a>
+            <div class="col-xxl-3">
+                <div *ngIf="isConnected(); else notConnected">
+                    <p-button [link]="true" (click)="menuAccount.toggle($event)"><i class="pi pi-user"
+                            style="font-size: 1rem"></i><span class="ms-2"> Hey <span
+                                class="text-teal-500 fst-italic me-2">{{customerName}}</span> </span><i
+                            class="pi pi-chevron-down"></i></p-button>
+                    <p-button [link]="true" class="text-teal-500" (click)="logout()" routerLink="">Logout</p-button>
+                    <p-tieredMenu id="menuAccount" #menuAccount [model]="items" [popup]="true"></p-tieredMenu>
+                </div>
                 <ng-template #notConnected>
-                    <a class="nav-link link-secondary mx-2 cursor-pointer" (click)="navigateToLogin()">Login/Register</a>
+                    <p-button [link]="true" (click)="navigateToLogin()" styleClass="text-gray-500"><i class="pi pi-user"
+                            style="font-size: 1rem"></i><span class="text-gray-500 ms-2">Login/Register</span></p-button>
                 </ng-template>
             </div>
         </div>
