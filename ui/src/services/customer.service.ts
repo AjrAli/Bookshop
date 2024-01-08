@@ -16,6 +16,7 @@ import { Observable, catchError, map, of, switchMap, tap } from "rxjs";
 import { CustomerDataService } from "./customer/customer-data.service";
 import { CustomerCommandResponse } from "../app/dto/handler-response/customer/customer-command.response";
 import { EditProfileDto } from "../app/dto/customer/edit-profile-dto";
+import { EditPasswordDto } from "../app/dto/customer/edit-password-dto";
 
 @Injectable()
 export class CustomerService {
@@ -55,6 +56,14 @@ export class CustomerService {
   }
   editProfile(editProfile: EditProfileDto): Observable<boolean> {
     return this.customerApiService.editProfile(editProfile).pipe(tap({
+      next: (r) => this.handleCustomerCommandResponse(r),
+      error: (e) => this.handleAuthenticationError(e),
+      complete: () => console.info('complete')
+    }), map(r => !!r.token)
+    );
+  }
+  editPassword(editPassword: EditPasswordDto): Observable<boolean> {
+    return this.customerApiService.editPassword(editPassword).pipe(tap({
       next: (r) => this.handleCustomerCommandResponse(r),
       error: (e) => this.handleAuthenticationError(e),
       complete: () => console.info('complete')

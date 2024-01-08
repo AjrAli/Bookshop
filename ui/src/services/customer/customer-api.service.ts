@@ -5,6 +5,7 @@ import { AuthenticateResponse } from "../../app/dto/handler-response/customer/au
 import { environment } from "../../app/environments/environment";
 import { EditProfileDto } from "../../app/dto/customer/edit-profile-dto";
 import { CustomerCommandResponse } from "../../app/dto/handler-response/customer/customer-command.response";
+import { EditPasswordDto } from "../../app/dto/customer/edit-password-dto";
 
 @Injectable()
 export class CustomerApiService {
@@ -22,5 +23,8 @@ export class CustomerApiService {
     }
     editProfile(editProfile: EditProfileDto) {
         return this.http.post<CustomerCommandResponse>(`${this.apiUrl}/edit-profile-customer`, editProfile);
+    }
+    editPassword(editPassword: EditPasswordDto) {
+        return this.http.post<CustomerCommandResponse>(`${this.apiUrl}/edit-password-customer`, editPassword);
     }
 }

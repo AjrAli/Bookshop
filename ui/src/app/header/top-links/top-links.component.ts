@@ -37,7 +37,8 @@ export class TopLinksComponent implements OnInit {
           },
           {
             label: 'Edit password',
-            icon: ''
+            icon: '',
+            command: () => this.router.navigate(['/customer/edit-password'])
           },
           {
             label: 'Edit profile',
