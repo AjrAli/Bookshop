@@ -14,6 +14,8 @@ import { CustomerLocalStorageService } from "./customer/customer-local-storage.s
 import { DecodedToken, TokenService } from "./token.service";
 import { Observable, catchError, map, of, switchMap, tap } from "rxjs";
 import { CustomerDataService } from "./customer/customer-data.service";
+import { CustomerCommandResponse } from "../app/dto/handler-response/customer/customer-command.response";
+import { EditProfileDto } from "../app/dto/customer/edit-profile-dto";
 
 @Injectable()
 export class CustomerService {
@@ -45,13 +47,33 @@ export class CustomerService {
 
   createCustomer(customer: CustomerDto): Observable<boolean> {
     return this.customerApiService.createCustomer(customer).pipe(tap({
-      next: (r) => this.handleAuthenticationResponse(r),
+      next: (r) => this.handleCustomerCommandResponse(r),
       error: (e) => this.handleAuthenticationError(e),
       complete: () => console.info('complete')
     }), map(r => !!r.token)
     );
   }
-
+  editProfile(editProfile: EditProfileDto): Observable<boolean> {
+    return this.customerApiService.editProfile(editProfile).pipe(tap({
+      next: (r) => this.handleCustomerCommandResponse(r),
+      error: (e) => this.handleAuthenticationError(e),
+      complete: () => console.info('complete')
+    }), map(r => !!r.token)
+    );
+  }
+  private handleCustomerCommandResponse(response: CustomerCommandResponse): void {
+    if (response.token) {
+      this.tokenService.setToken(response.token);
+      if (response.customer) {
+        this.setCustomerShoppingCart(response.customer);
+        this.customerDataService.setCustomer(response.customer);
+        this.customerLocalStorageService.setCustomerInfo(response.customer);
+      }
+      this.toastService.showSuccess(response.message);
+    } else {
+      this.toastService.showValidationError(response);
+    }
+  }
   private handleAuthenticationResponse(response: AuthenticateResponse): void {
     if (response.token) {
       this.tokenService.setToken(response.token);
@@ -67,8 +89,8 @@ export class CustomerService {
   }
 
   private handleAuthenticationError(error: any): void {
-    this.toastService.showError(error.error as ValidationErrorResponse);
-    this.toastService.showError(error as ValidationErrorResponse);
+    this.toastService.showError(error.error);
+    this.toastService.showError(error);
   }
 
   private setCustomerShoppingCart(customerResponseDto: CustomerResponseDto) {

@@ -1,32 +1,5 @@
 <div class="container mt-5 text-center">
     <form [formGroup]="loginForm" (submit)="onSubmit()">
-        <div class="row mb-2">
-            <div class="col-xxl-2 mt-2">
-                <label for="username">Username</label>
-            </div>
-            <div class="col-xxl-10">
-                <input pInputText class="w-75" type="text" formControlName="username" required />
-                <app-form-validation-error [control]="loginForm.get('username')"></app-form-validation-error>
-            </div>
-        </div>
-        <div class="row mb-5">
-            <div class="col-xxl-2 mt-2">
-                <label for="password">Password</label>
-            </div>
-            <div class="col-xxl-10">
-                <input pInputText class="w-75" type="password" formControlName="password" required />
-                <app-form-validation-error [control]="loginForm.get('password')"></app-form-validation-error>
-            </div>
-        </div>
-        <div class="row mb-5">
-            <div class="col-xxl-2 mt-2">
-                <label for="confirmPassword">Confirm Password</label>
-            </div>
-            <div class="col-xxl-10">
-                <input pInputText class="w-75" type="password" formControlName="confirmPassword" required />
-                <app-form-validation-error [control]="loginForm.get('confirmPassword')"></app-form-validation-error>
-            </div>
-        </div>
         <div class="row mb-5">
             <div class="col-xxl-2 mt-2">
                 <label for="firstName">FirstName</label>
@@ -43,15 +16,6 @@
             <div class="col-xxl-10">
                 <input pInputText class="w-75" type="text" formControlName="lastName" required />
                 <app-form-validation-error [control]="loginForm.get('lastName')"></app-form-validation-error>
-            </div>
-        </div>
-        <div class="row mb-5">
-            <div class="col-xxl-2 mt-2">
-                <label for="email">Email</label>
-            </div>
-            <div class="col-xxl-10">
-                <input pInputText class="w-75" type="email" formControlName="email" required />
-                <app-form-validation-error [control]="loginForm.get('email')"></app-form-validation-error>
             </div>
         </div>
         <div class="row mb-5">
@@ -151,7 +115,7 @@
                 </div>
                 <div class="row mb-3 justify-content-center">
                     <p-button [rounded]="true" styleClass="justify-content-center w-50" type="submit"
-                        [disabled]="!loginForm.valid">Sign Up</p-button>
+                        [disabled]="!loginForm.valid">Update profile</p-button>
                 </div>
             </div>
         </div>

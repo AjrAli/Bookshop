@@ -3,6 +3,8 @@ import { Injectable } from "@angular/core";
 import { CustomerDto } from "../../app/dto/customer/customer-dto";
 import { AuthenticateResponse } from "../../app/dto/handler-response/customer/authenticate/authenticate-response";
 import { environment } from "../../app/environments/environment";
+import { EditProfileDto } from "../../app/dto/customer/edit-profile-dto";
+import { CustomerCommandResponse } from "../../app/dto/handler-response/customer/customer-command.response";
 
 @Injectable()
 export class CustomerApiService {
@@ -16,6 +18,9 @@ export class CustomerApiService {
     }
 
     createCustomer(customer: CustomerDto) {
-        return this.http.post<AuthenticateResponse>(`${this.apiUrl}/create-customer`, customer);
+        return this.http.post<CustomerCommandResponse>(`${this.apiUrl}/create-customer`, customer);
+    }
+    editProfile(editProfile: EditProfileDto) {
+        return this.http.post<CustomerCommandResponse>(`${this.apiUrl}/edit-profile-customer`, editProfile);
     }
 }

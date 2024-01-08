@@ -48,7 +48,7 @@ export class OrderService {
     }
 
     private handleOrderError(error: any): void {
-        this.toastService.showError(error.error as ValidationErrorResponse);
-        this.toastService.showError(error as ValidationErrorResponse);
+        this.toastService.showError(error.error);
+        this.toastService.showError(error);
     }
 }

@@ -1,0 +1,54 @@
+<div *ngIf="customer" class="container mt-5 text-center">
+    <div class="row mb-5 justify-content-center">
+        <div class="col-xxl-1">
+            <label for="userName" class="fw-bold text-gray-500">UserName:</label>
+        </div>
+        <div class="col-xxl-2 text-teal-500">
+            <label for="userName">{{customer.userName}}</label>
+        </div>
+    </div>
+    <div class="row mb-5 justify-content-center">
+        <div class="col-xxl-1 ">
+            <label for="firstName" class="fw-bold text-gray-500">FirstName:</label>
+        </div>
+        <div class="col-xxl-2 text-teal-500">
+            <label for="firstName">{{customer.firstName}}</label>
+        </div>
+    </div>
+    <div class="row mb-5 justify-content-center">
+        <div class="col-xxl-1">
+            <label for="lastName" class="fw-bold text-gray-500">LastName:</label>
+        </div>
+        <div class="col-xxl-2 text-teal-500">
+            <label for="lastName">{{customer.lastName}}</label>
+        </div>
+    </div>
+    <div class="row mb-5 justify-content-center">
+        <div class="col-xxl-1">
+            <label for="email" class="fw-bold text-gray-500">Email:</label>
+        </div>
+        <div class="col-xxl-2 text-teal-500">
+            <label for="email">{{customer.email}}</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xxl-12 text-gray-500">
+            <h4>Shipping Address</h4>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-xxl-12 mt-2 text-teal-500">
+            <label for="shipaddress">{{customer.shippingAddress}}</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xxl-12 text-gray-500">
+            <h4>Billing Address</h4>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-xxl-12 mt-2 text-teal-500">
+            <label for="billaddress">{{customer.billingAddress}}</label>
+        </div>
+    </div>
+</div>

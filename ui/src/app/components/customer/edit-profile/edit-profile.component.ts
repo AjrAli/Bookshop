@@ -1,23 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, Validators, FormsModule, AbstractControl, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { CustomerService } from '../../../services/customer.service';
-import { ValidationErrorResponse } from '../../dto/response/error/validation-error-response';
-import { FormValidationErrorComponent, PasswordMatchValidator } from '../../shared/validation/form-validation-error/form-validation-error.component';
 import { CheckboxModule } from 'primeng/checkbox';
-import { AddressDto, CustomerDto } from '../../dto/customer/customer-dto';
+import { InputTextModule } from 'primeng/inputtext';
+import { CustomerService } from '../../../../services/customer.service';
+import { AddressDto } from '../../../dto/customer/customer-dto';
+import { ValidationErrorResponse } from '../../../dto/response/error/validation-error-response';
+import { FormValidationErrorComponent } from '../../../shared/validation/form-validation-error/form-validation-error.component';
+import { EditProfileDto } from '../../../dto/customer/edit-profile-dto';
+import { CustomerDataService } from '../../../../services/customer/customer-data.service';
 
 @Component({
-  selector: 'app-sign-up-form',
+  selector: 'app-edit-profile',
   standalone: true,
   imports: [ButtonModule, InputTextModule, FormValidationErrorComponent, ReactiveFormsModule, CommonModule, CheckboxModule, FormsModule],
-  templateUrl: './sign-up-form.component.html',
-  styleUrl: './sign-up-form.component.css'
+  templateUrl: './edit-profile.component.html',
+  styleUrl: './edit-profile.component.css'
 })
-export class SignUpFormComponent implements OnInit {
-  newCustomer: CustomerDto = new CustomerDto();
+export class EditProfileComponent implements OnInit {
+  updatedCustomer: EditProfileDto = new EditProfileDto();
   shippingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   billingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   loginForm!: FormGroup;
@@ -25,35 +27,29 @@ export class SignUpFormComponent implements OnInit {
   @Output() connected = new EventEmitter<boolean>();
 
   constructor(private customerService: CustomerService,
+    private customerDataService: CustomerDataService,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    const customer = this.customerDataService.getCustomer();
+    const shipArrayAddress = customer?.shippingAddress?.split(", ") ?? [''];
+    const billArrayAddress = customer?.billingAddress?.split(", ") ?? [''];
     this.loginForm = this.fb.group({
-      username: this.createControl(''),
-      password: this.createControl('', [Validators.minLength(4)]),
-      confirmPassword: this.createControl('', [Validators.minLength(4)]),
-      firstName: this.createControl(''),
-      lastName: this.createControl(''),
-      email: this.createControl('', [Validators.email]),
-      isSameAddress: this.createControl(false),
-      shipstreet: this.createControl(''),
-      shipcity: this.createControl(''),
-      shippostalCode: this.createControl(''),
-      shipcountry: this.createControl(''),
-      shipstate: this.createControl(''),
-      billstreet: this.createControl(''),
-      billcity: this.createControl(''),
-      billpostalCode: this.createControl(''),
-      billcountry: this.createControl(''),
-      billstate: this.createControl('')
-    }, {
-      validators: [Validators.required, Validators.maxLength(100), PasswordMatchValidator.match('password', 'confirmPassword')]
+      firstName: new FormControl(customer?.firstName, [Validators.required, Validators.maxLength(100)]),
+      lastName: new FormControl(customer?.lastName, [Validators.required, Validators.maxLength(100)]),
+      isSameAddress: new FormControl(false),
+      shipstreet: new FormControl(shipArrayAddress[0], [Validators.required, Validators.maxLength(100)]),
+      shipcity: new FormControl(shipArrayAddress[1], [Validators.required, Validators.maxLength(100)]),
+      shippostalCode: new FormControl(shipArrayAddress[2], [Validators.required, Validators.maxLength(100)]),
+      shipstate: new FormControl(shipArrayAddress[3], [Validators.required, Validators.maxLength(100)]),
+      shipcountry: new FormControl(shipArrayAddress[4], [Validators.required, Validators.maxLength(100)]),
+      billstreet: new FormControl(billArrayAddress[0], [Validators.required, Validators.maxLength(100)]),
+      billcity: new FormControl(billArrayAddress[1], [Validators.required, Validators.maxLength(100)]),
+      billpostalCode: new FormControl(billArrayAddress[2], [Validators.required, Validators.maxLength(100)]),
+      billstate: new FormControl(billArrayAddress[3], [Validators.required, Validators.maxLength(100)]),
+      billcountry: new FormControl(billArrayAddress[4], [Validators.required, Validators.maxLength(100)]),
     });
     this.subscribeToIsSameAddressChanges();
-  }
-
-  private createControl(initialValue: any, validators: any[] = []): AbstractControl {
-    return this.fb.control({ value: initialValue, disabled: false }, validators);
   }
 
   private subscribeToIsSameAddressChanges(): void {
@@ -76,12 +72,8 @@ export class SignUpFormComponent implements OnInit {
     });
   }
   onSubmit() {
-    const username = this.loginForm.get('username')?.value;
-    const password = this.loginForm.get('password')?.value;
-    const confirmPassword = this.loginForm.get('confirmPassword')?.value;
     const firstName = this.loginForm.get('firstName')?.value;
     const lastName = this.loginForm.get('lastName')?.value;
-    const email = this.loginForm.get('email')?.value;
     const isSameAddress = this.loginForm.get('isSameAddress')?.value;
     const shipstreet = this.loginForm.get('shipstreet')?.value;
     const shipcity = this.loginForm.get('shipcity')?.value;
@@ -101,20 +93,15 @@ export class SignUpFormComponent implements OnInit {
     else
       this.billingAddress = new AddressDto({ id: 0, street: billstreet, city: billcity, postalCode: billpostalCode, country: billcountry, state: billstate });
     if (this.shippingAddress && this.billingAddress) {
-      this.newCustomer = new CustomerDto({
-        username: username,
-        password: password,
-        confirmPassword: confirmPassword,
+      this.updatedCustomer = new EditProfileDto({
         firstName: firstName,
         lastName: lastName,
         shippingAddressId: 0,
         shippingAddress: this.shippingAddress,
         billingAddressId: 0,
-        billingAddress: this.billingAddress,
-        email: email,
-        emailConfirmed: true
+        billingAddress: this.billingAddress
       });
-      this.customerService.createCustomer(this.newCustomer).subscribe({
+      this.customerService.editProfile(this.updatedCustomer).subscribe({
         next: (response) => {
           this.connected.emit(response);
         }

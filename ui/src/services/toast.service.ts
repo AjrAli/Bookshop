@@ -11,14 +11,14 @@ export class ToastService {
     this.showNotification('success', message, 'Success', 3000);
   }
 
-  showValidationError(validationErrorResponse: ValidationErrorResponse): void {
-    const errorMessageArray: string[] = [validationErrorResponse?.message, ...(validationErrorResponse?.validationErrors ?? [])];
-
-    errorMessageArray.forEach((message) => {
-      if (message) {
-        this.showNotification('error', message, 'Error', 5000);
-      }
-    });
+  showValidationError(validationError?: Partial<ValidationErrorResponse>): void {
+    const errorMessageArray = [validationError?.message, ...(validationError?.validationErrors ?? [])];
+    if (errorMessageArray)
+      errorMessageArray.forEach((message) => {
+        if (message) {
+          this.showNotification('error', message, 'Error', 5000);
+        }
+      });
   }
   showError(errorResponse: ErrorResponse): void {
     const errorMessage: string = errorResponse?.message;

@@ -24,11 +24,27 @@ export class TopLinksComponent implements OnInit {
     this.items = [
       {
         label: 'Orders',
-        icon: 'pi pi-file'
+        icon: 'pi pi-shopping-bag'
       },
       {
         label: 'Profile',
-        icon: 'pi pi-file-edit'
+        icon: 'pi pi-user',
+        items: [
+          {
+            label: 'View',
+            icon: '',
+            command: () => this.router.navigate(['/customer/view-profile'])
+          },
+          {
+            label: 'Edit password',
+            icon: ''
+          },
+          {
+            label: 'Edit profile',
+            icon: '',
+            command: () => this.router.navigate(['/customer/edit-profile'])
+          }
+        ]
       }
     ]
   }

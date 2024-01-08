@@ -5,6 +5,9 @@ import { ShoppingGuard } from './guards/shopping.guard';
 export const routes: Routes = [
     { path: '', loadComponent: () => import('./components/home/home.component').then(mod => mod.HomeComponent) },
     { path: 'search', loadComponent: () => import('./components/search/search.component').then(mod => mod.SearchComponent) },
+    { path: 'customer/view-profile', loadComponent: () => import('./components/customer/view-profile/view-profile.component').then(mod => mod.ViewProfileComponent), canActivate: [AuthGuard] },
+    { path: 'customer/edit-profile', loadComponent: () => import('./components/customer/edit-profile/edit-profile.component').then(mod => mod.EditProfileComponent), canActivate: [AuthGuard] },
+    { path: 'customer/edit-password', loadComponent: () => import('./components/customer/edit-password/edit-password.component').then(mod => mod.EditPasswordComponent), canActivate: [AuthGuard] },
     { path: 'books', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent) },
     { path: 'books/author/:id', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent), data: { type: 'author' } },
     { path: 'books/category/:id', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent), data: { type: 'category' } },

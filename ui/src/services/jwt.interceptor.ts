@@ -34,6 +34,8 @@ export class JwtInterceptor implements HttpInterceptor {
                     this.customerService.resetFullyCustomer();
                     this.router.navigate(['/login']);
                 }
+                if(error.status === 0)
+                    this.customerService.resetFullyCustomer();
                 // Return error for other interceptors can handle this error too
                 return throwError(() => error);
             })

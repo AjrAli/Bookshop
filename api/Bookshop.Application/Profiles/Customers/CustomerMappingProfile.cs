@@ -22,8 +22,10 @@ namespace Bookshop.Application.Profiles.Customers
             CreateMap<Customer, CustomerResponseDto>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(x => x.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(x => x.LastName))
-                .ForPath(dest => dest.ShippingAddress, opt => opt.MapFrom(x => $"{x.ShippingAddress.Street}, {x.ShippingAddress.PostalCode}, {x.ShippingAddress.City}, {x.ShippingAddress.Country}"))
-                .ForPath(dest => dest.BillingAddress, opt => opt.MapFrom(x => $"{x.BillingAddress.Street}, {x.BillingAddress.PostalCode}, {x.BillingAddress.City}, {x.BillingAddress.Country}"))
+                .ForPath(dest => dest.UserName, opt => opt.MapFrom(x => x.IdentityData.UserName))
+                .ForPath(dest => dest.Email, opt => opt.MapFrom(x => x.IdentityData.Email))
+                .ForPath(dest => dest.ShippingAddress, opt => opt.MapFrom(x => $"{x.ShippingAddress.Street}, {x.ShippingAddress.City}, {x.ShippingAddress.PostalCode}, {x.ShippingAddress.State}, {x.ShippingAddress.Country}"))
+                .ForPath(dest => dest.BillingAddress, opt => opt.MapFrom(x => $"{x.BillingAddress.Street}, {x.BillingAddress.City}, {x.BillingAddress.PostalCode}, {x.BillingAddress.State}, {x.BillingAddress.Country}"))
                 .ForPath(dest => dest.ShoppingCart.Items, opt => opt.MapFrom(x => x.ShoppingCart.LineItems))
                 .ForPath(dest => dest.ShoppingCart.Total, opt => opt.MapFrom(x => x.ShoppingCart.Total))
                 .AfterMap((src, dest) => dest.ShoppingCart = src.ShoppingCart != null && src.ShoppingCart.Id != 0 ? dest.ShoppingCart : null);

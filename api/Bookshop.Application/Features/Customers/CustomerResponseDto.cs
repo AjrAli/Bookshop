@@ -4,6 +4,8 @@ namespace Bookshop.Application.Features.Customers
 {
     public class CustomerResponseDto
     {
+        public string? UserName { get; set; }
+        public string? Email { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? ShippingAddress { get; set; }

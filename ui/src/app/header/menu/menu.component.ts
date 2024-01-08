@@ -16,6 +16,13 @@ export class MenuComponent implements OnInit {
   categories: CategoryResponseDto[] | undefined;
   constructor(private router: Router, private categoryService: CategoryService) { }
   ngOnInit() {
+    this.items = [
+      {
+        label: 'Home',
+        icon: 'pi pi-fw pi-globe',
+        command: () => this.router.navigate([''])
+      }
+    ];
     this.categoryService.getAll().subscribe({
       next: (r) => {
         if (r && r.listDto) {
