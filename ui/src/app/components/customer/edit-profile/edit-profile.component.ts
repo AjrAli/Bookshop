@@ -10,6 +10,7 @@ import { ValidationErrorResponse } from '../../../dto/response/error/validation-
 import { FormValidationErrorComponent } from '../../../shared/validation/form-validation-error/form-validation-error.component';
 import { EditProfileDto } from '../../../dto/customer/edit-profile-dto';
 import { CustomerDataService } from '../../../../services/customer/customer-data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-profile',
@@ -24,10 +25,10 @@ export class EditProfileComponent implements OnInit {
   billingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   loginForm!: FormGroup;
   errorResponse!: ValidationErrorResponse;
-  @Output() connected = new EventEmitter<boolean>();
 
   constructor(private customerService: CustomerService,
     private customerDataService: CustomerDataService,
+    private router: Router,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -103,7 +104,8 @@ export class EditProfileComponent implements OnInit {
       });
       this.customerService.editProfile(this.updatedCustomer).subscribe({
         next: (response) => {
-          this.connected.emit(response);
+          if (response)
+            this.router.navigate(['/customer/view-profile']);
         }
       });
     }
