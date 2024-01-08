@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Features.Common.Helpers;
-using Bookshop.Application.Features.Customers.Helpers;
 using Bookshop.Application.Settings;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
@@ -11,9 +10,9 @@ using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using static Bookshop.Domain.Entities.Customer;
 
-namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
+namespace Bookshop.Application.Features.Customers.Commands.EditProfile
 {
-    public class EditCustomerHandler : ICommandHandler<EditCustomer, EditCustomerResponse>
+    public class EditProfileHandler : ICommandHandler<EditProfile, CustomerCommandResponse>
     {
         private readonly BookshopDbContext _dbContext;
         private readonly UserManager<IdentityUserData> _userManager;
@@ -21,7 +20,7 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
         private readonly JwtSecurityTokenHandler _jwtTokenHandler = new JwtSecurityTokenHandler();
         private readonly IMapper _mapper;
 
-        public EditCustomerHandler(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
+        public EditProfileHandler(BookshopDbContext dbContext, UserManager<IdentityUserData> userManager,
             IOptions<JwtSettings> jwtSettings, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -30,12 +29,11 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
             _mapper = mapper;
         }
 
-        public async Task<EditCustomerResponse> Handle(EditCustomer request, CancellationToken cancellationToken)
+        public async Task<CustomerCommandResponse> Handle(EditProfile request, CancellationToken cancellationToken)
         {
-            var editedCustomer = await EditCustomerFromDto(request.Customer);
-            await ChangeUserPassword(editedCustomer, request.Customer?.Password, request.Customer?.NewPassword);
+            var editedCustomer = await EditCustomerProfileFromDto(request.Customer);
             EditCustomerInDatabase(editedCustomer);
-            await SaveChangesAsync(request, cancellationToken);
+            await SaveChangesAsync(cancellationToken);
             var editedCustomerDto = await _dbContext.Customers.Include(x => x.BillingAddress)
                                                               .Include(x => x.ShippingAddress)
                                                               .Include(x => x.IdentityData)
@@ -47,24 +45,24 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
             {
                 Customer = editedCustomerDto,
                 Token = _jwtTokenHandler.WriteToken(jwtSecurityToken),
-                Message = $"Customer {editedCustomerDto.FirstName} successfully edited",
+                Message = $"Customer's profile successfully updated",
                 IsSaveChangesAsyncCalled = true
             };
         }
-        private async Task SaveChangesAsync(EditCustomer request, CancellationToken cancellationToken)
-        {
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-        private void EditCustomerInDatabase(Customer customer)
-        {
-            _dbContext.Customers.Update(customer);
-        }
-        private async Task<Customer> EditCustomerFromDto(EditCustomerDto customerDto)
+        private async Task<Customer> EditCustomerProfileFromDto(EditProfileDto customerDto)
         {
             var customerExisting = await _dbContext.Customers
                                              .Include(x => x.BillingAddress)
                                              .Include(x => x.ShippingAddress)
                                              .Include(x => x.IdentityData)
+                                             .Include(x => x.ShoppingCart)
+                                                 .ThenInclude(x => x.LineItems)
+                                                     .ThenInclude(x => x.Book)
+                                                         .ThenInclude(x => x.Author)
+                                             .Include(x => x.ShoppingCart)
+                                                 .ThenInclude(x => x.LineItems)
+                                                     .ThenInclude(x => x.Book)
+                                                         .ThenInclude(x => x.Category)
                                              .FirstOrDefaultAsync(x => x.IdentityUserDataId == customerDto.UserId);
             var locationPricing = await _dbContext.FindLocationPricingByCountry(customerDto?.ShippingAddress.Country);
             customerExisting.ShippingAddress.EditAdress(_mapper.Map<Address>(customerDto.ShippingAddress), locationPricing);
@@ -73,16 +71,15 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
             customerExisting.LastName = customerDto.LastName;
             return customerExisting;
         }
-
-        private async Task ChangeUserPassword(Customer customer, string currentPassword, string newPassword)
+        private void EditCustomerInDatabase(Customer customer)
         {
-            var result = await _userManager.ChangePasswordAsync(customer.IdentityData, currentPassword, newPassword);
-
-            if (!result.Succeeded)
-                UserCreationExceptionHelper.ThrowUserCreationBadRequestException(result.Errors, customer?.IdentityData.UserName);
+            _dbContext.Customers.Update(customer);
         }
-
-        public Task ValidateRequest(EditCustomer request)
+        private async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+        public Task ValidateRequest(EditProfile request)
         {
             throw new NotImplementedException();
         }

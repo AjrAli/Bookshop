@@ -1,13 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
+namespace Bookshop.Application.Features.Customers.Commands.EditProfile
 {
-    public class EditCustomerDto
+    public class EditProfileDto
     {
-        public string? Password { get; set; }
-        public string? ConfirmPassword { get; set; }
-        public string? NewPassword { get; set; }
-        public string? ConfirmNewPassword { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public long? ShippingAddressId { get; set; }

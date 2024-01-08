@@ -12,7 +12,7 @@ using static Bookshop.Domain.Entities.Customer;
 
 namespace Bookshop.Application.Features.Customers.Queries.Authenticate
 {
-    public class AuthenticateHandler : IQueryHandler<Authenticate, AuthenticateResponse>
+    public class AuthenticateHandler : IQueryHandler<Authenticate, CustomerResponse>
     {
         private readonly BookshopDbContext _dbContext;
         private readonly UserManager<IdentityUserData> _userManager;
@@ -29,7 +29,7 @@ namespace Bookshop.Application.Features.Customers.Queries.Authenticate
             _mapper = mapper;
         }
 
-        public async Task<AuthenticateResponse> Handle(Authenticate request, CancellationToken cancellationToken)
+        public async Task<CustomerResponse> Handle(Authenticate request, CancellationToken cancellationToken)
         {
             if (request?.Username == null || request?.Password == null)
                 throw new BadRequestException($"One of the credentials given is empty");

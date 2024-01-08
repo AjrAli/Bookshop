@@ -14,7 +14,7 @@ using static Bookshop.Domain.Entities.Customer;
 
 namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
 {
-    public class CreateCustomerHandler : ICommandHandler<CreateCustomer, CreateCustomerResponse>
+    public class CreateCustomerHandler : ICommandHandler<CreateCustomer, CustomerCommandResponse>
     {
         private readonly BookshopDbContext _dbContext;
         private readonly UserManager<IdentityUserData> _userManager;
@@ -31,7 +31,7 @@ namespace Bookshop.Application.Features.Customers.Commands.CreateCustomer
             _mapper = mapper;
         }
 
-        public async Task<CreateCustomerResponse> Handle(CreateCustomer request, CancellationToken cancellationToken)
+        public async Task<CustomerCommandResponse> Handle(CreateCustomer request, CancellationToken cancellationToken)
         {
             var newCustomer = await CreateNewCustomerFromDto(request.Customer);
             await CreateUserAndRole(newCustomer, request.Customer?.Password);

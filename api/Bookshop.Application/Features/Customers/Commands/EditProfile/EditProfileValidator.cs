@@ -1,33 +1,11 @@
 ﻿using FluentValidation;
 
-namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
+namespace Bookshop.Application.Features.Customers.Commands.EditProfile
 {
-    public class EditCustomerValidator : AbstractValidator<EditCustomer>
+    public class EditProfileValidator : AbstractValidator<EditProfile>
     {
-        public EditCustomerValidator()
+        public EditProfileValidator()
         {
-            //UserData for Customer
-            // Current Password
-            RuleFor(p => p.Customer.Password)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
-                .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
-            RuleFor(p => p.Customer.ConfirmPassword)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .Equal(p => p.Customer.Password).WithMessage("{PropertyName} must be the same as field password.")
-                .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
-                .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
-            // New Password
-            RuleFor(p => p.Customer.NewPassword)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
-                .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
-            RuleFor(p => p.Customer.ConfirmNewPassword)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .Equal(p => p.Customer.NewPassword).WithMessage("{PropertyName} must be the same as field NewPassword.")
-                .MinimumLength(4).WithMessage("{PropertyName} must have minimum 4 characters.")
-                .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
-
 
             // Customer
             RuleFor(p => p.Customer.FirstName)
@@ -36,7 +14,6 @@ namespace Bookshop.Application.Features.Customers.Commands.EditCustomer
             RuleFor(p => p.Customer.LastName)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
-
 
             // BillingAddress
             RuleFor(p => p.Customer.BillingAddress.Street)

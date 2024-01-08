@@ -1,6 +1,7 @@
 ﻿using Bookshop.Application.Features.Customers;
 using Bookshop.Application.Features.Customers.Commands.CreateCustomer;
-using Bookshop.Application.Features.Customers.Commands.EditCustomer;
+using Bookshop.Application.Features.Customers.Commands.EditPassword;
+using Bookshop.Application.Features.Customers.Commands.EditProfile;
 using Bookshop.Persistence.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -34,11 +35,22 @@ namespace Bookshop.Api.Controllers.Commands
             return Ok(dataCommandReponse);
         }
         [Authorize]
-        [HttpPost("edit-user-customer")]
-        public async Task<IActionResult> EditCustomer([FromBody] EditCustomerDto customerDto)
+        [HttpPost("edit-profile-customer")]
+        public async Task<IActionResult> EditProfile([FromBody] EditProfileDto customerDto)
         {
             customerDto.UserId = _loggedInUserService?.GetUserId();
-            var dataCommandReponse = await _mediator.Send(new EditCustomer
+            var dataCommandReponse = await _mediator.Send(new EditProfile
+            {
+                Customer = customerDto
+            });
+            return Ok(dataCommandReponse);
+        }
+        [Authorize]
+        [HttpPost("edit-password-customer")]
+        public async Task<IActionResult> EditPassword([FromBody] EditPasswordDto customerDto)
+        {
+            customerDto.UserId = _loggedInUserService?.GetUserId();
+            var dataCommandReponse = await _mediator.Send(new EditPassword
             {
                 Customer = customerDto
             });

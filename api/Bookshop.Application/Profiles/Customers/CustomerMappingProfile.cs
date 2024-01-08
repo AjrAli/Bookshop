@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Features.Customers;
-using Bookshop.Application.Features.Customers.Commands.EditCustomer;
+using Bookshop.Application.Features.Customers.Commands.EditPassword;
+using Bookshop.Application.Features.Customers.Commands.EditProfile;
 using Bookshop.Domain.Entities;
 
 namespace Bookshop.Application.Profiles.Customers
@@ -11,8 +12,10 @@ namespace Bookshop.Application.Profiles.Customers
         {
             // Address profile
             CreateMap<Address, AddressDto>().ReverseMap();
-            //Edit Customer profile
-            CreateMap<Customer, EditCustomerDto>().ReverseMap();
+            //Edit Profile profile
+            CreateMap<Customer, EditProfileDto>().ReverseMap();
+            //Edit Password profile
+            CreateMap<Customer, EditPasswordDto>().ReverseMap();
             // Create Customer profile
             CreateMap<Customer, CustomerRequestDto>().ReverseMap();
             // Response Customer profile

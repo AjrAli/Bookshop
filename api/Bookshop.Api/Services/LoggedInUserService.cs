@@ -12,9 +12,23 @@ namespace Bookshop.Api.Services
         }
         public string? GetUserId()
         {
-            var result = string.Empty;
-            if(_httpContextAccessor?.HttpContext != null)
+            string? result = null;
+            if (_httpContextAccessor?.HttpContext != null)
                 result = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            return result;
+        }
+        public string? GetUserToken()
+        {
+            string? result = null;
+            if (_httpContextAccessor?.HttpContext != null && !string.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString()))
+                result = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            return result;
+        }
+        public string? GetAuthScheme()
+        {
+            string? result = null;
+            if (_httpContextAccessor?.HttpContext != null)
+                result = _httpContextAccessor.HttpContext.User?.Identity?.AuthenticationType; ;
             return result;
         }
     }
