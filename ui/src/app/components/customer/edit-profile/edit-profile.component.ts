@@ -32,25 +32,28 @@ export class EditProfileComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    const customer = this.customerDataService.getCustomer();
-    const shipArrayAddress = customer?.shippingAddress?.split(", ") ?? [''];
-    const billArrayAddress = customer?.billingAddress?.split(", ") ?? [''];
-    this.loginForm = this.fb.group({
-      firstName: new FormControl(customer?.firstName, [Validators.required, Validators.maxLength(100)]),
-      lastName: new FormControl(customer?.lastName, [Validators.required, Validators.maxLength(100)]),
-      isSameAddress: new FormControl(false),
-      shipstreet: new FormControl(shipArrayAddress[0], [Validators.required, Validators.maxLength(100)]),
-      shipcity: new FormControl(shipArrayAddress[1], [Validators.required, Validators.maxLength(100)]),
-      shippostalCode: new FormControl(shipArrayAddress[2], [Validators.required, Validators.maxLength(100)]),
-      shipstate: new FormControl(shipArrayAddress[3], [Validators.required, Validators.maxLength(100)]),
-      shipcountry: new FormControl(shipArrayAddress[4], [Validators.required, Validators.maxLength(100)]),
-      billstreet: new FormControl(billArrayAddress[0], [Validators.required, Validators.maxLength(100)]),
-      billcity: new FormControl(billArrayAddress[1], [Validators.required, Validators.maxLength(100)]),
-      billpostalCode: new FormControl(billArrayAddress[2], [Validators.required, Validators.maxLength(100)]),
-      billstate: new FormControl(billArrayAddress[3], [Validators.required, Validators.maxLength(100)]),
-      billcountry: new FormControl(billArrayAddress[4], [Validators.required, Validators.maxLength(100)]),
+    this.customerDataService.getCustomerObservable().subscribe({
+      next: (customer) => {
+        const shipArrayAddress = customer?.shippingAddress?.split(", ") ?? [''];
+        const billArrayAddress = customer?.billingAddress?.split(", ") ?? [''];
+        this.loginForm = this.fb.group({
+          firstName: new FormControl(customer?.firstName, [Validators.required, Validators.maxLength(100)]),
+          lastName: new FormControl(customer?.lastName, [Validators.required, Validators.maxLength(100)]),
+          isSameAddress: new FormControl(false),
+          shipstreet: new FormControl(shipArrayAddress[0], [Validators.required, Validators.maxLength(100)]),
+          shipcity: new FormControl(shipArrayAddress[1], [Validators.required, Validators.maxLength(100)]),
+          shippostalCode: new FormControl(shipArrayAddress[2], [Validators.required, Validators.maxLength(100)]),
+          shipstate: new FormControl(shipArrayAddress[3], [Validators.required, Validators.maxLength(100)]),
+          shipcountry: new FormControl(shipArrayAddress[4], [Validators.required, Validators.maxLength(100)]),
+          billstreet: new FormControl(billArrayAddress[0], [Validators.required, Validators.maxLength(100)]),
+          billcity: new FormControl(billArrayAddress[1], [Validators.required, Validators.maxLength(100)]),
+          billpostalCode: new FormControl(billArrayAddress[2], [Validators.required, Validators.maxLength(100)]),
+          billstate: new FormControl(billArrayAddress[3], [Validators.required, Validators.maxLength(100)]),
+          billcountry: new FormControl(billArrayAddress[4], [Validators.required, Validators.maxLength(100)]),
+        });
+        this.subscribeToIsSameAddressChanges();
+      }
     });
-    this.subscribeToIsSameAddressChanges();
   }
 
   private subscribeToIsSameAddressChanges(): void {

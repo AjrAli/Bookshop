@@ -5,7 +5,9 @@ import { CustomerDataService } from '../../services/customer/customer-data.servi
 import { ShoppingCartDataService } from '../../services/shoppingcart/shoppingcart-data.service';
 import { IdleTimeoutService } from '../../services/idle-timeout.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class ShoppingGuard {
     constructor(
         private customerService: CustomerService,
@@ -19,7 +21,7 @@ export class ShoppingGuard {
         this.idleTimeoutService.onIdleTimeout().subscribe(() => {
             // Redirect to home page when idle timeout is reached
             if (!this.customerService.isLoggedIn()) {
-                this.router.navigate(['']);
+                this.navigateToAuthentication('');
                 this.idleTimeoutService.stopIdleTimer();
             }
         });

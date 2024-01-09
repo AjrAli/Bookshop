@@ -22,11 +22,11 @@ export class TopLinksComponent implements OnInit {
     private customerDataService: CustomerDataService,
     private router: Router) { }
   ngOnInit() {
-    this.customerService.connected$.subscribe({
-      next: (r) => {
-        if (r) {
-          this.connected = r;
-          this.customerName = this.customerDataService.getCustomer()?.firstName;
+    this.customerDataService.getCustomerObservable().subscribe({
+      next: (customer) => {
+        if (customer) {
+          this.connected = true;
+          this.customerName = customer.firstName;
           this.items = [
             {
               label: 'Orders',
@@ -55,7 +55,7 @@ export class TopLinksComponent implements OnInit {
             }
           ]
         } else {
-          this.connected = r;
+          this.connected = false;
           this.customerName = undefined;
           this.items = [];
         }

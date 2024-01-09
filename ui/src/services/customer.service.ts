@@ -21,8 +21,6 @@ import { EditPasswordDto } from "../app/dto/customer/edit-password-dto";
 @Injectable()
 export class CustomerService {
   private userInfo: DecodedToken | undefined;
-  private connectedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  connected$: Observable<boolean> = this.connectedSubject.asObservable();
 
   constructor(private customerApiService: CustomerApiService,
     private customerLocalStorageService: CustomerLocalStorageService,
@@ -35,8 +33,9 @@ export class CustomerService {
   }
   private loadCustomer() {
     const customer = this.customerLocalStorageService.getCustomerInfo();
-    if (customer)
+    if (customer) {
       this.customerDataService.setCustomer(customer);
+    }
   }
 
   authenticate(username: string, password: string): Observable<boolean> {
@@ -80,7 +79,6 @@ export class CustomerService {
         this.customerDataService.setCustomer(response.customer);
         this.customerLocalStorageService.setCustomerInfo(response.customer);
       }
-      this.connectedSubject.next(true);
       this.toastService.showSuccess(response.message);
     } else {
       this.toastService.showValidationError(response);
@@ -94,7 +92,6 @@ export class CustomerService {
         this.customerDataService.setCustomer(response.customer);
         this.customerLocalStorageService.setCustomerInfo(response.customer);
       }
-      this.connectedSubject.next(true);
       this.toastService.showSuccess(response.message);
     } else {
       this.toastService.showSimpleError('Invalid credentials');
@@ -109,13 +106,14 @@ export class CustomerService {
   private setCustomerShoppingCart(customerResponseDto: CustomerResponseDto) {
     if (customerResponseDto.shoppingCart) {
       customerResponseDto.shoppingCart = new ShoppingCartResponseDto(customerResponseDto.shoppingCart);
-      this.shoppingCartDataService.updateShoppingCart(customerResponseDto.shoppingCart);
+      this.shoppingCartService.updateFullyShoppingCart(customerResponseDto.shoppingCart)
     }
   }
 
   isLoggedIn(): boolean {
     const token = this.tokenService.getToken();
     if (!token) {
+      this.resetFullyCustomer();
       return false;
     }
     this.userInfo = this.tokenService.decodeToken(token);
@@ -123,7 +121,8 @@ export class CustomerService {
       this.resetFullyCustomer();
       return false;
     }
-    this.connectedSubject.next(true);
+    if (!this.customerDataService.getCustomer())
+      this.loadCustomer();
     return true;
   }
 
@@ -181,7 +180,6 @@ export class CustomerService {
     return of(true);
   }
   resetFullyCustomer() {
-    this.connectedSubject.next(false);
     this.customerDataService.resetCustomer();
     this.customerLocalStorageService.removeCustomerDataStored();
     this.tokenService.removeTokenStored();

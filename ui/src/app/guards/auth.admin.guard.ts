@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Router, RouterStateSnapshot } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthAdminGuard {
 
     constructor(private customerService: CustomerService, private router: Router) { }

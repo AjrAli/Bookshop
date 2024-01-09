@@ -60,9 +60,15 @@ export class ShoppingCartService {
         this.toastService.showError(error.error);
         this.toastService.showError(error);
     }
-
-
-    private saveShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
+    updateFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
+        if (shoppingCart) {
+            this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
+            this.shoppingCartDataService.updateShoppingCart(shoppingCart);
+            if (message)
+                this.toastService.showSuccess(message);
+        }
+    }
+    private saveFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
         if (shoppingCart) {
             this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
             this.shoppingCartDataService.setShoppingCart(shoppingCart);
@@ -91,7 +97,7 @@ export class ShoppingCartService {
         } else {
             shoppingCart = new ShoppingCartResponseDto({ total: newItem.price, items: [shopitem] });
         }
-        this.saveShoppingCart(shoppingCart, "item added to shoppingcart");
+        this.saveFullyShoppingCart(shoppingCart, "item added to shoppingcart");
     }
     updateItem(shopitem: ShopItemResponseDto) {
         let shoppingCart = this.shoppingCartDataService.getShoppingCart();
@@ -101,7 +107,7 @@ export class ShoppingCartService {
                 shopitem.setValidQuantity(shopitem.quantity);
                 itemToUpdate.quantity = shopitem.quantity;
                 itemToUpdate.price = itemToUpdate.quantity * shopitem.bookPrice;
-                this.saveShoppingCart(shoppingCart);
+                this.saveFullyShoppingCart(shoppingCart);
             } else {
                 this.toastService.showSimpleError(`Book ${shopitem.title} not found in ShoppingCart`);
                 return;
@@ -119,6 +125,6 @@ export class ShoppingCartService {
             return;
         }
         shoppingCart.items.splice(itemToDeleteIndex, 1);
-        this.saveShoppingCart(shoppingCart, "item correctly removed");
+        this.saveFullyShoppingCart(shoppingCart, "item correctly removed");
     }
 }
