@@ -26,9 +26,6 @@ namespace Bookshop.Application.Features.Orders.Extension
                                    .OrderByDescending(x => x.Id)
                                    .Select(x => mapper.Map<OrderResponseDto>(x))
                                    .FirstOrDefaultAsync(cancellationToken);
-            orderDto.StatusOrder = order.StatusOrder.ToString();
-            orderDto.MethodOfPayment = order.MethodOfPayment.ToString();
-            orderDto.DateOrder = order.DateOrder.ToShortDateString();
             return orderDto;
         }
     }
