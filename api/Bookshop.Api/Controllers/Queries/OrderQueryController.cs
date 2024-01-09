@@ -1,4 +1,4 @@
-﻿using Bookshop.Application.Features.Common.Queries.Orders;
+﻿using Bookshop.Application.Features.Orders.Queries.GetOrderById;
 using Bookshop.Application.Features.Orders.Queries.GetOrders;
 using Bookshop.Persistence.Contracts;
 using MediatR;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [Route("api/order")]
     public class OrderQueryController : ControllerBase
     {
@@ -23,23 +23,6 @@ namespace Bookshop.Api.Controllers.Queries
             _logger = logger;
             _loggedInUserService = loggedInUserService;
         }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(long id)
-        {
-            var dataReponse = await _mediator.Send(new Application.Features.Common.Queries.Orders.GetOrderById
-            {
-                Id = id
-            });
-            return Ok(dataReponse);
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var dataReponse = await _mediator.Send(new GetAllOrders());
-            return Ok(dataReponse);
-        }
-        [Authorize]
         [HttpGet("get-user-orders")]
         public async Task<IActionResult> GetOrders()
         {
@@ -49,11 +32,10 @@ namespace Bookshop.Api.Controllers.Queries
             });
             return Ok(dataReponse);
         }
-        [Authorize]
         [HttpGet("get-user-order/{id}")]
         public async Task<IActionResult> GetOrderById(long? id)
         {
-            var dataReponse = await _mediator.Send(new Application.Features.Orders.Queries.GetOrderById.GetOrderById
+            var dataReponse = await _mediator.Send(new GetOrderById
             {
                 UserId = _loggedInUserService?.GetUserId(),
                 Id = id

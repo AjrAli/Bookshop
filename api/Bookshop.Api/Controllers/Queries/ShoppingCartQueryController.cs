@@ -1,5 +1,4 @@
-﻿using Bookshop.Application.Features.Common.Queries.ShoppingCarts;
-using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCart;
+﻿using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCart;
 using Bookshop.Application.Features.ShoppingCarts.Queries.GetShoppingCartDetails;
 using Bookshop.Persistence.Contracts;
 using MediatR;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [Route("api/shopcart")]
     public class ShoppingCartQueryController : ControllerBase
     {
@@ -25,22 +24,6 @@ namespace Bookshop.Api.Controllers.Queries
             _loggedInUserService = loggedInUserService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(long id)
-        {
-            var dataReponse = await _mediator.Send(new GetShoppingCartById
-            {
-                Id = id
-            });
-            return Ok(dataReponse);
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var dataReponse = await _mediator.Send(new GetAllShoppingCarts());
-            return Ok(dataReponse);
-        }
-        [Authorize]
         [HttpGet("get-user-shopcart")]
         public async Task<IActionResult> GetShoppingCart()
         {
@@ -50,7 +33,7 @@ namespace Bookshop.Api.Controllers.Queries
             });
             return Ok(dataReponse);
         }
-        [Authorize]
+
         [HttpGet("get-user-shopcart-details-review")]
         public async Task<IActionResult> GetShoppingCartDetails()
         {
