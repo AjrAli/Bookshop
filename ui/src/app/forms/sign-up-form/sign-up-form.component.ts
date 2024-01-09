@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, Validators, FormsModule, AbstractControl, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, Validators, FormsModule, AbstractControl, FormBuilder, FormControl } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CustomerService } from '../../../services/customer.service';
@@ -29,33 +29,28 @@ export class SignUpFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: this.createControl(''),
-      password: this.createControl('', [Validators.minLength(4)]),
-      confirmPassword: this.createControl('', [Validators.minLength(4)]),
-      firstName: this.createControl(''),
-      lastName: this.createControl(''),
-      email: this.createControl('', [Validators.email]),
-      isSameAddress: this.createControl(false),
-      shipstreet: this.createControl(''),
-      shipcity: this.createControl(''),
-      shippostalCode: this.createControl(''),
-      shipcountry: this.createControl(''),
-      shipstate: this.createControl(''),
-      billstreet: this.createControl(''),
-      billcity: this.createControl(''),
-      billpostalCode: this.createControl(''),
-      billcountry: this.createControl(''),
-      billstate: this.createControl('')
+      username: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
+      confirmPassword: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
+      firstName: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      lastName: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      email: new FormControl('', [Validators.required, Validators.maxLength(100), Validators.email]),
+      isSameAddress: new FormControl(false),
+      shipstreet: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      shipcity: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      shippostalCode: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      shipcountry: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      shipstate: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      billstreet: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      billcity: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      billpostalCode: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      billcountry: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      billstate: new FormControl('', [Validators.required, Validators.maxLength(100)])
     }, {
-      validators: [Validators.required, Validators.maxLength(100), PasswordMatchValidator.match('password', 'confirmPassword')]
+      validators: [PasswordMatchValidator.match('password', 'confirmPassword')]
     });
     this.subscribeToIsSameAddressChanges();
   }
-
-  private createControl(initialValue: any, validators: any[] = []): AbstractControl {
-    return this.fb.control({ value: initialValue, disabled: false }, validators);
-  }
-
   private subscribeToIsSameAddressChanges(): void {
     const billControls = ['billstreet', 'billcity', 'billpostalCode', 'billcountry', 'billstate'];
 

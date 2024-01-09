@@ -9,7 +9,7 @@
                 <form [formGroup]="searchForm" (ngSubmit)="submitSearch()">
                     <p-inputGroup>
                         <input type="text" formControlName="searchField" (ngModelChange)="submitSearch($event)"
-                            pInputText placeholder="Search by title, author, keyword or ISBN" />
+                            pInputText placeholder="Search by title, author, keyword or ISBN" maxlength="100" />
                         <button type="submit" pButton icon="pi pi-search" label="Search"></button>
                     </p-inputGroup>
                 </form>

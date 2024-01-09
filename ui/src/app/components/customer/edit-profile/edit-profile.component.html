@@ -5,7 +5,7 @@
                 <label for="firstName">FirstName</label>
             </div>
             <div class="col-xxl-10">
-                <input pInputText class="w-75" type="text" formControlName="firstName" required />
+                <input pInputText class="w-75" type="text" formControlName="firstName" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('firstName')"></app-form-validation-error>
             </div>
         </div>
@@ -14,7 +14,7 @@
                 <label for="lastName">LastName</label>
             </div>
             <div class="col-xxl-10">
-                <input pInputText class="w-75" type="text" formControlName="lastName" required />
+                <input pInputText class="w-75" type="text" formControlName="lastName" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('lastName')"></app-form-validation-error>
             </div>
         </div>
@@ -28,21 +28,21 @@
                 <label for="shipstreet">Street</label>
             </div>
             <div class="col-xxl-2">
-                <input pInputText class="w-75" type="text" formControlName="shipstreet" required />
+                <input pInputText class="w-75" type="text" formControlName="shipstreet" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('shipstreet')"></app-form-validation-error>
             </div>
             <div class="col-xxl-2 mt-2">
                 <label for="shipcity">City</label>
             </div>
             <div class="col-xxl-2">
-                <input pInputText class="w-75" type="text" formControlName="shipcity" required />
+                <input pInputText class="w-75" type="text" formControlName="shipcity" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('shipcity')"></app-form-validation-error>
             </div>
             <div class="col-xxl-2 mt-2">
                 <label for="shippostalCode">Postal Code</label>
             </div>
             <div class="col-xxl-2">
-                <input pInputText class="w-75" type="text" formControlName="shippostalCode" required />
+                <input pInputText class="w-75" type="text" formControlName="shippostalCode" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('shippostalCode')"></app-form-validation-error>
             </div>
         </div>
@@ -51,14 +51,14 @@
                 <label for="shipstate">State</label>
             </div>
             <div class="col-xxl-4">
-                <input pInputText class="w-75" type="text" formControlName="shipstate" required />
+                <input pInputText class="w-75" type="text" formControlName="shipstate" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('shipstate')"></app-form-validation-error>
             </div>
             <div class="col-xxl-2 mt-2">
                 <label for="shipcountry">Country</label>
             </div>
             <div class="col-xxl-4">
-                <input pInputText class="w-75" type="text" formControlName="shipcountry" required />
+                <input pInputText class="w-75" type="text" formControlName="shipcountry"  maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('shipcountry')"></app-form-validation-error>
             </div>
         </div>
@@ -74,21 +74,21 @@
                 <label for="billstreet">Street</label>
             </div>
             <div class="col-xxl-2">
-                <input pInputText class="w-75" type="text" formControlName="billstreet" required />
+                <input pInputText class="w-75" type="text" formControlName="billstreet" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('billstreet')"></app-form-validation-error>
             </div>
             <div class="col-xxl-2 mt-2">
                 <label for="billcity">City</label>
             </div>
             <div class="col-xxl-2">
-                <input pInputText class="w-75" type="text" formControlName="billcity" required />
+                <input pInputText class="w-75" type="text" formControlName="billcity" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('billcity')"></app-form-validation-error>
             </div>
             <div class="col-xxl-2 mt-2">
                 <label for="billpostalCode">Postal Code</label>
             </div>
             <div class="col-xxl-2">
-                <input pInputText class="w-75" type="text" formControlName="billpostalCode" required />
+                <input pInputText class="w-75" type="text" formControlName="billpostalCode" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('billpostalCode')"></app-form-validation-error>
             </div>
         </div>
@@ -97,14 +97,14 @@
                 <label for="billstate">State</label>
             </div>
             <div class="col-xxl-4">
-                <input pInputText class="w-75" type="text" formControlName="billstate" required />
+                <input pInputText class="w-75" type="text" formControlName="billstate" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('billstate')"></app-form-validation-error>
             </div>
             <div class="col-xxl-2 mt-2">
                 <label for="billcountry">Country</label>
             </div>
             <div class="col-xxl-4">
-                <input pInputText class="w-75" type="text" formControlName="billcountry" required />
+                <input pInputText class="w-75" type="text" formControlName="billcountry" maxlength="100" required />
                 <app-form-validation-error [control]="loginForm.get('billcountry')"></app-form-validation-error>
             </div>
         </div>

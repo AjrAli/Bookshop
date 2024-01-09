@@ -31,13 +31,11 @@ export class PaymentFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.paymentForm = this.fb.group({
-      cardholderName: new FormControl(this.cardholderName),
-      methodOfPayment: new FormControl(this.methodOfPayment),
-      cardholderNumber: new FormControl(this.cardholderNumber),
-      date: new FormControl(this.date),
-      cvv: new FormControl(this.cvv)
-    }, {
-      validators: [Validators.required]
+      cardholderName: new FormControl(this.cardholderName, [Validators.required]),
+      methodOfPayment: new FormControl(this.methodOfPayment, [Validators.required]),
+      cardholderNumber: new FormControl(this.cardholderNumber, [Validators.required]),
+      date: new FormControl(this.date, [Validators.required]),
+      cvv: new FormControl(this.cvv, [Validators.required])
     });
   }
 
