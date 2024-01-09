@@ -4,10 +4,8 @@ import { OrderResponseDto } from "../app/dto/order/order-response-dto";
 import { OrderApiService } from "./order/order-api.service";
 import { ToastService } from "./toast.service";
 import { Observable, map, tap } from "rxjs";
-import { OrderResponse } from "../app/dto/handler-response/order/order-response";
-import { ValidationErrorResponse } from "../app/dto/response/error/validation-error-response";
-import { BaseResponse } from "../app/dto/response/base-response";
 import { UpdateOrderDto } from "../app/dto/order/update-order-dto";
+import { OrderCommandResponse } from "../app/dto/handler-response/order/order-command.response";
 
 @Injectable()
 export class OrderService {
@@ -39,11 +37,11 @@ export class OrderService {
         }), map(response => response.success));
     }
 
-    private handleOrderResponse(response: OrderResponse): void {
+    private handleOrderResponse(response: OrderCommandResponse): void {
         if (response.order) {
             this.toastService.showSuccess(response.message);
         } else {
-            this.toastService.showSimpleError('Invalid request');
+            this.toastService.showValidationError(response);
         }
     }
 

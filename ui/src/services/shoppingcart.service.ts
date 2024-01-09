@@ -4,12 +4,11 @@ import { ShoppingCartResponseDto } from "../app/dto/shoppingcart/shoppingcart-re
 import { ToastService } from "./toast.service";
 import { BookResponseDto } from "../app/dto/book/book-response-dto";
 import { ShoppingCartDto } from "../app/dto/shoppingcart/shoppingcart-dto";
-import { ShoppingCartResponse } from "../app/dto/handler-response/shoppingcart/shoppingcart-response";
-import { ValidationErrorResponse } from "../app/dto/response/error/validation-error-response";
 import { ShoppingCartApiService } from "./shoppingcart/shoppingcart-api.service";
 import { ShoppingCartLocalStorageService } from "./shoppingcart/shoppingcart-local-storage.service";
 import { ShoppingCartDataService } from "./shoppingcart/shoppingcart-data.service";
 import { Observable, map, tap } from "rxjs";
+import { ShoppingCartCommandResponse } from "../app/dto/handler-response/shoppingcart/shoppingcart-command-response";
 
 @Injectable()
 export class ShoppingCartService {
@@ -47,12 +46,12 @@ export class ShoppingCartService {
         }), map(response => !!response.success));
     }
 
-    private handleShoppingCartResponse(response: ShoppingCartResponse): void {
+    private handleShoppingCartResponse(response: ShoppingCartCommandResponse): void {
         if (response.shoppingCart) {
             this.shoppingCartDataService.setShoppingCart(response.shoppingCart);
             this.toastService.showSuccess(response.message);
         } else {
-            this.toastService.showSimpleError('Invalid request');
+            this.toastService.showValidationError(response);
         }
     }
 

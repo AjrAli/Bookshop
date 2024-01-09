@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xxl-5">
             <div class="container mt-3 align-baseline">
-                <app-login-form (connected)="navigateToHome($event)"></app-login-form>
+                <app-login-form (connected)="navigateRequest($event)"></app-login-form>
             </div>
         </div>
         <div class="col-xxl-2">
@@ -20,4 +20,4 @@
         </div>
     </div>
 </div>
-<app-sign-up-form *ngIf="signUp" (connected)="navigateToHome($event)"></app-sign-up-form>
+<app-sign-up-form *ngIf="signUp" (connected)="navigateRequest($event)"></app-sign-up-form>

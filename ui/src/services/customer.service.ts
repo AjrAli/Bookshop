@@ -35,6 +35,7 @@ export class CustomerService {
     const customer = this.customerLocalStorageService.getCustomerInfo();
     if (customer) {
       this.customerDataService.setCustomer(customer);
+      this.setCustomerShoppingCart(customer);
     }
   }
 

@@ -3,7 +3,7 @@ import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CustomerService } from '../../../services/customer.service';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormValidationErrorComponent } from '../../shared/validation/form-validation-error/form-validation-error.component';
 import { CommonModule } from '@angular/common';
 import { LoginFormComponent } from '../../forms/login-form/login-form.component';
@@ -19,18 +19,26 @@ import { SignUpFormComponent } from '../../forms/sign-up-form/sign-up-form.compo
 export class LoginProposaleComponent implements OnInit {
   signUp = false
   constructor(private customerService: CustomerService,
+    private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit(): void {
     this.signUp = false;
     if (this.customerService.isLoggedIn()) {
-      this.router.navigate(['']);
+      this.navigateToNext();
     }
   }
-  navigateToHome(connected: any) {
+  navigateRequest(connected: any) {
     if (connected) {
-      this.router.navigate(['']);
+      this.navigateToNext();
     }
+  }
+  navigateToNext(){
+    const returnUrlParam = this.getPreviousUrlRequest();
+    this.router.navigate([returnUrlParam ?? '']);
+  }
+  getPreviousUrlRequest(): string | null{
+    return this.route?.snapshot?.queryParamMap?.get('returnUrl');
   }
   showSignUp() {
     this.signUp = true;

@@ -9,9 +9,11 @@ export const routes: Routes = [
     { path: 'customer/edit-profile', loadComponent: () => import('./components/customer/edit-profile/edit-profile.component').then(mod => mod.EditProfileComponent), canActivate: [AuthGuard] },
     { path: 'customer/edit-password', loadComponent: () => import('./components/customer/edit-password/edit-password.component').then(mod => mod.EditPasswordComponent), canActivate: [AuthGuard] },
     { path: 'books', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent) },
+    { path: 'orders', loadComponent: () => import('./components/orders/orders.component').then(mod => mod.OrdersComponent), canActivate: [AuthGuard] },
     { path: 'books/author/:id', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent), data: { type: 'author' } },
     { path: 'books/category/:id', loadComponent: () => import('./components/books/books.component').then(mod => mod.BooksComponent), data: { type: 'category' } },
     { path: 'book/:id', loadComponent: () => import('./components/book-details/book-details.component').then(mod => mod.BookDetailsComponent) },
+    { path: 'order/:id', loadComponent: () => import('./components/order-details/order-details.component').then(mod => mod.OrderDetailsComponent), canActivate: [AuthGuard] },
     { path: 'login', loadComponent: () => import('./components/login-proposale/login-proposale.component').then(mod => mod.LoginProposaleComponent) },
     {
         path: 'steps',

@@ -30,7 +30,8 @@ export class TopLinksComponent implements OnInit {
           this.items = [
             {
               label: 'Orders',
-              icon: 'pi pi-shopping-bag'
+              icon: 'pi pi-shopping-bag',
+              command: () => this.router.navigate(['/orders'])
             },
             {
               label: 'Profile',

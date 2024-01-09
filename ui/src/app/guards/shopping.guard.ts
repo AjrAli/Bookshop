@@ -21,7 +21,7 @@ export class ShoppingGuard {
         this.idleTimeoutService.onIdleTimeout().subscribe(() => {
             // Redirect to home page when idle timeout is reached
             if (!this.customerService.isLoggedIn()) {
-                this.navigateToAuthentication('');
+                this.navigateToAuthentication();
                 this.idleTimeoutService.stopIdleTimer();
             }
         });
@@ -50,7 +50,11 @@ export class ShoppingGuard {
         this.router.navigate(['/steps/my-shoppingcart'], { queryParams: { returnUrl } });
     }
 
-    private navigateToAuthentication(returnUrl: string): void {
-        this.router.navigate(['/steps/authentication'], { queryParams: { returnUrl } });
+    private navigateToAuthentication(returnUrl?: string): void {
+        let queryParams: any = {};
+        if (returnUrl)
+            queryParams = { queryParams: { returnUrl } };
+
+        this.router.navigate(['/steps/authentication'], queryParams);
     }
 }
