@@ -5,7 +5,7 @@
                 <p-button [link]="true" styleClass="text-gray-500">CONTACT US</p-button>
             </div>
             <div class="col-xxl-3">
-                <div *ngIf="isConnected(); else notConnected">
+                <div *ngIf="connected; else notConnected">
                     <p-button [link]="true" (click)="menuAccount.toggle($event)"><i class="pi pi-user"
                             style="font-size: 1rem"></i><span class="ms-2"> Hey <span
                                 class="text-teal-500 fst-italic me-2">{{customerName}}</span> </span><i

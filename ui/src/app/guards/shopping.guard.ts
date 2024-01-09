@@ -3,19 +3,26 @@ import { Router, RouterStateSnapshot } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
 import { CustomerDataService } from '../../services/customer/customer-data.service';
 import { ShoppingCartDataService } from '../../services/shoppingcart/shoppingcart-data.service';
+import { IdleTimeoutService } from '../../services/idle-timeout.service';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class ShoppingGuard {
     constructor(
         private customerService: CustomerService,
         private customerDataService: CustomerDataService,
         private shoppingCartDataService: ShoppingCartDataService,
+        private idleTimeoutService: IdleTimeoutService,
         private router: Router
     ) { }
 
     canActivate(state: RouterStateSnapshot): boolean {
+        this.idleTimeoutService.onIdleTimeout().subscribe(() => {
+            // Redirect to home page when idle timeout is reached
+            if (!this.customerService.isLoggedIn()) {
+                this.router.navigate(['']);
+                this.idleTimeoutService.stopIdleTimer();
+            }
+        });
         const shoppingCart = this.shoppingCartDataService.getShoppingCart();
 
         if (!shoppingCart?.items || shoppingCart.items.length === 0) {

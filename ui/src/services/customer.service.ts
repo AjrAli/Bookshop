@@ -12,7 +12,7 @@ import { ShoppingCartDataService } from "./shoppingcart/shoppingcart-data.servic
 import { CustomerApiService } from "./customer/customer-api.service";
 import { CustomerLocalStorageService } from "./customer/customer-local-storage.service";
 import { DecodedToken, TokenService } from "./token.service";
-import { Observable, catchError, map, of, switchMap, tap } from "rxjs";
+import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap } from "rxjs";
 import { CustomerDataService } from "./customer/customer-data.service";
 import { CustomerCommandResponse } from "../app/dto/handler-response/customer/customer-command.response";
 import { EditProfileDto } from "../app/dto/customer/edit-profile-dto";
@@ -21,6 +21,8 @@ import { EditPasswordDto } from "../app/dto/customer/edit-password-dto";
 @Injectable()
 export class CustomerService {
   private userInfo: DecodedToken | undefined;
+  private connectedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  connected$: Observable<boolean> = this.connectedSubject.asObservable();
 
   constructor(private customerApiService: CustomerApiService,
     private customerLocalStorageService: CustomerLocalStorageService,
@@ -78,6 +80,7 @@ export class CustomerService {
         this.customerDataService.setCustomer(response.customer);
         this.customerLocalStorageService.setCustomerInfo(response.customer);
       }
+      this.connectedSubject.next(true);
       this.toastService.showSuccess(response.message);
     } else {
       this.toastService.showValidationError(response);
@@ -91,6 +94,7 @@ export class CustomerService {
         this.customerDataService.setCustomer(response.customer);
         this.customerLocalStorageService.setCustomerInfo(response.customer);
       }
+      this.connectedSubject.next(true);
       this.toastService.showSuccess(response.message);
     } else {
       this.toastService.showSimpleError('Invalid credentials');
@@ -119,6 +123,7 @@ export class CustomerService {
       this.resetFullyCustomer();
       return false;
     }
+    this.connectedSubject.next(true);
     return true;
   }
 
@@ -176,6 +181,7 @@ export class CustomerService {
     return of(true);
   }
   resetFullyCustomer() {
+    this.connectedSubject.next(false);
     this.customerDataService.resetCustomer();
     this.customerLocalStorageService.removeCustomerDataStored();
     this.tokenService.removeTokenStored();
