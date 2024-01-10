@@ -4,13 +4,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { CardComponent } from '../../body/card/card.component';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { PageEvent } from './page-event';
 
-interface PageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
-}
 @Component({
   selector: 'app-list-cards',
   standalone: true,

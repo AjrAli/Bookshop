@@ -16,7 +16,7 @@ import { ShoppingCartDataService } from '../../../../services/shoppingcart/shopp
   styleUrl: './my-shoppingcart.component.css'
 })
 export class MyShoppingCartComponent {
-  manage = 'manage';
+  manage = 'shoppingcart';
   rootUrl = environment.apiRootUrl;
   private shoppingCartSubscription: Subscription | undefined;
   shoppingcart: ShoppingCartResponseDto | null = new ShoppingCartResponseDto();

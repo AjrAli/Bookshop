@@ -17,6 +17,7 @@ namespace Bookshop.Domain.Entities
                 _total = value;
             }
         }
+        public decimal SubTotal { get; set; }
         [EnumDataType(typeof(CreditCards))]
         public CreditCards MethodOfPayment { get; set; }
         public DateTime DateOrder { get; }
@@ -38,8 +39,8 @@ namespace Bookshop.Domain.Entities
             decimal? total = null;
             if (LineItems != null && LineItems.Count > 0 && Customer?.ShippingAddress?.LocationPricing != null)
             {
-                var totalWithoutTaxes = LineItems.Sum(x => x.Price);
-                total = totalWithoutTaxes + ((totalWithoutTaxes / 100) * Customer?.ShippingAddress?.LocationPricing?.VatRate) +
+                SubTotal = Math.Round(LineItems.Sum(x => x.Price), 2);
+                total = SubTotal + ((SubTotal / 100) * Customer?.ShippingAddress?.LocationPricing?.VatRate) +
                     Customer?.ShippingAddress?.LocationPricing?.ShippingFee;
                 if (total != null)
                 {

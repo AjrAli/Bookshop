@@ -6,6 +6,7 @@ namespace Bookshop.Application.Features.Orders
     public class OrderResponseDto : IBaseDto
     {
         public long Id { get; set; }
+        public decimal SubTotal { get; set; }
         public decimal Total { get; set; }
         public decimal ShippingFee { get; set; }
         public decimal VatRate { get; set; }

@@ -13,6 +13,7 @@ namespace Bookshop.Persistence.Configurations
             builder.ToTable("Orders");
 
             builder.Property(e => e.Total).IsRequired().HasColumnType("decimal(18,2)");
+            builder.Property(e => e.SubTotal).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(e => e.MethodOfPayment).IsRequired().HasConversion<string>();
             builder.Property(e => e.DateOrder).IsRequired().HasColumnType("datetime2");
             builder.Property(e => e.StatusOrder).IsRequired().HasConversion<string>();

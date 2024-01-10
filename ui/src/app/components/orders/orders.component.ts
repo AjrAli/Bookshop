@@ -4,37 +4,67 @@ import { OrderResponseDto } from '../../dto/order/order-response-dto';
 import { ButtonModule } from 'primeng/button';
 import { OrderService } from '../../../services/order.service';
 import { OrderApiService } from '../../../services/order/order-api.service';
+import { PaginatorModule } from 'primeng/paginator';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { PageEvent } from '../../body/list-cards/page-event';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule, ButtonModule, PaginatorModule, ProgressSpinnerModule],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
 })
 export class OrdersComponent implements OnInit {
-  orders: OrderResponseDto[] | null = null;
+  orders: OrderResponseDto[] | undefined;
+  totalRecords: number = 0;
+  rows: number = 10; // Number of items per page
+  first: number = 0; // Initial page index
 
-  constructor(private OrderService: OrderService, private orderApiService: OrderApiService) { }
+  constructor(private OrderService: OrderService, private orderApiService: OrderApiService, private router: Router) { }
 
   ngOnInit(): void {
+    this.orders = [];
     this.orderApiService.getOrders().subscribe({
       next: (r) => {
-        if (r && r.orders)
+        if (r && r.orders?.length > 0) {
           this.orders = r.orders.map((order: OrderResponseDto) => {
             return new OrderResponseDto(order);
-          })
+          });
+          this.totalRecords = this.orders.length;
+        } else {
+          this.orders = undefined;
+        }
+      },
+      error: (e) => {
+        this.orders = undefined;
       }
-    })
+    });
+  }
+  onPageChange(event: any): void {
+    let eventOfPageEvent = event as PageEvent;
+    if (eventOfPageEvent) {
+      this.first = eventOfPageEvent.first;
+      this.rows = eventOfPageEvent.rows;
+    }
+  }
+  navigateToOrder(id: number) {
+    if (id)
+      this.router.navigate([`/order/${id}`]);
   }
   cancelOrder(id: number) {
     if (id > 0) {
       this.OrderService.cancelOrderFromApi(id).subscribe({
         next: (r) => {
           if (r) {
-            const orderIndexToDelete = this.orders?.findIndex(x => x.id === id);
-            if (orderIndexToDelete)
-              this.orders?.splice(orderIndexToDelete, 1)
+            if (this.orders && this.orders.length > 0) {
+              const orderIndexToDelete = this.orders.findIndex(x => x.id === id);
+              this.orders.splice(orderIndexToDelete, 1)
+              this.totalRecords = this.orders.length;
+              if (this.orders.length === 0)
+                this.orders = undefined;
+            }
           }
         }
       })

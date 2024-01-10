@@ -1,7 +1,20 @@
 <div *ngIf="items && items.length > 0 && manage" class="container text-center border-bottom">
 
     <div *ngFor="let item of items">
-        <app-shop-item [manage]="manage" [shopItem]="item"></app-shop-item>
+        <div *ngIf="manage === 'order'; else default" class="container">
+            <div class="row align-items-center mb-3">
+                <div class="col-md-11">
+                    <app-shop-item [manage]="manage" [shopItem]="item"></app-shop-item>
+                </div>
+                <div class="col-md-1">
+                    <p-checkbox name="shopId" [value]="item.id"
+                        [(ngModel)]="shopIds"></p-checkbox>
+                </div>
+            </div>
+        </div>
+        <ng-template #default>
+            <app-shop-item [manage]="manage" [shopItem]="item"></app-shop-item>
+        </ng-template>
     </div>
 </div>
 <div *ngIf="items && items.length > 0 && !manage" class="container text-center ps-5 pe-5">

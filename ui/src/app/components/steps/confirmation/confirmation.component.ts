@@ -13,11 +13,12 @@ import { OrderResponseDto } from '../../../dto/order/order-response-dto';
 import { OrderDto } from '../../../dto/order/order-dto';
 import { OrderService } from '../../../../services/order.service';
 import { CustomerService } from '../../../../services/customer.service';
+import { OrderDetailsComponent } from '../../order-details/order-details.component';
 
 @Component({
   selector: 'app-confirmation',
   standalone: true,
-  imports: [CommonModule, ButtonModule, ListShopItemsComponent, DividerModule],
+  imports: [CommonModule, ButtonModule, ListShopItemsComponent, DividerModule, OrderDetailsComponent],
   templateUrl: './confirmation.component.html',
   styleUrl: './confirmation.component.css'
 })

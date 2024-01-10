@@ -1,34 +1,50 @@
 <div class="container text-center mb-5">
     <div class="row">
-        <div *ngIf="orders && orders.length > 0" class="col-xxl-12 mt-3 border-bottom">
-            <h1 class="text-teal-500 underline fst-italic mb-5"> List Orders</h1>
-            <div *ngFor="let order of orders" class="container text-center ">
-                <div class="pb-3 row pt-3 border-top justify-content-center align-items-center">
-                    <div class="col-md-2">
-                        <span class="text-gray-500">Order N°: </span>
-                        <span class="text-teal-500">{{order.id}}</span>
-                    </div>
-                    <div class="col-md-3">
-                        <span class="text-gray-500">Date Order: </span>
-                        <span class="text-teal-500">{{order.dateOrder}}</span>
-                    </div>
-                    <div class="col-md-3">
-                        <span class="text-gray-500">Status: </span>
-                        <span class="text-teal-500">{{order.statusOrder}}</span>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <span class="text-gray-500">Total: </span>
-                        <span class="text-teal-500">{{ order.total | currency:'USD':'symbol':'1.2-2' }}</span>
-                        <!-- <span class="text-gray-500 text-xs">{{ shopItem.price | currency:'USD':'symbol':'1.2-2' }}</span> -->
-                    </div>
-                    <div class="col-md-2">
-                        <p-button styleClass="me-2" icon="pi pi-search" [rounded]="true" severity="success"
-                            [outlined]="true"></p-button>
-                        <p-button (click)="cancelOrder(order.id)" icon="pi pi-times" [rounded]="true" [text]="true"
-                            [raised]="true" severity="danger "></p-button>
+        <div *ngIf="orders else notfound" class="col-xxl-12 mt-3 border-bottom">
+            <div *ngIf="orders.length > 0; else loading">
+                <h1 class="text-teal-500 underline fst-italic mb-5"> List Orders</h1>
+                <div *ngFor="let order of orders.slice(first, first + rows)" class="container text-center ">
+                    <div class="pb-3 row pt-3 border-top justify-content-center align-items-center">
+                        <div class="col-md-2">
+                            <span class="text-gray-500">Order N°: </span>
+                            <span class="text-teal-500">{{order.id}}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="text-gray-500">Date Order: </span>
+                            <span class="text-teal-500">{{order.dateOrder}}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="text-gray-500">Status: </span>
+                            <span class="text-teal-500">{{order.statusOrder}}</span>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <span class="text-gray-500">Total: </span>
+                            <span class="text-teal-500">{{ order.total | currency:'USD':'symbol':'1.2-2' }}</span>
+                            <!-- <span class="text-gray-500 text-xs">{{ shopItem.price | currency:'USD':'symbol':'1.2-2' }}</span> -->
+                        </div>
+                        <div class="col-md-2">
+                            <p-button (click)="navigateToOrder(order.id)" styleClass="me-2" icon="pi pi-search"
+                                [rounded]="true" severity="success" [outlined]="true"></p-button>
+                            <p-button (click)="cancelOrder(order.id)" icon="pi pi-times" [rounded]="true" [text]="true"
+                                [raised]="true" severity="danger "></p-button>
+                        </div>
                     </div>
                 </div>
+                <p-paginator [rows]="rows" [totalRecords]="totalRecords" [first]="first"
+                    (onPageChange)="onPageChange($event)" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
             </div>
         </div>
     </div>
 </div>
+<ng-template #loading>
+    <div class="container mt-5 mb-5 p-5">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>
+<ng-template #notfound>
+    <div class="container mt-5 mb-5 p-4 border">
+        <h1 class="text-gray-500 underline font-italic"> <i class="pi pi-spin pi-exclamation-triangle me-3"
+                style="font-size: 2rem; color:red;"></i> No Order found! <i
+                class="pi pi-spin pi-exclamation-triangle ms-3" style="font-size: 2rem; color:red;"></i></h1>
+    </div>
+</ng-template>

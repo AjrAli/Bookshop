@@ -1,1 +1,70 @@
-<p>order-details works!</p>
+<div *ngIf="order" class="container text-center">
+    <h2 class="text-teal-500 mt-5">Order Review</h2>
+    <div class="row mb-2">
+        <div class="col-xxl-12">
+            <div class="container mt-5 text-left">
+                <div class="row justify-content-center mb-2">
+                    <div class="col-xxl-4">
+                        <span class="font-bold">Date Order: </span> <span
+                            class="text-teal-500">{{order.dateOrder}}</span>
+                    </div>
+                    <div class="col-xxl-2">
+                        <p-divider layout="vertical" styleClass="hidden md:flex"><b></b></p-divider>
+                        <p-divider layout="horizontal" styleClass="flex md:hidden"
+                            [align]="'center'"><b></b></p-divider>
+                    </div>
+                    <div class="col-xxl-4">
+                        <span class="font-bold">Method Of Payment: </span> <span
+                            class="text-teal-500">{{order.methodOfPayment}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xxl-12">
+            <app-list-shop-items #listItems [manage]="manage" [items]="order.items">
+            </app-list-shop-items>
+            <div class="container mt-3">
+                <div *ngIf="manage === 'order'" class="row text-center mb-5">
+                    <div class="col-xxl-12">
+                        <p-button (click)="removeItemsSelectedToApi()" [rounded]="true" [disabled]="listItems.shopIds.length === 0" styleClass="justify-content-center">Remove items selected</p-button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xxl-6">
+                        <span>Sub Total</span>
+                    </div>
+                    <div class="col-xxl-6">
+                        <span class="ms-3"> {{this.order.subTotal| currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xxl-6">
+                        <span>Shipping Fee</span>
+                    </div>
+                    <div class="col-xxl-6">
+                        <span>+ {{order.shippingFee | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xxl-6">
+                        <span>Vat Rate</span>
+                    </div>
+                    <div class="col-xxl-6">
+                        <span>+ {{(order.subTotal / 100) * order.vatRate |
+                            currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                </div>
+                <div class="row text-teal-500 ">
+                    <div class="col-xxl-6">
+                        <h3>Total</h3>
+                    </div>
+                    <div class="col-xxl-6">
+                        <h3>{{order.total | currency:'USD':'symbol':'1.2-2' }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

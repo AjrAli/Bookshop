@@ -4,6 +4,7 @@ import { ShopItemResponseDto } from "../shoppingcart/shopitem-response-dto";
 export class OrderResponseDto {
 
     id: number;
+    subTotal: number;
     total: number;
     shippingFee: number;
     vatRate: number;
@@ -14,6 +15,7 @@ export class OrderResponseDto {
 
     constructor(data?: Partial<OrderResponseDto>) {
         this.id = data?.id ?? 0;
+        this.subTotal = data?.subTotal ?? 0;
         this.total = data?.total ?? 0;
         this.shippingFee = data?.shippingFee ?? 0;
         this.vatRate = data?.vatRate ?? 0;

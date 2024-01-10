@@ -7,6 +7,7 @@ import { UpdateOrderDto } from "../../app/dto/order/update-order-dto";
 import { OrdersResponse } from "../../app/dto/handler-response/order/orders-response";
 import { OrderCommandResponse } from "../../app/dto/handler-response/order/order-command.response";
 import { environment } from "../../app/environments/environment";
+import { OrderResponse } from "../../app/dto/handler-response/order/order-response";
 
 @Injectable()
 export class OrderApiService {
@@ -17,8 +18,8 @@ export class OrderApiService {
     getOrders(): Observable<OrdersResponse> {
         return this.http.get<OrdersResponse>(`${this.apiUrl}/get-user-orders`);
     }
-    getOrderById(id: number): Observable<OrdersResponse> {
-        return this.http.get<OrdersResponse>(`${this.apiUrl}/get-user-order/${id}`);
+    getOrderById(id: number): Observable<OrderResponse> {
+        return this.http.get<OrderResponse>(`${this.apiUrl}/get-user-order/${id}`);
     }
     createOrder(order: OrderDto): Observable<OrderCommandResponse> {
         return this.http.post<OrderCommandResponse>(`${this.apiUrl}/create-user-order`, order);
