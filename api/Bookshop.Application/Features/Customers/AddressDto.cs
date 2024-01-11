@@ -1,8 +1,8 @@
-﻿using Bookshop.Application.Features.Dto;
+﻿
 
 namespace Bookshop.Application.Features.Customers
 {
-    public class AddressDto : IBaseDto
+    public class AddressDto
     {
         public long Id { get; set; }
         public string Street { get; set; }

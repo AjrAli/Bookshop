@@ -1,6 +1,5 @@
 using Bookshop.Api.Middleware;
 using Bookshop.Api.Services;
-using Bookshop.Api.Utility;
 using Bookshop.Application;
 using Bookshop.Application.Settings;
 using Bookshop.Identity;
@@ -22,14 +21,18 @@ namespace Bookshop.Api
 
         public IConfiguration Configuration { get; }
 
+        // Configures the services used by the application
         public void ConfigureServices(IServiceCollection services)
         {
+            // Bind JwtSettings from configuration
             services.AddOptions<JwtSettings>().Bind(Configuration.GetSection("JwtSettings"));
+            // Configure Swagger documentation
             AddSwagger(services);
             services.AddApplicationServices();
             services.AddPersistenceServices(Configuration);
             services.AddIdentityServices(Configuration);
             services.AddScoped<ILoggedInUserService, LoggedInUserService>();
+            // Configure JSON options to ignore reference cycles
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -43,7 +46,7 @@ namespace Bookshop.Api
                 });
             });
         }
-
+        // Configures Swagger generation and documentation
         private static void AddSwagger(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -82,14 +85,14 @@ namespace Bookshop.Api
                     Version = "v1",
                     Title = "Project : Bookshop API",
                 });
-
-                c.OperationFilter<FileResultContentTypeOperationFilter>();
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // Configures the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
+            // Configure development-specific settings
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -102,20 +105,22 @@ namespace Bookshop.Api
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, @"Client")),
                 RequestPath = "/client"
             });
+            // Configure Serilog request logging
             app.UseSerilogRequestLogging();
+            // Configure routing, CORS, authentication, and authorization
             app.UseRouting();
             app.UseCors("BookshopUI");
             app.UseAuthentication();
-
             app.UseAuthorization();
-
+            // Use custom exception handler middleware
             app.UseCustomExceptionHandler();
-
+            // Configure endpoints for controllers and fallback to index.html
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
+            // Register Serilog log closing on application stop
             appLifetime.ApplicationStopped.Register(Log.CloseAndFlush);
         }
     }

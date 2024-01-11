@@ -9,12 +9,9 @@ namespace Bookshop.Api.Controllers.Queries
     public class CustomerQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<CustomerQueryController> _logger;
-        public CustomerQueryController(IMediator mediator,
-                                ILogger<CustomerQueryController> logger)
+        public CustomerQueryController(IMediator mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] Authenticate request)

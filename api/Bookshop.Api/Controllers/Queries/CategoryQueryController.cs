@@ -5,17 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
-    //[Authorize]
     [Route("api/category")]
     public class CategoryQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<CategoryQueryController> _logger;
-        public CategoryQueryController(IMediator mediator,
-                                ILogger<CategoryQueryController> logger)
+        public CategoryQueryController(IMediator mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
 
         [HttpGet("{id}")]

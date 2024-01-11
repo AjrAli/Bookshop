@@ -1,9 +1,8 @@
-﻿using Bookshop.Application.Features.Dto;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Bookshop.Application.Features.Orders
 {
-    public class OrderRequestDto : IBaseDto
+    public class OrderRequestDto
     {
         public long Id { get; set; }
         [JsonIgnore]

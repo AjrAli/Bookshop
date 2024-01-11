@@ -9,10 +9,10 @@ namespace Bookshop.Application.Features.Orders.Validation
         public static async Task ValidateOrderRequest(this OrderRequestDto? orderDto, BookshopDbContext context)
         {
             if (!await context.ShoppingCarts.Include(x => x.Customer).AnyAsync(x => x.Customer.IdentityUserDataId == orderDto.UserId))
-                throw new ValidationException($"ShoppingCart of current customer not found in Database");
+                throw new BadRequestException($"ShoppingCart of current customer not found in Database");
             if (!await context.ShoppingCarts.Include(x => x.Customer).Include(x => x.LineItems).AnyAsync(x => x.Customer.IdentityUserDataId == orderDto.UserId &&
                                                                                                               x.LineItems.Count > 0))
-                throw new ValidationException($"ShoppingCart of current customer is empty");
+                throw new BadRequestException($"ShoppingCart of current customer is empty");
         }
     }
 }

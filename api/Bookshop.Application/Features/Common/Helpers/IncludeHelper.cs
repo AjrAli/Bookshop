@@ -4,6 +4,9 @@ using System.Linq.Expressions;
 
 namespace Bookshop.Application.Features.Common.Helpers
 {
+    /*
+     Include helper for working with generics DbSet, this will help for apply the includes of specific DbSet using NavigationPropertyConfigurations 
+     */
     public static class IncludeHelper
     {
         public static IQueryable<T> ApplyIncludesAndThenIncludes<T>(this IQueryable<T> query,

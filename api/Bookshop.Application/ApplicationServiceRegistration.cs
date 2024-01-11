@@ -1,7 +1,5 @@
 ﻿using Bookshop.Application.Contracts.Seed;
 using Bookshop.Application.Features.PipelineBehaviours;
-using Bookshop.Application.Features.Response;
-using Bookshop.Application.Features.Response.Contracts;
 using Bookshop.Application.Service;
 using Bookshop.Domain.Service;
 using FluentValidation;
@@ -29,7 +27,6 @@ namespace Bookshop.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
-            services.AddTransient(typeof(IResponseFactory<>), typeof(ResponseFactory<>));
         }
     }
 }

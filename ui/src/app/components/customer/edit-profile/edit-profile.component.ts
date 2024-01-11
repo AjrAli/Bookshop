@@ -6,7 +6,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { CustomerService } from '../../../../services/customer.service';
 import { AddressDto } from '../../../dto/customer/customer-dto';
-import { ValidationErrorResponse } from '../../../dto/response/error/validation-error-response';
 import { FormValidationErrorComponent } from '../../../shared/validation/form-validation-error/form-validation-error.component';
 import { EditProfileDto } from '../../../dto/customer/edit-profile-dto';
 import { CustomerDataService } from '../../../../services/customer/customer-data.service';
@@ -24,7 +23,6 @@ export class EditProfileComponent implements OnInit {
   shippingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   billingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   loginForm!: FormGroup;
-  errorResponse!: ValidationErrorResponse;
 
   constructor(private customerService: CustomerService,
     private customerDataService: CustomerDataService,

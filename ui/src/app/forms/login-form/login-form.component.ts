@@ -4,7 +4,6 @@ import { CustomerService } from '../../../services/customer.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormValidationErrorComponent } from '../../shared/validation/form-validation-error/form-validation-error.component';
-import { ValidationErrorResponse } from '../../dto/response/error/validation-error-response';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -18,7 +17,6 @@ export class LoginFormComponent implements OnInit {
   username: string = '';
   password: string = '';
   loginForm!: FormGroup;
-  errorResponse!: ValidationErrorResponse;
   @Output() connected = new EventEmitter<boolean>();
 
   constructor(private customerService: CustomerService) { }

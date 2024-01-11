@@ -4,30 +4,47 @@ using Bookshop.Application.Features.Common.Helpers;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using System.Threading;
 using static Bookshop.Domain.Entities.Book;
 
 namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 {
+    /// <summary>
+    /// GetSearchResultsHandler: Handles the query to retrieve search results for books.
+    /// </summary>
     public class GetSearchResultsHandler : IQueryHandler<GetSearchResults, GetSearchResultsResponse>
     {
         private readonly BookshopDbContext _dbContext;
 
+        /// <summary>
+        /// Initializes a new instance of the GetSearchResultsHandler class.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
         public GetSearchResultsHandler(BookshopDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Handles the query to retrieve search results for books.
+        /// </summary>
+        /// <param name="request">The search query request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>Returns the response containing the search results.</returns>
         public async Task<GetSearchResultsResponse> Handle(GetSearchResults request, CancellationToken cancellationToken)
         {
+            // Remove extra spaces from the search keyword
             var stringWithoutExtraSpaces = Regex.Replace(request.Keyword, @"\s{2,}", " ");
             var keywords = stringWithoutExtraSpaces.Trim().Split();
             var allSearchResults = new HashSet<BookResponseDto>(new GetBookSearchResultsDtoComparer());
 
+            // Iterate through each keyword and search for books
             foreach (var keyword in keywords)
             {
-                // Search for books
                 var booksResults = await SearchBooks(keyword, cancellationToken);
                 allSearchResults.UnionWith(booksResults);
             }
@@ -39,20 +56,28 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
                     .Where(r => FullKeywordMatch(r, keywords)),
                     new GetBookSearchResultsDtoComparer());
             }
-            // Order results by the number of keyword matches
 
-            return new()
+            // Order results by the number of keyword matches
+            return new GetSearchResultsResponse
             {
                 Books = allSearchResults
-                .OrderByDescending(x => NumberOfMatches(x, keywords))
-                .ToList()
+                    .OrderByDescending(x => NumberOfMatches(x, keywords))
+                    .ToList()
             };
         }
 
+        /// <summary>
+        /// Searches for books based on a keyword.
+        /// </summary>
+        /// <param name="keyword">The search keyword.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>Returns a collection of BookResponseDto.</returns>
         private async Task<IEnumerable<BookResponseDto>> SearchBooks(string keyword, CancellationToken cancellationToken)
         {
+            // Create a queryable database view for books
             var query = _dbContext.Books.Include(b => b.Author).Include(b => b.Category).AsQueryable();
-            // Build OR conditions using Expression
+
+            // Build OR conditions using Expression for dynamic search
             Expression<Func<Book, bool>> predicate = p => false;
             predicate = predicate.Or(x => x.Title.Contains(keyword) ||
                             x.Description.Contains(keyword) ||
@@ -62,11 +87,13 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
                             x.PublishDate.ToString().Contains(keyword) ||
                             x.Author.Name.Contains(keyword) ||
                             x.Category.Title.Contains(keyword));
+
+            // Extract language from the keyword and add it to the search
             var languageStrFromKeyword = Enum.GetNames(typeof(Languages)).FirstOrDefault(x => x.Contains(keyword, StringComparison.OrdinalIgnoreCase));
             if (languageStrFromKeyword != null)
                 predicate = predicate.Or(x => x.Language == Enum.Parse<Languages>(languageStrFromKeyword));
 
-            // Apply the dynamic OR conditions
+            // Apply the dynamic OR conditions to the query
             var results = await query.Where(predicate).Select(x => new BookResponseDto
             {
                 Id = x.Id,
@@ -83,6 +110,13 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 
             return results;
         }
+
+        /// <summary>
+        /// Checks if a BookResponseDto fully matches all provided keywords.
+        /// </summary>
+        /// <param name="result">The BookResponseDto to check.</param>
+        /// <param name="keywords">The array of keywords to match.</param>
+        /// <returns>Returns true if the BookResponseDto fully matches all keywords.</returns>
         private static bool FullKeywordMatch(BookResponseDto result, string[] keywords)
         {
             foreach (var keyword in keywords)
@@ -99,6 +133,12 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
             return true;
         }
 
+        /// <summary>
+        /// Counts the number of keyword matches in a BookResponseDto.
+        /// </summary>
+        /// <param name="result">The BookResponseDto to count matches in.</param>
+        /// <param name="keywords">The collection of keywords to match.</param>
+        /// <returns>Returns the number of keyword matches.</returns>
         private static int NumberOfMatches(BookResponseDto result, IEnumerable<string> keywords)
         {
             var counter = 0;
@@ -126,29 +166,37 @@ namespace Bookshop.Application.Features.Search.Queries.GetSearchResults
 
             return counter;
         }
-    }
-    // Custom comparer to handle duplicates in the list
-    public class GetBookSearchResultsDtoComparer : IEqualityComparer<BookResponseDto>
-    {
-        public bool Equals(BookResponseDto? x, BookResponseDto? y)
-        {
-            if (x == null && y == null)
-                return true;
-            if (x == null || y == null)
-                return false;
 
-            return x.Id == y.Id;
-        }
-
-        public int GetHashCode(BookResponseDto obj)
+        /// <summary>
+        /// Custom comparer to handle duplicates in the list.
+        /// </summary>
+        private class GetBookSearchResultsDtoComparer : IEqualityComparer<BookResponseDto>
         {
-            unchecked
+            /// <summary>
+            /// Determines whether two BookResponseDto instances are equal.
+            /// </summary>
+            public bool Equals(BookResponseDto? x, BookResponseDto? y)
             {
-                int hash = 17;
-                hash = hash * 23 + obj.Id.GetHashCode();
-                return hash;
+                if (x == null && y == null)
+                    return true;
+                if (x == null || y == null)
+                    return false;
+
+                return x.Id == y.Id;
+            }
+
+            /// <summary>
+            /// Gets the hash code for a BookResponseDto instance.
+            /// </summary>
+            public int GetHashCode(BookResponseDto obj)
+            {
+                unchecked
+                {
+                    int hash = 17;
+                    hash = hash * 23 + obj.Id.GetHashCode();
+                    return hash;
+                }
             }
         }
     }
-
 }

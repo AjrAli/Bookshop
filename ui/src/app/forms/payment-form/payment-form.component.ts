@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, F
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
-import { ValidationErrorResponse } from '../../dto/response/error/validation-error-response';
 import { FormValidationErrorComponent } from '../../shared/validation/form-validation-error/form-validation-error.component';
 import { CreditCards, PaymentInformation } from '../../../services/customer/customer-data.service';
 import { DropdownModule } from 'primeng/dropdown';
@@ -24,7 +23,6 @@ export class PaymentFormComponent implements OnInit {
   date: string = '';
   cvv: string = '';
   paymentForm!: FormGroup;
-  errorResponse!: ValidationErrorResponse;
   creditCardsOptions: { label: string, value: string }[] = Object.keys(CreditCards).map(key => ({ label: key, value: (CreditCards as any)[key] }));
 
   constructor(private fb: FormBuilder) { }

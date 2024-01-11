@@ -4,19 +4,7 @@ namespace Bookshop.Domain.Entities
 {
     public class ShoppingCart : AuditableEntity
     {
-        private decimal _total;
-        public decimal Total
-        {
-            get
-            {
-                return (_total != 0) ? _total : CalculateSubtotal();
-            }
-            set
-            {
-                _total = value;
-            }
-
-        }
+        public decimal Total { get; set; }
         private ShoppingCart() { }
         public ShoppingCart(Customer customer, ICollection<LineItem>? lineItems = null)
         {
@@ -82,12 +70,12 @@ namespace Bookshop.Domain.Entities
                 total = LineItems.Sum(x => x.Price);
                 if (total != null)
                 {
-                    _total = Math.Round((decimal)total, 2);
+                    Total = Math.Round((decimal)total, 2);
                 }
             }
             else
-                _total = 0;
-            return _total;
+                Total = 0;
+            return Total;
         }
         public int TotalItems()
         {

@@ -1,8 +1,7 @@
-﻿using Bookshop.Application.Features.Dto;
-
+﻿
 namespace Bookshop.Application.Features.ShoppingCarts
 {
-    public class ShopItemRequestDto : IBaseDto
+    public class ShopItemRequestDto
     {
         public long Id { get; set; }
         public int Quantity { get; set; }

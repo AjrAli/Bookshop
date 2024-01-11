@@ -13,14 +13,11 @@ namespace Bookshop.Api.Controllers.Queries
     public class OrderQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<OrderQueryController> _logger;
         private readonly ILoggedInUserService? _loggedInUserService;
         public OrderQueryController(IMediator mediator,
-                                ILogger<OrderQueryController> logger,
                                 ILoggedInUserService? loggedInUserService)
         {
             _mediator = mediator;
-            _logger = logger;
             _loggedInUserService = loggedInUserService;
         }
         [HttpGet("get-user-orders")]

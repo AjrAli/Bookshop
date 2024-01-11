@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormGroup, Validators, FormsModule, AbstractContro
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CustomerService } from '../../../services/customer.service';
-import { ValidationErrorResponse } from '../../dto/response/error/validation-error-response';
 import { FormValidationErrorComponent, PasswordMatchValidator } from '../../shared/validation/form-validation-error/form-validation-error.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AddressDto, CustomerDto } from '../../dto/customer/customer-dto';
@@ -21,7 +20,6 @@ export class SignUpFormComponent implements OnInit {
   shippingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   billingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   loginForm!: FormGroup;
-  errorResponse!: ValidationErrorResponse;
   @Output() connected = new EventEmitter<boolean>();
 
   constructor(private customerService: CustomerService,

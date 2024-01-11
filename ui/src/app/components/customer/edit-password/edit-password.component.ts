@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, F
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CustomerService } from '../../../../services/customer.service';
-import { ValidationErrorResponse } from '../../../dto/response/error/validation-error-response';
 import { FormValidationErrorComponent, PasswordMatchValidator } from '../../../shared/validation/form-validation-error/form-validation-error.component';
 import { EditPasswordDto } from '../../../dto/customer/edit-password-dto';
 import { Router } from '@angular/router';
@@ -19,7 +18,6 @@ import { Router } from '@angular/router';
 export class EditPasswordComponent implements OnInit {
   editPassword: EditPasswordDto = new EditPasswordDto();
   loginForm!: FormGroup;
-  errorResponse!: ValidationErrorResponse;
 
   constructor(private customerService: CustomerService,
     private router: Router,

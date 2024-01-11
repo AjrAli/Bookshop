@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Bookshop.Application.Features.Response.Contracts;
+﻿using Bookshop.Application.Features.Response.Contracts;
 
 namespace Bookshop.Application.Features.Response
 {

@@ -9,12 +9,9 @@ namespace Bookshop.Api.Controllers.Queries
     public class SearchQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<SearchQueryController> _logger;
-        public SearchQueryController(IMediator mediator,
-                            ILogger<SearchQueryController> logger)
+        public SearchQueryController(IMediator mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
 
         [HttpGet("book/{keyword}")]

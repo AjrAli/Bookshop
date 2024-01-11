@@ -24,12 +24,12 @@
         /// Gets or sets the mappings of file extensions to MIME types for custom content types.
         /// </summary>
         public Dictionary<string, string> ContentTypeMappings { get; set; } = new Dictionary<string, string>
-    {
-        { ".css", "text/css" },
-        { ".js", "application/javascript" },
-        { ".png", "image/png" },
-        { ".jpg", "image/jpeg" },
-        // Add more mappings as needed
-    };
+        {
+            { ".css", "text/css" },
+            { ".js", "application/javascript" },
+            { ".png", "image/png" },
+            { ".jpg", "image/jpeg" },
+            // Add more mappings as needed
+        };
     }
 }

@@ -13,14 +13,11 @@ namespace Bookshop.Api.Controllers.Queries
     public class ShoppingCartQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<ShoppingCartQueryController> _logger;
         private readonly ILoggedInUserService? _loggedInUserService;
         public ShoppingCartQueryController(IMediator mediator,
-                                ILogger<ShoppingCartQueryController> logger,
                                 ILoggedInUserService? loggedInUserService)
         {
             _mediator = mediator;
-            _logger = logger;
             _loggedInUserService = loggedInUserService;
         }
 

@@ -1,5 +1,4 @@
-﻿using Bookshop.Application.Features.Dto;
-
+﻿
 namespace Bookshop.Application.Features.Categories
 {
     public record CategoryResponseDto

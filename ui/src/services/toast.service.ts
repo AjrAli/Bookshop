@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { ValidationErrorResponse } from '../app/dto/response/error/validation-error-response';
 import { ErrorResponse } from '../app/dto/response/error/error-response';
+import { CommandResponse } from '../app/dto/response/command-response';
 
 @Injectable()
 export class ToastService {
@@ -11,8 +11,8 @@ export class ToastService {
     this.showNotification('success', message, 'Success', 3000);
   }
 
-  showValidationError(validationError?: Partial<ValidationErrorResponse>): void {
-    const errorMessageArray = [validationError?.message, ...(validationError?.validationErrors ?? [])];
+  showValidationError(commandResponse?: Partial<CommandResponse>): void {
+    const errorMessageArray = [commandResponse?.message, ...(commandResponse?.validationErrors ?? [])];
     if (errorMessageArray)
       errorMessageArray.forEach((message) => {
         if (message) {

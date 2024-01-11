@@ -3,7 +3,6 @@ import { AuthenticateResponse } from "../app/dto/handler-response/customer/authe
 import { Role } from "../app/enum/role";
 import { CustomerDto } from "../app/dto/customer/customer-dto";
 import { CustomerResponseDto } from "../app/dto/customer/customer-response-dto";
-import { ValidationErrorResponse } from "../app/dto/response/error/validation-error-response";
 import { ToastService } from "./toast.service";
 import { ShoppingCartResponseDto } from "../app/dto/shoppingcart/shoppingcart-response-dto";
 import { ShoppingCartDto } from "../app/dto/shoppingcart/shoppingcart-dto";

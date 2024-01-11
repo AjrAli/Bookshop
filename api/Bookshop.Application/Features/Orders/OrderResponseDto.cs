@@ -1,9 +1,8 @@
-﻿using Bookshop.Application.Features.Dto;
-using Bookshop.Application.Features.ShoppingCarts;
+﻿using Bookshop.Application.Features.ShoppingCarts;
 
 namespace Bookshop.Application.Features.Orders
 {
-    public class OrderResponseDto : IBaseDto
+    public class OrderResponseDto
     {
         public long Id { get; set; }
         public decimal SubTotal { get; set; }

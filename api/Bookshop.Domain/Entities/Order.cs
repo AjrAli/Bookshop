@@ -5,18 +5,7 @@ namespace Bookshop.Domain.Entities
 {
     public class Order : AuditableEntity
     {
-        private decimal _total;
-        public decimal Total
-        {
-            get
-            {
-                return (_total != 0) ? _total : CalculateTotalOrder();
-            }
-            set
-            {
-                _total = value;
-            }
-        }
+        public decimal Total { get; set; }
         public decimal SubTotal { get; set; }
         [EnumDataType(typeof(CreditCards))]
         public CreditCards MethodOfPayment { get; set; }
@@ -44,12 +33,12 @@ namespace Bookshop.Domain.Entities
                     Customer?.ShippingAddress?.LocationPricing?.ShippingFee;
                 if (total != null)
                 {
-                    _total = Math.Round((decimal)total, 2);
+                    Total = Math.Round((decimal)total, 2);
                 }
             }
             else
-                _total = 0;
-            return _total;
+                Total = 0;
+            return Total;
         }
         public enum CreditCards
         {

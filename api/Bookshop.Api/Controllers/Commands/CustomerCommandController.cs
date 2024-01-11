@@ -14,14 +14,11 @@ namespace Bookshop.Api.Controllers.Commands
     public class CustomerCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<CustomerCommandController> _logger;
         private readonly ILoggedInUserService? _loggedInUserService;
         public CustomerCommandController(IMediator mediator,
-                                ILogger<CustomerCommandController> logger,
                                  ILoggedInUserService? loggedInUserService)
         {
             _mediator = mediator;
-            _logger = logger;
             _loggedInUserService = loggedInUserService;
         }
 
