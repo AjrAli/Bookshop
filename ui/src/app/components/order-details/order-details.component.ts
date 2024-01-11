@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { ListShopItemsComponent } from '../../body/list-shop-items/list-shop-items.component';
@@ -10,6 +10,7 @@ import { ToastService } from '../../../services/toast.service';
 import { OrderApiService } from '../../../services/order/order-api.service';
 import { ErrorResponse } from '../../dto/response/error/error-response';
 import { UpdateOrderDto } from '../../dto/order/update-order-dto';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-order-details',
@@ -18,23 +19,27 @@ import { UpdateOrderDto } from '../../dto/order/update-order-dto';
   templateUrl: './order-details.component.html',
   styleUrl: './order-details.component.css'
 })
-export class OrderDetailsComponent implements OnInit {
+export class OrderDetailsComponent implements OnInit, OnDestroy {
 
   @ViewChild('listItems') listItems: ListShopItemsComponent | undefined;
   @Input() order: OrderResponseDto | undefined;
   @Input() manage = "order";
-
+  private orderSubscription: Subscription | undefined;
+  private orderUpdateSubscription: Subscription | undefined;
   constructor(private route: ActivatedRoute,
     private router: Router,
     private orderApiService: OrderApiService,
     private orderService: OrderService,
     private toastService: ToastService) { }
-
+  ngOnDestroy(): void {
+    this.orderSubscription?.unsubscribe();
+    this.orderUpdateSubscription?.unsubscribe();
+  }
   ngOnInit(): void {
     if (!this.order) {
       const id = Number.parseInt(this.route.snapshot.params['id']);
       if (!Number.isNaN(id)) {
-        this.orderApiService.getOrderById(id).subscribe({
+        this.orderSubscription = this.orderApiService.getOrderById(id).subscribe({
           next: (r) => {
             if (r.order) {
               this.order = new OrderResponseDto(r.order);
@@ -53,7 +58,7 @@ export class OrderDetailsComponent implements OnInit {
   removeItemsSelectedToApi() {
     const listIds = this.listItems?.shopIds;
     if (this.manage === 'order' && listIds && listIds.length > 0) {
-      this.orderService.updateOrderFromApi(new UpdateOrderDto({ id: this.order?.id, itemsId: listIds })).subscribe({
+      this.orderUpdateSubscription = this.orderService.updateOrderFromApi(new UpdateOrderDto({ id: this.order?.id, itemsId: listIds })).subscribe({
         next: (r) => {
           if (r) {
             this.listItems!.shopIds = [];

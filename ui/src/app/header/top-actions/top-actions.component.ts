@@ -34,8 +34,7 @@ export class TopActionsComponent implements OnInit, OnDestroy {
     private searchStateService: SearchStateService,
     private router: Router) { }
   ngOnDestroy(): void {
-    if (this.shoppingCartSubscription)
-      this.shoppingCartSubscription.unsubscribe();
+    this.shoppingCartSubscription?.unsubscribe();
   }
 
   ngOnInit() {

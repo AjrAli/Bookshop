@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ListShopItemsComponent } from '../../../body/list-shop-items/list-shop-items.component';
@@ -12,6 +12,7 @@ import { ToastService } from '../../../../services/toast.service';
 import { CustomerDataService } from '../../../../services/customer/customer-data.service';
 import { ShoppingCartDataService } from '../../../../services/shoppingcart/shoppingcart-data.service';
 import { ShoppingCartApiService } from '../../../../services/shoppingcart/shoppingcart-api.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-payment',
@@ -20,19 +21,22 @@ import { ShoppingCartApiService } from '../../../../services/shoppingcart/shoppi
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.css'
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent implements OnInit, OnDestroy {
   @ViewChild('paymentForm') paymentForm!: PaymentFormComponent;
   manage = 'show';
   rootUrl = environment.apiRootUrl;
   shoppingcartDetails: ShoppingCartDetailsResponseDto | null = null;
+  private shoppingCartSubscription: Subscription | undefined;
   constructor(private shoppingCartApiService: ShoppingCartApiService,
     private shoppingCartDataService: ShoppingCartDataService,
     private customerDataService: CustomerDataService,
     private router: Router, private toastService: ToastService) { }
 
-
+  ngOnDestroy(): void {
+    this.shoppingCartSubscription?.unsubscribe();
+  }
   ngOnInit() {
-    this.shoppingCartApiService.getShoppingCartDetails().subscribe({
+    this.shoppingCartSubscription = this.shoppingCartApiService.getShoppingCartDetails().subscribe({
       next: (response: ShoppingCartDetailsResponse | null) => {
         if (!response || !response.shoppingCartDetails) {
           this.shoppingcartDetails = null;

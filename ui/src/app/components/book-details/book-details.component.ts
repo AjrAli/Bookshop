@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../../../services/book.service';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
@@ -10,6 +10,7 @@ import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { ShoppingCartService } from '../../../services/shoppingcart.service';
 import { ImageModule } from 'primeng/image';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-book-details',
@@ -18,19 +19,23 @@ import { ImageModule } from 'primeng/image';
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css'
 })
-export class BookDetailsComponent implements OnInit {
+export class BookDetailsComponent implements OnInit, OnDestroy {
 
   book: BookResponseDto | null = null;
   rootUrl = environment.apiRootUrl;
+  private bookSubscription: Subscription | undefined;
   constructor(private route: ActivatedRoute,
     private router: Router,
     private bookService: BookService,
     private shoppingCartService: ShoppingCartService,
     private toastService: ToastService) { }
+  ngOnDestroy(): void {
+    this.bookSubscription?.unsubscribe();
+  }
   ngOnInit(): void {
     const id = Number.parseInt(this.route.snapshot.params['id']);
     if (!Number.isNaN(id)) {
-      this.bookService.getById(id).subscribe({
+      this.bookSubscription = this.bookService.getById(id).subscribe({
         next: (r) => {
           if (r.dto) {
             this.book = new BookResponseDto(r.dto);

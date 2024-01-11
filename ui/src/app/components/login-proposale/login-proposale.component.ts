@@ -1,9 +1,9 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CustomerService } from '../../../services/customer.service';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormValidationErrorComponent } from '../../shared/validation/form-validation-error/form-validation-error.component';
 import { CommonModule } from '@angular/common';
 import { LoginFormComponent } from '../../forms/login-form/login-form.component';

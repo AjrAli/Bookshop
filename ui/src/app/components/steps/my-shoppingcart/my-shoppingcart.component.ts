@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { Subscription } from 'rxjs';
@@ -15,16 +15,16 @@ import { ShoppingCartDataService } from '../../../../services/shoppingcart/shopp
   templateUrl: './my-shoppingcart.component.html',
   styleUrl: './my-shoppingcart.component.css'
 })
-export class MyShoppingCartComponent {
+export class MyShoppingCartComponent implements OnDestroy {
   manage = 'shoppingcart';
   rootUrl = environment.apiRootUrl;
   private shoppingCartSubscription: Subscription | undefined;
   shoppingcart: ShoppingCartResponseDto | null = new ShoppingCartResponseDto();
   constructor(private shoppingCartDataService: ShoppingCartDataService,
     private router: Router) { }
+    
   ngOnDestroy(): void {
-    if (this.shoppingCartSubscription)
-      this.shoppingCartSubscription.unsubscribe();
+    this.shoppingCartSubscription?.unsubscribe();
   }
 
   ngOnInit() {

@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { CommonModule } from '@angular/common';
 import { ListCardsComponent } from '../../body/list-cards/list-cards.component';
 import { BookService } from '../../../services/book.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PanelComponent } from '../../body/panel/panel.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-books',
@@ -13,15 +14,22 @@ import { PanelComponent } from '../../body/panel/panel.component';
   templateUrl: './books.component.html',
   styleUrl: './books.component.css'
 })
-export class BooksComponent implements OnInit {
+export class BooksComponent implements OnInit, OnDestroy {
 
   @Input() books: BookResponseDto[] | undefined;
+  private booksSubscription: Subscription | undefined;
+  private routeSubscription: Subscription | undefined;
   constructor(private bookService: BookService,
     private route: ActivatedRoute,
     private router: Router) { }
+    
+  ngOnDestroy(): void {
+    this.routeSubscription?.unsubscribe();
+    this.booksSubscription?.unsubscribe();
+  }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.routeSubscription = this.route.paramMap.subscribe(params => {
       const id = Number.parseInt(params.get('id') ?? '');
       const routeType = this.route.snapshot.data['type'];
 
@@ -41,17 +49,17 @@ export class BooksComponent implements OnInit {
     });
   }
   private getAllBooks(): void {
-    this.bookService.getAll().subscribe({
+    this.booksSubscription = this.bookService.getAll().subscribe({
       next: (response) => this.handleBooksResponse(response)
     });
   }
   private getBooksByAuthorId(id: number): void {
-    this.bookService.getBooksByAuthorId(id).subscribe({
+    this.booksSubscription = this.bookService.getBooksByAuthorId(id).subscribe({
       next: (response) => this.handleBooksResponse(response)
     });
   }
   private getBooksByCategoryId(id: number): void {
-    this.bookService.getBooksByCategoryId(id).subscribe({
+    this.booksSubscription = this.bookService.getBooksByCategoryId(id).subscribe({
       next: (response) => this.handleBooksResponse(response)
     });
   }

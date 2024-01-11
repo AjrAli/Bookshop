@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
@@ -6,12 +6,12 @@ import { PanelComponent } from '../../body/panel/panel.component';
 import { FlyerPanelComponent } from '../../body/flyer-panel/flyer-panel.component';
 import { GalleriaComponent } from '../../body/galleria/galleria.component';
 import { CarouselComponent } from '../../body/carousel/carousel.component';
-import { TableComponent } from '../../body/table/table.component';
 import { ToastService } from '../../../services/toast.service';
 import { BookService } from '../../../services/book.service';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { ErrorResponse } from '../../dto/response/error/error-response';
 import { ListCardsComponent } from '../../body/list-cards/list-cards.component';
+import { Subscription } from 'rxjs';
 
 
 
@@ -19,12 +19,11 @@ import { ListCardsComponent } from '../../body/list-cards/list-cards.component';
   selector: 'app-home',
   standalone: true,
   imports: [ButtonModule, FormsModule,
-    PanelComponent, FlyerPanelComponent, GalleriaComponent, CarouselComponent,
-    TableComponent, CommonModule, ListCardsComponent],
+    PanelComponent, FlyerPanelComponent, GalleriaComponent, CarouselComponent, CommonModule, ListCardsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   images: any[] | undefined;
   books: BookResponseDto[] | undefined = [];
   indexes: number[] = Array.from({ length: 10 }, (_, index) => index + 1);
@@ -43,11 +42,16 @@ export class HomeComponent implements OnInit {
       numVisible: 1
     }
   ];
+  private booksSubscription: Subscription | undefined;
   constructor(private toastService: ToastService,
     private bookService: BookService) { }
 
+  ngOnDestroy(): void {
+    this.booksSubscription?.unsubscribe();
+  }
+
   getBooks() {
-    this.bookService.getAll().subscribe({
+    this.booksSubscription = this.bookService.getAll().subscribe({
       next: (response: any) => {
         if (!response || response.listDto.length === 0) {
           this.books = undefined;

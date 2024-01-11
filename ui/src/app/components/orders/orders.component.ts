@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OrderResponseDto } from '../../dto/order/order-response-dto';
 import { ButtonModule } from 'primeng/button';
 import { OrderService } from '../../../services/order.service';
@@ -8,6 +8,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PageEvent } from '../../body/list-cards/page-event';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-orders',
@@ -16,17 +17,22 @@ import { Router } from '@angular/router';
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
   orders: OrderResponseDto[] | undefined;
   totalRecords: number = 0;
   rows: number = 10; // Number of items per page
   first: number = 0; // Initial page index
-
+  private orderSubscription: Subscription | undefined;
+  private orderUpdateSubscription: Subscription | undefined;
   constructor(private OrderService: OrderService, private orderApiService: OrderApiService, private router: Router) { }
+  ngOnDestroy(): void {
+    this.orderSubscription?.unsubscribe();
+    this.orderUpdateSubscription?.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.orders = [];
-    this.orderApiService.getOrders().subscribe({
+    this.orderSubscription = this.orderApiService.getOrders().subscribe({
       next: (r) => {
         if (r && r.orders?.length > 0) {
           this.orders = r.orders.map((order: OrderResponseDto) => {
@@ -55,7 +61,7 @@ export class OrdersComponent implements OnInit {
   }
   cancelOrder(id: number) {
     if (id > 0) {
-      this.OrderService.cancelOrderFromApi(id).subscribe({
+      this.orderUpdateSubscription = this.OrderService.cancelOrderFromApi(id).subscribe({
         next: (r) => {
           if (r) {
             if (this.orders && this.orders.length > 0) {

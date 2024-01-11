@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,6 +7,7 @@ import { CustomerService } from '../../../../services/customer.service';
 import { FormValidationErrorComponent, PasswordMatchValidator } from '../../../shared/validation/form-validation-error/form-validation-error.component';
 import { EditPasswordDto } from '../../../dto/customer/edit-password-dto';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-password',
@@ -15,14 +16,18 @@ import { Router } from '@angular/router';
   templateUrl: './edit-password.component.html',
   styleUrl: './edit-password.component.css'
 })
-export class EditPasswordComponent implements OnInit {
+export class EditPasswordComponent implements OnInit, OnDestroy {
   editPassword: EditPasswordDto = new EditPasswordDto();
   loginForm!: FormGroup;
-
+  private customerSubscription: Subscription | undefined;
   constructor(private customerService: CustomerService,
     private router: Router,
     private fb: FormBuilder) { }
 
+
+  ngOnDestroy(): void {
+    this.customerSubscription?.unsubscribe();
+  }
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       password: new FormControl("", [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
@@ -46,7 +51,7 @@ export class EditPasswordComponent implements OnInit {
       newPassword: newPassword,
       confirmNewPassword: confirmNewPassword
     });
-    this.customerService.editPassword(this.editPassword).subscribe({
+    this.customerSubscription = this.customerService.editPassword(this.editPassword).subscribe({
       next: (response) => {
         if (response)
           this.router.navigate(['/customer/view-profile']);

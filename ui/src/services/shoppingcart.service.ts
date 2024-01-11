@@ -12,118 +12,163 @@ import { ShoppingCartCommandResponse } from "../app/dto/handler-response/shoppin
 
 @Injectable()
 export class ShoppingCartService {
-    constructor(private shoppingcartApiService: ShoppingCartApiService,
-        private shoppingCartLocalStorageService: ShoppingCartLocalStorageService,
-        private shoppingCartDataService: ShoppingCartDataService,
-        private toastService: ToastService,
-    ) {
-        this.loadShoppingCart();
-    }
-    private loadShoppingCart() {
-        const shoppingCart = this.shoppingCartLocalStorageService.getStoredShoppingCart();
-        if (shoppingCart)
-            this.shoppingCartDataService.setShoppingCart(shoppingCart);
-    }
-    createShoppingCartFromApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
-        return this.shoppingcartApiService.createShoppingCart(shoppingCart).pipe(tap({
-            next: (r) => this.handleShoppingCartResponse(r),
-            error: (e) => this.handleShoppingCartError(e),
-            complete: () => console.info('complete')
-        }), map(response => response.shoppingCart));
-    }
-    updateShoppingCartFromApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
-        return this.shoppingcartApiService.updateShoppingCart(shoppingCart).pipe(tap({
-            next: (r) => this.handleShoppingCartResponse(r),
-            error: (e) => this.handleShoppingCartError(e),
-            complete: () => console.info('complete')
-        }), map(response => response.shoppingCart));
-    }
-    resetShoppingCartFromApi(): Observable<boolean> {
-        return this.shoppingcartApiService.resetShoppingCart().pipe(tap({
-            next: (r) => this.toastService.showSuccess(r.message),
-            error: (e) => this.handleShoppingCartError(e),
-            complete: () => console.info('complete')
-        }), map(response => !!response.success));
-    }
+  constructor(
+    private shoppingcartApiService: ShoppingCartApiService,
+    private shoppingCartLocalStorageService: ShoppingCartLocalStorageService,
+    private shoppingCartDataService: ShoppingCartDataService,
+    private toastService: ToastService,
+  ) {
+    this.loadShoppingCart();
+  }
 
-    private handleShoppingCartResponse(response: ShoppingCartCommandResponse): void {
-        if (response.shoppingCart) {
-            this.shoppingCartDataService.setShoppingCart(response.shoppingCart);
-            this.toastService.showSuccess(response.message);
-        } else {
-            this.toastService.showValidationError(response);
-        }
+  // Load shopping cart from local storage
+  private loadShoppingCart() {
+    const shoppingCart = this.shoppingCartLocalStorageService.getStoredShoppingCart();
+    if (shoppingCart) {
+      this.shoppingCartDataService.setShoppingCart(shoppingCart);
     }
+  }
 
-    private handleShoppingCartError(error: any): void {
-        this.toastService.showError(error.error);
-        this.toastService.showError(error);
+  // Create a new shopping cart on the server
+  createShoppingCartFromApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
+    return this.shoppingcartApiService.createShoppingCart(shoppingCart).pipe(
+      tap({
+        next: (response) => this.handleShoppingCartResponse(response),
+        error: (error) => this.handleShoppingCartError(error),
+        complete: () => console.info('Shopping cart creation complete')
+      }),
+      map(response => response.shoppingCart)
+    );
+  }
+
+  // Update an existing shopping cart on the server
+  updateShoppingCartFromApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
+    return this.shoppingcartApiService.updateShoppingCart(shoppingCart).pipe(
+      tap({
+        next: (response) => this.handleShoppingCartResponse(response),
+        error: (error) => this.handleShoppingCartError(error),
+        complete: () => console.info('Shopping cart update complete')
+      }),
+      map(response => response.shoppingCart)
+    );
+  }
+
+  // Reset the shopping cart on the server
+  resetShoppingCartFromApi(): Observable<boolean> {
+    return this.shoppingcartApiService.resetShoppingCart().pipe(
+      tap({
+        next: (response) => this.toastService.showSuccess(response.message),
+        error: (error) => this.handleShoppingCartError(error),
+        complete: () => console.info('Shopping cart reset complete')
+      }),
+      map(response => !!response.success)
+    );
+  }
+
+  // Handle response from shopping cart command (create, update, reset)
+  private handleShoppingCartResponse(response: ShoppingCartCommandResponse): void {
+    if (response.shoppingCart) {
+      this.shoppingCartDataService.setShoppingCart(response.shoppingCart);
+      this.toastService.showSuccess(response.message);
+    } else {
+      this.toastService.showValidationError(response);
     }
-    updateFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
-        if (shoppingCart) {
-            this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
-            this.shoppingCartDataService.updateShoppingCart(shoppingCart);
-            if (message)
-                this.toastService.showSuccess(message);
+  }
+
+  // Handle shopping cart command error
+  private handleShoppingCartError(error: any): void {
+    this.toastService.showError(error.error);
+    this.toastService.showError(error);
+  }
+
+  // Update local and server shopping cart details
+  updateFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
+    if (shoppingCart) {
+      this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
+      this.shoppingCartDataService.updateShoppingCart(shoppingCart);
+      if (message) {
+        this.toastService.showSuccess(message);
+      }
+    }
+  }
+
+  // Save fully updated shopping cart details locally and on the server
+  private saveFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
+    if (shoppingCart) {
+      this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
+      this.shoppingCartDataService.setShoppingCart(shoppingCart);
+      this.toastService.showSuccess(message ?? `Successfully updated your shopping cart`);
+    }
+  }
+
+  // Reset local shopping cart data
+  resetLocalShoppingCart() {
+    this.shoppingCartDataService.resetShoppingCart();
+    this.shoppingCartLocalStorageService.removeStoredShoppingCart();
+  }
+
+  // Add a new item to the shopping cart
+  addItem(newItem: BookResponseDto) {
+    let shopitem = new ShopItemResponseDto({
+      id: 0,
+      quantity: 1,
+      bookId: newItem.id,
+      price: newItem.price * 1,
+      bookPrice: newItem.price,
+      title: newItem.title,
+      imageUrl: newItem.imageUrl,
+      authorName: newItem.authorName,
+      categoryTitle: newItem.categoryTitle
+    });
+
+    let shoppingCart = this.shoppingCartDataService.getShoppingCart();
+    if (shoppingCart) {
+      const itemToUpdate = shoppingCart.items.find(item => item.bookId === shopitem.bookId);
+      if (itemToUpdate) {
+        const isQuantitySet = itemToUpdate.addQuantityWithLimit(1);
+        if (!isQuantitySet) {
+          this.toastService.showSimpleError(`Limit quantity of 100 reached for ${itemToUpdate.title}`);
+          return;
         }
+        itemToUpdate.price = itemToUpdate.quantity * newItem.price;
+      } else {
+        shoppingCart.items.push(shopitem);
+      }
+    } else {
+      shoppingCart = new ShoppingCartResponseDto({ total: newItem.price, items: [shopitem] });
     }
-    private saveFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
-        if (shoppingCart) {
-            this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
-            this.shoppingCartDataService.setShoppingCart(shoppingCart);
-            this.toastService.showSuccess(message ?? `Successfully updated your ShoppingCart`);
-        }
+    this.saveFullyShoppingCart(shoppingCart, "Item added to shopping cart");
+  }
+
+  // Update the quantity of an item in the shopping cart
+  updateItem(shopitem: ShopItemResponseDto) {
+    let shoppingCart = this.shoppingCartDataService.getShoppingCart();
+    if (shoppingCart) {
+      const itemToUpdate = shoppingCart.items.find(item => item.bookId === shopitem.bookId);
+      if (itemToUpdate) {
+        shopitem.setValidQuantity(shopitem.quantity);
+        itemToUpdate.quantity = shopitem.quantity;
+        itemToUpdate.price = itemToUpdate.quantity * shopitem.bookPrice;
+        this.saveFullyShoppingCart(shoppingCart);
+      } else {
+        this.toastService.showSimpleError(`Book ${shopitem.title} not found in shopping cart`);
+        return;
+      }
     }
-    resetLocalShoppingCart() {
-        this.shoppingCartDataService.resetShoppingCart();
-        this.shoppingCartLocalStorageService.removeStoredShoppingCart();
+  }
+
+  // Remove an item from the shopping cart
+  removeItem(shopitem: ShopItemResponseDto) {
+    const shoppingCart = this.shoppingCartDataService.getShoppingCart();
+    if (!shoppingCart) {
+      return;
     }
-    addItem(newItem: BookResponseDto) {
-        let shopitem = new ShopItemResponseDto({ id: 0, quantity: 1, bookId: newItem.id, price: newItem.price * 1, bookPrice: newItem.price, title: newItem.title, imageUrl: newItem.imageUrl, authorName: newItem.authorName, categoryTitle: newItem.categoryTitle });
-        let shoppingCart = this.shoppingCartDataService.getShoppingCart();
-        if (shoppingCart) {
-            const itemToUpdate = shoppingCart.items.find(item => item.bookId === shopitem.bookId);
-            if (itemToUpdate) {
-                const isQuantitySet = itemToUpdate.addQuantityWithLimit(1);
-                if (!isQuantitySet) {
-                    this.toastService.showSimpleError(`Limit quantity of 100 reached for ${itemToUpdate.title}`);
-                    return;
-                }
-                itemToUpdate.price = itemToUpdate.quantity * newItem.price;
-            } else {
-                shoppingCart.items.push(shopitem);
-            }
-        } else {
-            shoppingCart = new ShoppingCartResponseDto({ total: newItem.price, items: [shopitem] });
-        }
-        this.saveFullyShoppingCart(shoppingCart, "item added to shoppingcart");
+    const itemToDeleteIndex = shoppingCart.items.findIndex(item => item.bookId === shopitem.bookId);
+    if (itemToDeleteIndex === -1) {
+      this.toastService.showSimpleError(`Book ${shopitem.title} not found in shopping cart`);
+      return;
     }
-    updateItem(shopitem: ShopItemResponseDto) {
-        let shoppingCart = this.shoppingCartDataService.getShoppingCart();
-        if (shoppingCart) {
-            const itemToUpdate = shoppingCart.items.find(item => item.bookId === shopitem.bookId);
-            if (itemToUpdate) {
-                shopitem.setValidQuantity(shopitem.quantity);
-                itemToUpdate.quantity = shopitem.quantity;
-                itemToUpdate.price = itemToUpdate.quantity * shopitem.bookPrice;
-                this.saveFullyShoppingCart(shoppingCart);
-            } else {
-                this.toastService.showSimpleError(`Book ${shopitem.title} not found in ShoppingCart`);
-                return;
-            }
-        }
-    }
-    removeItem(shopitem: ShopItemResponseDto) {
-        const shoppingCart = this.shoppingCartDataService.getShoppingCart();
-        if (!shoppingCart) {
-            return;
-        }
-        const itemToDeleteIndex = shoppingCart.items.findIndex(item => item.bookId === shopitem.bookId);
-        if (itemToDeleteIndex === -1) {
-            this.toastService.showSimpleError(`Book ${shopitem.title} not found in ShoppingCart`);
-            return;
-        }
-        shoppingCart.items.splice(itemToDeleteIndex, 1);
-        this.saveFullyShoppingCart(shoppingCart, "item correctly removed");
-    }
+    shoppingCart.items.splice(itemToDeleteIndex, 1);
+    this.saveFullyShoppingCart(shoppingCart, "Item correctly removed");
+  }
 }

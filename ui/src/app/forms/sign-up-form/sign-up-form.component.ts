@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, Validators, FormsModule, AbstractControl, FormBuilder, FormControl } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,6 +7,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { FormValidationErrorComponent, PasswordMatchValidator } from '../../shared/validation/form-validation-error/form-validation-error.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AddressDto, CustomerDto } from '../../dto/customer/customer-dto';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -15,15 +16,21 @@ import { AddressDto, CustomerDto } from '../../dto/customer/customer-dto';
   templateUrl: './sign-up-form.component.html',
   styleUrl: './sign-up-form.component.css'
 })
-export class SignUpFormComponent implements OnInit {
+export class SignUpFormComponent implements OnInit, OnDestroy {
   newCustomer: CustomerDto = new CustomerDto();
   shippingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   billingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   loginForm!: FormGroup;
   @Output() connected = new EventEmitter<boolean>();
-
+  private customerSubscription: Subscription | undefined;
+  private loginSubscription: Subscription | undefined;
   constructor(private customerService: CustomerService,
     private fb: FormBuilder) { }
+
+  ngOnDestroy(): void {
+    this.customerSubscription?.unsubscribe();
+    this.loginSubscription?.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -52,7 +59,7 @@ export class SignUpFormComponent implements OnInit {
   private subscribeToIsSameAddressChanges(): void {
     const billControls = ['billstreet', 'billcity', 'billpostalCode', 'billcountry', 'billstate'];
 
-    this.loginForm?.get('isSameAddress')?.valueChanges.subscribe((value) => {
+    this.loginSubscription = this.loginForm?.get('isSameAddress')?.valueChanges.subscribe((value) => {
       billControls.forEach(controlName => {
         const control = this.loginForm.get(controlName);
         if (control) {
@@ -107,7 +114,7 @@ export class SignUpFormComponent implements OnInit {
         email: email,
         emailConfirmed: true
       });
-      this.customerService.createCustomer(this.newCustomer).subscribe({
+      this.customerSubscription = this.customerService.createCustomer(this.newCustomer).subscribe({
         next: (response) => {
           this.connected.emit(response);
         }

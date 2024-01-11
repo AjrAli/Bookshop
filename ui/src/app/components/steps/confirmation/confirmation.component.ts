@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CustomerResponseDto } from '../../../dto/customer/customer-response-dto';
@@ -14,6 +14,7 @@ import { OrderDto } from '../../../dto/order/order-dto';
 import { OrderService } from '../../../../services/order.service';
 import { CustomerService } from '../../../../services/customer.service';
 import { OrderDetailsComponent } from '../../order-details/order-details.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-confirmation',
@@ -22,7 +23,7 @@ import { OrderDetailsComponent } from '../../order-details/order-details.compone
   templateUrl: './confirmation.component.html',
   styleUrl: './confirmation.component.css'
 })
-export class ConfirmationComponent implements OnInit {
+export class ConfirmationComponent implements OnInit, OnDestroy {
 
   manage = 'show';
   rootUrl = environment.apiRootUrl;
@@ -30,11 +31,16 @@ export class ConfirmationComponent implements OnInit {
   shoppingcartDetails: ShoppingCartDetailsResponseDto | null = null;
   paymentInfo: PaymentInformation | null = null;
   order: OrderResponseDto | null = null;
+  private orderSubscription: Subscription | undefined;
   constructor(private router: Router,
     private customerDataService: CustomerDataService,
     private customerService: CustomerService,
     private shoppingCartDataService: ShoppingCartDataService,
     private orderService: OrderService) { }
+
+  ngOnDestroy(): void {
+    this.orderSubscription?.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.paymentInfo = this.customerDataService.getPaymentInformation();
@@ -55,7 +61,7 @@ export class ConfirmationComponent implements OnInit {
     if (this.customer && this.customer.shoppingCart && this.paymentInfo && this.shoppingcartDetails) {
       const orderDto = new OrderDto(this.paymentInfo);
       if (orderDto.methodOfPayment) {
-        this.orderService.createOrderFromApi(orderDto).subscribe({
+        this.orderSubscription = this.orderService.createOrderFromApi(orderDto).subscribe({
           next: (r) => {
             if (r) {
               this.order = r;

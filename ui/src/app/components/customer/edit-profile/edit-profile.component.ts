@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -10,6 +10,7 @@ import { FormValidationErrorComponent } from '../../../shared/validation/form-va
 import { EditProfileDto } from '../../../dto/customer/edit-profile-dto';
 import { CustomerDataService } from '../../../../services/customer/customer-data.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
@@ -18,19 +19,26 @@ import { Router } from '@angular/router';
   templateUrl: './edit-profile.component.html',
   styleUrl: './edit-profile.component.css'
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, OnDestroy {
   updatedCustomer: EditProfileDto = new EditProfileDto();
   shippingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   billingAddress: AddressDto = new AddressDto(); // Assuming AddressDto is another class
   loginForm!: FormGroup;
-
+  private customerSubscription: Subscription | undefined;
+  private customerDataSubscription: Subscription | undefined;
+  private loginSubscription: Subscription | undefined;
   constructor(private customerService: CustomerService,
     private customerDataService: CustomerDataService,
     private router: Router,
     private fb: FormBuilder) { }
 
+  ngOnDestroy(): void {
+    this.customerDataSubscription?.unsubscribe();
+    this.loginSubscription?.unsubscribe();
+    this.customerSubscription?.unsubscribe();
+  }
   ngOnInit(): void {
-    this.customerDataService.getCustomerObservable().subscribe({
+    this.customerDataSubscription = this.customerDataService.getCustomerObservable().subscribe({
       next: (customer) => {
         const shipArrayAddress = customer?.shippingAddress?.split(", ") ?? [''];
         const billArrayAddress = customer?.billingAddress?.split(", ") ?? [''];
@@ -57,7 +65,7 @@ export class EditProfileComponent implements OnInit {
   private subscribeToIsSameAddressChanges(): void {
     const billControls = ['billstreet', 'billcity', 'billpostalCode', 'billcountry', 'billstate'];
 
-    this.loginForm?.get('isSameAddress')?.valueChanges.subscribe((value) => {
+    this.loginSubscription = this.loginForm?.get('isSameAddress')?.valueChanges.subscribe((value) => {
       billControls.forEach(controlName => {
         const control = this.loginForm.get(controlName);
         if (control) {
@@ -103,7 +111,7 @@ export class EditProfileComponent implements OnInit {
         billingAddressId: 0,
         billingAddress: this.billingAddress
       });
-      this.customerService.editProfile(this.updatedCustomer).subscribe({
+      this.customerSubscription = this.customerService.editProfile(this.updatedCustomer).subscribe({
         next: (response) => {
           if (response)
             this.router.navigate(['/customer/view-profile']);

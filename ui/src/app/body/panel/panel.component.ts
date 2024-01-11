@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { MenuItem } from 'primeng/api';
@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AuthorService } from '../../../services/author.service';
 import { AuthorResponseDto } from '../../dto/author/author-response-dto';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-panel',
   standalone: true,
@@ -13,13 +14,18 @@ import { CommonModule } from '@angular/common';
   templateUrl: './panel.component.html',
   styleUrl: './panel.component.css'
 })
-export class PanelComponent implements OnInit {
+export class PanelComponent implements OnInit, OnDestroy {
   itemsPanelMenu: MenuItem[] | undefined;
   authors: AuthorResponseDto[] | undefined;
+  private authorsSubscription: Subscription | undefined;
   constructor(private router: Router, private authorService: AuthorService) { }
 
+  ngOnDestroy(): void {
+    this.authorsSubscription?.unsubscribe();
+  }
+
   ngOnInit() {
-    this.authorService.getAll().subscribe({
+    this.authorsSubscription = this.authorService.getAll().subscribe({
       next: (r) => {
         if (r && r.listDto) {
           this.authors = r.listDto;
@@ -39,7 +45,6 @@ export class PanelComponent implements OnInit {
               items: items
             }
           ];
-
         }
       }
     });

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
@@ -9,6 +9,7 @@ import { FormValidationErrorComponent } from '../../../shared/validation/form-va
 import { Router } from '@angular/router';
 import { CustomerService } from '../../../../services/customer.service';
 import { ShoppingCartResponseDto } from '../../../dto/shoppingcart/shoppingcart-response-dto';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-authentication',
@@ -17,17 +18,21 @@ import { ShoppingCartResponseDto } from '../../../dto/shoppingcart/shoppingcart-
   templateUrl: './authentication.component.html',
   styleUrl: './authentication.component.css'
 })
-export class AuthenticationComponent implements OnInit {
+export class AuthenticationComponent implements OnInit, OnDestroy {
   signUp = false
   connected = false;
+  private customerSubscription: Subscription | undefined;
   constructor(private customerService: CustomerService,
     private router: Router) { }
+  ngOnDestroy(): void {
+    this.customerSubscription?.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.signUp = false;
     this.connected = this.customerService.isLoggedIn();
     if (this.connected) {
-      this.customerService.updateCustomerShoppingCart()?.subscribe({
+      this.customerSubscription = this.customerService.updateCustomerShoppingCart()?.subscribe({
         next: (r) => {
           if (r) {
             this.router.navigate(['/steps/payment']);
@@ -38,7 +43,7 @@ export class AuthenticationComponent implements OnInit {
   }
   navigateToNext(connected: any) {
     if (connected) {
-      this.customerService.updateCustomerShoppingCart()?.subscribe({
+      this.customerSubscription = this.customerService.updateCustomerShoppingCart()?.subscribe({
         next: (r) => {
           if (r) {
             this.router.navigate(['/steps/payment']);

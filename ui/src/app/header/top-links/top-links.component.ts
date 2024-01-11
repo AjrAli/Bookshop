@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerDataService } from '../../../services/customer/customer-data.service';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { MenuItem } from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-top-links',
@@ -14,15 +15,20 @@ import { MenuItem } from 'primeng/api';
   templateUrl: './top-links.component.html',
   styleUrl: './top-links.component.css'
 })
-export class TopLinksComponent implements OnInit {
+export class TopLinksComponent implements OnInit, OnDestroy {
   customerName: string | undefined;
   items: MenuItem[] | undefined;
   connected: boolean = false;
+  private customerSubscription: Subscription | undefined;
   constructor(private customerService: CustomerService,
     private customerDataService: CustomerDataService,
     private router: Router) { }
+
+  ngOnDestroy(): void {
+    this.customerSubscription?.unsubscribe();
+  }
   ngOnInit() {
-    this.customerDataService.getCustomerObservable().subscribe({
+    this.customerSubscription = this.customerDataService.getCustomerObservable().subscribe({
       next: (customer) => {
         if (customer) {
           this.connected = true;
