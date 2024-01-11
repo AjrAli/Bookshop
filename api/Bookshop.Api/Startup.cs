@@ -42,7 +42,8 @@ namespace Bookshop.Api
             {
                 options.AddPolicy("BookshopUI", builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                    var allowedOrigins = Configuration.GetSection("AllowedOrigins").Get<string>();
+                    builder.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod();
                 });
             });
         }
