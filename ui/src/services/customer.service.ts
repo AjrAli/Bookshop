@@ -95,9 +95,7 @@ export class CustomerService {
     if (response.token) {
       this.tokenService.setToken(response.token);
       if (response.customer) {
-        this.setCustomerShoppingCart(response.customer);
-        this.customerDataService.setCustomer(response.customer);
-        this.customerLocalStorageService.setCustomerInfo(response.customer);
+        this.setAllCustomerData(response.customer);
       }
       this.toastService.showSuccess(response.message);
     } else {
@@ -110,9 +108,7 @@ export class CustomerService {
     if (response.token) {
       this.tokenService.setToken(response.token);
       if (response.customer) {
-        this.setCustomerShoppingCart(response.customer);
-        this.customerDataService.setCustomer(response.customer);
-        this.customerLocalStorageService.setCustomerInfo(response.customer);
+        this.setAllCustomerData(response.customer);
       }
       this.toastService.showSuccess(response.message);
     } else {
@@ -171,9 +167,7 @@ export class CustomerService {
             const customer = this.customerDataService.getCustomer();
             if (customer && shoppingCart) {
               customer.shoppingCart = shoppingCart;
-              this.setCustomerShoppingCart(customer);
-              this.customerDataService.setCustomer(customer);
-              this.customerLocalStorageService.setCustomerInfo(customer);
+              this.setAllCustomerData(customer);
               return of(true);
             }
           }
@@ -224,11 +218,14 @@ export class CustomerService {
     const customer = this.customerDataService.getCustomer();
     if (customer) {
       customer.shoppingCart = new ShoppingCartResponseDto();
-      this.customerDataService.setCustomer(customer);
-      this.customerLocalStorageService.setCustomerInfo(customer);
+      this.setAllCustomerData(customer);
     }
   }
-
+  setAllCustomerData(customer: CustomerResponseDto) {
+    this.setCustomerShoppingCart(customer);
+    this.customerDataService.setCustomer(customer);
+    this.customerLocalStorageService.setCustomerInfo(customer);
+  }
   // Logout the user
   logout() {
     this.syncShoppingCartWithCustomer()?.subscribe({
