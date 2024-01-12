@@ -42,7 +42,7 @@ namespace Bookshop.Api
             {
                 options.AddPolicy("BookshopUI", builder =>
                 {
-                    var allowedOrigins = Configuration.GetSection("AllowedOrigins").Get<string>();
+                    var allowedOrigins = Configuration.GetSection("AllowedOrigins").Get<string[]>();
                     builder.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod();
                 });
             });
