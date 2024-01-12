@@ -23,6 +23,7 @@ import { SearchStateService } from '../services/search/search-state.service';
 import { AuthorService } from '../services/author.service';
 import { CategoryService } from '../services/category.service';
 import { IdleTimeoutService } from '../services/idle-timeout.service';
+import { ScrollToTopService } from '../services/scroll-to-top.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -45,6 +46,7 @@ export const appConfig: ApplicationConfig = {
     AuthorService,
     CategoryService,
     IdleTimeoutService,
+    ScrollToTopService,
     ToastService, BookService, importProvidersFrom(
       ToastrModule.forRoot()
     )

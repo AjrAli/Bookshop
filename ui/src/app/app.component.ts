@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { ScrollToTopService } from '../services/scroll-to-top.service';
 
 
 @Component({
@@ -14,5 +15,5 @@ import { FooterComponent } from './footer/footer.component';
 })
 
 export class AppComponent {
-
+    constructor(private scrollToTopService: ScrollToTopService) { }
 }

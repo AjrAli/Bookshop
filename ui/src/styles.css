@@ -81,6 +81,8 @@ body {
 #menuAccount .p-menuitem-content .p-menuitem-link .p-menuitem-text,
 #menuAccount .p-menuitem-icon {
     color: black;
+    font-size: 0.8em;
+    padding: 0;
 }
 
 @media screen and (max-width: 960px) {
