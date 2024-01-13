@@ -22,7 +22,7 @@ export class BooksComponent implements OnInit, OnDestroy {
   constructor(private bookService: BookService,
     private route: ActivatedRoute,
     private router: Router) { }
-    
+
   ngOnDestroy(): void {
     this.routeSubscription?.unsubscribe();
     this.booksSubscription?.unsubscribe();
@@ -30,6 +30,7 @@ export class BooksComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routeSubscription = this.route.paramMap.subscribe(params => {
+      this.books = [];
       const id = Number.parseInt(params.get('id') ?? '');
       const routeType = this.route.snapshot.data['type'];
 
@@ -41,6 +42,7 @@ export class BooksComponent implements OnInit, OnDestroy {
             this.getBooksByCategoryId(id);
           }
         } else {
+          this.resetBooks();
           this.router.navigate(['/books']);
         }
       } else {
@@ -50,17 +52,20 @@ export class BooksComponent implements OnInit, OnDestroy {
   }
   private getAllBooks(): void {
     this.booksSubscription = this.bookService.getAll().subscribe({
-      next: (response) => this.handleBooksResponse(response)
+      next: (response) => this.handleBooksResponse(response),
+      error: (error) => this.resetBooks()
     });
   }
   private getBooksByAuthorId(id: number): void {
     this.booksSubscription = this.bookService.getBooksByAuthorId(id).subscribe({
-      next: (response) => this.handleBooksResponse(response)
+      next: (response) => this.handleBooksResponse(response),
+      error: (error) => this.resetBooks()
     });
   }
   private getBooksByCategoryId(id: number): void {
     this.booksSubscription = this.bookService.getBooksByCategoryId(id).subscribe({
-      next: (response) => this.handleBooksResponse(response)
+      next: (response) => this.handleBooksResponse(response),
+      error: (error) => this.resetBooks()
     });
   }
   private handleBooksResponse(response: any): void {
@@ -68,6 +73,11 @@ export class BooksComponent implements OnInit, OnDestroy {
       this.books = response.listDto.map((book: BookResponseDto) => {
         return new BookResponseDto(book);
       })
+    } else {
+      this.books = undefined;
     }
+  }
+  private resetBooks() {
+    this.books = undefined;
   }
 }

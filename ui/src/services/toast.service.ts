@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { ErrorResponse } from '../app/dto/response/error/error-response';
 import { CommandResponse } from '../app/dto/response/command-response';
+import { MessageService } from 'primeng/api';
 
 @Injectable()
 export class ToastService {
-  constructor(private toastr: ToastrService) { }
+  constructor(private messageService: MessageService) { }
 
   showSuccess(message: string): void {
-    this.showNotification('success', message, 'Success', 3000);
+    this.showNotification('success', message, 'Success');
   }
 
   showValidationError(commandResponse?: Partial<CommandResponse>): void {
@@ -16,7 +16,7 @@ export class ToastService {
     if (errorMessageArray)
       errorMessageArray.forEach((message) => {
         if (message) {
-          this.showNotification('error', message, 'Error', 5000);
+          this.showNotification('error', message, 'Error');
         }
       });
   }
@@ -24,22 +24,18 @@ export class ToastService {
     const errorMessage: string = errorResponse?.message;
 
     if (errorMessage) {
-      this.showNotification('error', errorMessage, 'Error', 5000);
+      this.showNotification('error', errorMessage, 'Error');
     }
   }
   showSimpleError(message: string): void {
-    this.showNotification('error', message, 'Error', 5000);
+    this.showNotification('error', message, 'Error');
   }
-  private showNotification(type: 'success' | 'error', message: string, title: string, duration: number): void {
-    const options = {
-      positionClass: 'toast-bottom-center',
-      timeOut: duration
-    };
-
-    if (type === 'success') {
-      this.toastr.success(message, title, options);
-    } else {
-      this.toastr.error(message, title, options);
-    }
+  private showNotification(type: 'success' | 'error', message: string, title: string): void {
+    this.messageService.add({
+      key: 'bc',
+      severity: type,
+      summary: title,
+      detail: message,
+    });
   }
 }

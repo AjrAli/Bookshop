@@ -6,7 +6,6 @@ import { JwtInterceptor } from '../services/jwt.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ToastService } from '../services/toast.service';
 import { BookService } from '../services/book.service';
-import { ToastrModule } from 'ngx-toastr';
 import { CustomerService } from '../services/customer.service';
 import { ShoppingCartService } from '../services/shoppingcart.service';
 import { ShoppingCartApiService } from '../services/shoppingcart/shoppingcart-api.service';
@@ -24,6 +23,7 @@ import { AuthorService } from '../services/author.service';
 import { CategoryService } from '../services/category.service';
 import { IdleTimeoutService } from '../services/idle-timeout.service';
 import { ScrollToTopService } from '../services/scroll-to-top.service';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -47,8 +47,7 @@ export const appConfig: ApplicationConfig = {
     CategoryService,
     IdleTimeoutService,
     ScrollToTopService,
-    ToastService, BookService, importProvidersFrom(
-      ToastrModule.forRoot()
-    )
+    MessageService,
+    ToastService, BookService
   ]
 };

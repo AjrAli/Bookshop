@@ -1,3 +1,11 @@
 <app-top-links></app-top-links>
 <app-top-actions></app-top-actions>
 <app-menu></app-menu>
+<p-dialog styleClass="text-center" [(visible)]="visible" [modal]="true" [draggable]="false" [resizable]="false">
+    <h2>Welcome to my Bookshop Project!</h2>
+    <p class="mt-5">
+        This project is just a demo of an e-shop (Bookshop) using .NET 6 & Angular 17.<br>
+    </p>
+    <p-button styleClass="mt-5" (click)="redirectToGithub()" [rounded]="true">Click for more details!</p-button>
+</p-dialog>
+<p-toast position="bottom-center" key="bc"></p-toast>
