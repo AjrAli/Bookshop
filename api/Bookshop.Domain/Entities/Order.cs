@@ -58,8 +58,8 @@ namespace Bookshop.Domain.Entities
         }
 
         // Relationships
-        public long? CustomerId { get; set; }
-        public Customer? Customer { get; set; }
+        public long CustomerId { get; set; }
+        public Customer Customer { get; set; }
         public ICollection<LineItem> LineItems { get; set; } = new List<LineItem>();
     }
 }

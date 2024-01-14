@@ -47,6 +47,7 @@ namespace Bookshop.Domain.Entities
             Category = category;
             ImageUrl = imageUrl;
         }
+
         public enum Languages
         {
             English,
@@ -57,9 +58,10 @@ namespace Bookshop.Domain.Entities
         }
 
         // Relationships
-        public long? AuthorId { get; set; }
-        public Author? Author { get; set; }
+        public long AuthorId { get; set; }
+        public Author Author { get; set; }
         public long CategoryId { get; set; }
-        public Category? Category { get; set; }
+        public Category Category { get; set; }
+        public ICollection<Comment> Comments { get; set; }
     }
 }

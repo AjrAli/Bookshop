@@ -36,11 +36,11 @@ namespace Bookshop.Domain.Entities
             }
         }
         // Relationships
-        public long? ShippingAddressId { get; set; }
-        public Address? ShippingAddress { get; set; }
-        public long? BillingAddressId { get; set; }
-        public Address? BillingAddress { get; set; }
-        public string? IdentityUserDataId { get; set; }
+        public long ShippingAddressId { get; set; }
+        public Address ShippingAddress { get; set; }
+        public long BillingAddressId { get; set; }
+        public Address BillingAddress { get; set; }
+        public string IdentityUserDataId { get; set; }
         public IdentityUserData IdentityData { get; set; } = new IdentityUserData();
         public long? ShoppingCartId { get; set; }
         public ShoppingCart? ShoppingCart { get; set; }

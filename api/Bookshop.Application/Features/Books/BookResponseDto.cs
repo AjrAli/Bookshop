@@ -17,5 +17,6 @@
         public string ImageUrl { get; set; }
         public string Language { get; set; }
         public string PublishDate { get; set; }
+        public IList<CommentResponseDto>? Comments { get; set; }
     }
 }

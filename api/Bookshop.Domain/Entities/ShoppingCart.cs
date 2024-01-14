@@ -82,8 +82,8 @@ namespace Bookshop.Domain.Entities
             return LineItems?.Sum(x => x.Quantity) ?? 0;
         }
         // Relationships
-        public long? CustomerId { get; set; }
-        public Customer? Customer { get; set; }
+        public long CustomerId { get; set; }
+        public Customer Customer { get; set; }
         public ICollection<LineItem>? LineItems { get; set; }
     }
 }

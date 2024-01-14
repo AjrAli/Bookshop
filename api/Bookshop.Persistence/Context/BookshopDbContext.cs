@@ -28,6 +28,7 @@ namespace Bookshop.Persistence.Context
         public DbSet<Customer> Customers => Set<Customer>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<ShoppingCart> ShoppingCarts => Set<ShoppingCart>();
+        public DbSet<Comment> Comments => Set<Comment>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -47,6 +48,7 @@ namespace Bookshop.Persistence.Context
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new ShoppingCartConfiguration());
             modelBuilder.ApplyConfiguration(new LocationPricingConfiguration());
+            modelBuilder.ApplyConfiguration(new CommentConfiguration());
         }
 
         public override int SaveChanges()

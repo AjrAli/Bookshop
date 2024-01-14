@@ -24,6 +24,10 @@ namespace Bookshop.Persistence.Configurations
             builder.Property(e => e.Language).IsRequired().HasConversion<string>();
             builder.Property(e => e.PublishDate).IsRequired().HasColumnType("datetime2");
 
+            // Relationships
+            builder.HasMany(e => e.Comments).WithOne(e => e.Book)
+                   .HasForeignKey(e => e.BookId)
+                   .OnDelete(DeleteBehavior.Cascade);
             // Add check constraint using raw SQL
             //builder.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 1000");
         }
