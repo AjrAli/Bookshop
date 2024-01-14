@@ -5,7 +5,7 @@
                 <i class="pi pi-book text-teal-500 fst-italic " style="font-size: 3.5rem"></i>
                 <h1 class="text-teal-500 opacity-75 fst-italic mt-0" style="font-size: 2.2rem;">The Bookshop</h1>
             </div>
-            <div class="col-md-5 justify-content-around">
+            <div id="targetSearch" class="col-md-5 justify-content-around">
                 <form [formGroup]="searchForm" (ngSubmit)="submitSearch()">
                     <p-inputGroup>
                         <input type="text" formControlName="searchField" (ngModelChange)="submitSearch($event)"
