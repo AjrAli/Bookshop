@@ -24,7 +24,7 @@ namespace Bookshop.Api.Controllers.Commands
         }
 
         [HttpPost("add-comment-book")]
-        public async Task<IActionResult> AddCommentToBook([FromBody] CommentRequestDto commentDto)
+        public async Task<IActionResult> AddComment([FromBody] CommentRequestDto commentDto)
         {
             commentDto.UserId = _loggedInUserService?.GetUserId();
             var dataCommandReponse = await _mediator.Send(new AddComment
@@ -34,7 +34,7 @@ namespace Bookshop.Api.Controllers.Commands
             return Ok(dataCommandReponse);
         }
         [HttpPost("delete-comment-book")]
-        public async Task<IActionResult> CancelOrder([FromBody] long id)
+        public async Task<IActionResult> DeleteComment([FromBody] long id)
         {
             var dataCommandReponse = await _mediator.Send(new DeleteComment
             {
@@ -45,7 +45,7 @@ namespace Bookshop.Api.Controllers.Commands
             return Ok(dataCommandReponse);
         }
         [HttpPost("update-comment-book")]
-        public async Task<IActionResult> UpdateOrder([FromBody] CommentRequestDto commentDto)
+        public async Task<IActionResult> UpdateComment([FromBody] CommentRequestDto commentDto)
         {
             commentDto.UserId = _loggedInUserService?.GetUserId();
             var dataCommandReponse = await _mediator.Send(new UpdateComment

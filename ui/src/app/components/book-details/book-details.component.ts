@@ -11,11 +11,13 @@ import { ButtonModule } from 'primeng/button';
 import { ShoppingCartService } from '../../../services/shoppingcart.service';
 import { ImageModule } from 'primeng/image';
 import { Subscription } from 'rxjs';
+import { RatingModule } from 'primeng/rating';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-book-details',
   standalone: true,
-  imports: [CommonModule, DividerModule, ButtonModule, ImageModule],
+  imports: [CommonModule, DividerModule, ButtonModule, ImageModule, RatingModule, FormsModule],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css'
 })

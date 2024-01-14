@@ -1,3 +1,5 @@
+import { CommentResponseDto } from "./comment/comment-response-dto";
+
 export class BookResponseDto {
     id: number = 0;
     title: string = '';
@@ -14,6 +16,7 @@ export class BookResponseDto {
     authorName: string = '';
     authorAbout: string = '';
     categoryTitle: string = '';
+    comments: CommentResponseDto[];
 
     constructor(data?: Partial<BookResponseDto>) {
         // Initialize properties with default values if not provided
@@ -32,6 +35,7 @@ export class BookResponseDto {
         this.authorName = data?.authorName ?? this.authorName;
         this.authorAbout = data?.authorAbout ?? this.authorAbout;
         this.categoryTitle = data?.categoryTitle ?? this.categoryTitle;
+        this.comments = data?.comments?.map(comment => new CommentResponseDto(comment)) ?? [];
     }
     get status(): string {
         if (this.quantity > 50)
