@@ -10,6 +10,7 @@ import { ToastService } from '../../../services/toast.service';
 import { CommentResponseDto } from '../../dto/book/comment/comment-response-dto';
 import { CustomerDataService } from '../../../services/customer/customer-data.service';
 import { CommentFormComponent } from '../../forms/login-form/comment-form/comment-form.component';
+import { CustomerResponseDto } from '../../dto/customer/customer-response-dto';
 
 @Component({
   selector: 'app-comment',
@@ -22,10 +23,12 @@ export class CommentComponent implements OnInit, OnDestroy {
   showComments = 5;
   @Input() comments: CommentResponseDto[] | undefined;
   @Input() bookId: number | undefined;
-  connected: boolean | null = null;
+  showForm: boolean | null = null;
+  customer: CustomerResponseDto | null = null;
   private customerSubscription: Subscription | undefined;
   private scrollSubject = new Subject<Event>();
   private commentSubscription: Subscription | undefined;
+  private commentApiSubscription: Subscription | undefined;
   private urlSubscription: Subscription | undefined;
 
   constructor(private router: Router,
@@ -37,15 +40,17 @@ export class CommentComponent implements OnInit, OnDestroy {
     this.commentSubscription?.unsubscribe();
     this.urlSubscription?.unsubscribe();
     this.customerSubscription?.unsubscribe();
+    this.commentApiSubscription?.unsubscribe();
   }
   ngOnInit(): void {
     this.customerSubscription = this.customerDataService.getCustomerObservable().subscribe({
       next: (customer) => {
         if (customer) {
+          this.customer = customer;
           const commentWithSameUser = this.comments?.find(x => x.userName === customer.userName);
-          this.connected = true && !commentWithSameUser;
+          this.showForm = true && !commentWithSameUser;
         } else {
-          this.connected = null;
+          this.showForm = null;
         }
       }
     });
@@ -72,7 +77,20 @@ export class CommentComponent implements OnInit, OnDestroy {
   getCommentCreated(comment: any) {
     if (comment) {
       this.comments?.push(comment);
-      this.connected = false;
+      this.showForm = false;
+    }
+  }
+  removeComment(id: number) {
+    if (id) {
+      this.bookService.deleteComment(id).subscribe({
+        next: (response) => {
+          if (response && this.comments && this.comments.length > 0) {
+            const commentIndexToDelete = this.comments.findIndex(x => x.id === id);
+            this.comments.splice(commentIndexToDelete, 1)
+            this.showForm = true;
+          }
+        }
+      });
     }
   }
   @HostListener('window:scroll', ['$event'])

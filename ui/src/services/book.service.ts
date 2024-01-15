@@ -37,7 +37,7 @@ export class BookService extends CommonApiService {
         }), map(response => response.comment));
     }
     deleteComment(id: number): Observable<boolean> {
-        return this.http.post<CommentCommandResponse>(`${this.apiUrl}/add-comment-book`, id).pipe(tap({
+        return this.http.post<CommentCommandResponse>(`${this.apiUrl}/delete-comment-book`, id).pipe(tap({
             next: (r) => this.toastService.showSuccess(r.message),
             error: (e) => this.handleCommentError(e),
             complete: () => console.info('complete')

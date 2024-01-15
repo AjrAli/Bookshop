@@ -6,10 +6,10 @@
     </div>
     <div class="row mt-5 mb-4">
         <div class="col-xxl-12">
-            <h4 class="text-red-500" *ngIf="connected === false"> You already posted a comment for this book!</h4>
-            <p-button *ngIf="connected === null" [rounded]="true" (click)="navigateToLogin()"
+            <h4 class="text-red-500" *ngIf="showForm === false"> You already posted a comment for this book!</h4>
+            <p-button *ngIf="showForm === null" [rounded]="true" (click)="navigateToLogin()"
                 styleClass="justify-content-center">Get connected for adding a comment!</p-button>
-            <app-comment-form (newCommentCreated)="getCommentCreated($event)" *ngIf="connected"
+            <app-comment-form (newCommentCreated)="getCommentCreated($event)" *ngIf="showForm"
                 [bookId]="bookId"></app-comment-form>
         </div>
     </div>
@@ -41,6 +41,12 @@
                         </div>
                         <div class="pb-4 pt-4 text-sm">
                             <span class="">{{comment.content}}</span>
+                        </div>
+                        <div class="pb-4 pt-4 text-sm">
+                            <p-button *ngIf="customer?.userName === comment.userName"
+                                (click)="removeComment(comment.id)" [rounded]="true" severity="danger"
+                                styleClass="justify-content-center">Delete my
+                                comment</p-button>
                         </div>
                     </div>
                 </div>
