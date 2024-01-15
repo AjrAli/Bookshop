@@ -3,6 +3,7 @@ using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
@@ -35,7 +36,8 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
         }
         private async Task<Comment> EditCommentFromDto(CommentRequestDto commentDto)
         {
-            var commentExisting = await _dbContext.Comments.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == commentDto.Id);
+            var commentExisting = await _dbContext.Comments.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Customer.IdentityUserDataId == commentDto.UserId &&
+                                                                                                              x.Id == commentDto.Id);
             commentExisting.Title = commentDto.Title;
             commentExisting.Content = commentDto.Content;
             commentExisting.Rating = commentDto.Rating;
@@ -52,7 +54,8 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
 
         public async Task ValidateRequest(UpdateComment request)
         {
-            if (!await _dbContext.Comments.AnyAsync(x => x.Id == request.Comment.Id))
+            if (!await _dbContext.Comments.Include(x => x.Customer).AnyAsync(x => x.Customer.IdentityUserDataId == request.Comment.UserId &&
+                                                                                  x.Id == request.Comment.Id))
                 throw new BadRequestException($"Comment: {request.Comment.Id} not found in the database.");
         }
     }

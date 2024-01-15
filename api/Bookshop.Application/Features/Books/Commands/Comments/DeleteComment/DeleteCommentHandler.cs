@@ -20,7 +20,9 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.DeleteComment
         {
             // Validate the request
             await ValidateRequest(request);
-            var commentToDelete = await _dbContext.Comments.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var commentToDelete = await _dbContext.Comments.Include(x => x.Customer)
+                                                           .FirstOrDefaultAsync(x => x.Customer.IdentityUserDataId == request.UserId &&
+                                                                                     x.Id == request.Id, cancellationToken);
             if (commentToDelete == null)
             {
                 throw new NotFoundException($"{nameof(Comment)} {request.Id} is not found for current user");
