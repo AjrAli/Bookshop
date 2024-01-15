@@ -1,0 +1,22 @@
+<form [formGroup]="commentForm" (submit)="onSubmit()">
+    <div class="row mb-3">
+        <label class="mb-2" for="title">Title</label>
+        <input pInputText type="text" formControlName="title" maxlength="100" required />
+        <app-form-validation-error [control]="commentForm.get('title')"></app-form-validation-error>
+    </div>
+    <div class="row mb-3">
+        <label class="mb-2" for="rating">Rating</label>
+        <p-rating [cancel]="false" formControlName="rating"></p-rating>
+        <app-form-validation-error [control]="commentForm.get('rating')"></app-form-validation-error>
+    </div>
+    <div class="row mb-3">
+        <label class="mb-2" for="content">Content</label>
+        <textarea rows="5" cols="30" pInputTextarea [autoResize]="true" maxlength="1000" formControlName="content"
+            required></textarea>
+        <app-form-validation-error [control]="commentForm.get('content')"></app-form-validation-error>
+    </div>
+    <div class="row mb-3 justify-content-center">
+        <p-button [rounded]="true" styleClass="mt-2 justify-content-center w-100" type="submit"
+            [disabled]="!commentForm.valid">Add a comment</p-button>
+    </div>
+</form>

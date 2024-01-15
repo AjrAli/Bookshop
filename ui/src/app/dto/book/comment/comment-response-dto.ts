@@ -5,6 +5,7 @@ export class CommentResponseDto {
     rating: number = 1;
     dateComment: string = '';
     customerName: string = '';
+    userName: string = '';
 
 
     constructor(data?: Partial<CommentResponseDto>) {
@@ -15,5 +16,6 @@ export class CommentResponseDto {
         this.rating = data?.rating ?? this.rating;
         this.dateComment = data?.dateComment ?? this.dateComment;
         this.customerName = data?.customerName ?? this.customerName;
+        this.userName = data?.userName ?? this.userName;
     }
 }

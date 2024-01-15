@@ -25,7 +25,8 @@ namespace Bookshop.Application.Features.Common.Queries.Books
             query = query.Include(x => x.Author)
                          .Include(x => x.Category)
                          .Include(x => x.Comments)
-                         .ThenInclude(x => x.Customer);
+                            .ThenInclude(x => x.Customer)
+                                .ThenInclude(x => x.IdentityData);
             var entity = await query.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             if (entity == null)
             {

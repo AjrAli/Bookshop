@@ -22,7 +22,7 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.AddComment
         {
             // Validate the request
             await ValidateRequest(request);
-            var customerRetrieved = await _dbContext.Customers.FirstOrDefaultAsync(x => x.IdentityUserDataId == request.Comment.UserId);
+            var customerRetrieved = await _dbContext.Customers.Include(x => x.IdentityData).FirstOrDefaultAsync(x => x.IdentityUserDataId == request.Comment.UserId);
             var bookRetrieved = await _dbContext.Books.Include(x => x.Comments).FirstOrDefaultAsync(x => x.Id == request.Comment.BookId);
             var newComment = CreateNewCommentFromDto(request.Comment, customerRetrieved, bookRetrieved);
             await StoreCommentInDatabase(newComment, bookRetrieved, cancellationToken);

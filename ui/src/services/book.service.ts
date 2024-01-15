@@ -23,21 +23,21 @@ export class BookService extends CommonApiService {
         return this.http.get<GetAllResponse>(`${this.apiUrl}/category/${categoryId}`);
     }
     addComment(comment: CommentDto): Observable<CommentResponseDto> {
-        return this.http.post<CommentCommandResponse>(`${this.apiUrl}/add-comment-book`, { comment }).pipe(tap({
+        return this.http.post<CommentCommandResponse>(`${this.apiUrl}/add-comment-book`, comment).pipe(tap({
             next: (r) => this.handleCommentResponse(r),
             error: (e) => this.handleCommentError(e),
             complete: () => console.info('complete')
         }), map(response => response.comment));
     }
     updateComment(comment: CommentDto): Observable<CommentResponseDto> {
-        return this.http.post<CommentCommandResponse>(`${this.apiUrl}/update-comment-book`, { comment }).pipe(tap({
+        return this.http.post<CommentCommandResponse>(`${this.apiUrl}/update-comment-book`, comment).pipe(tap({
             next: (r) => this.handleCommentResponse(r),
             error: (e) => this.handleCommentError(e),
             complete: () => console.info('complete')
         }), map(response => response.comment));
     }
     deleteComment(id: number): Observable<boolean> {
-        return this.http.post<CommentCommandResponse>(`${this.apiUrl}/add-comment-book`, { id }).pipe(tap({
+        return this.http.post<CommentCommandResponse>(`${this.apiUrl}/add-comment-book`, id).pipe(tap({
             next: (r) => this.toastService.showSuccess(r.message),
             error: (e) => this.handleCommentError(e),
             complete: () => console.info('complete')

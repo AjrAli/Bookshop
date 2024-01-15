@@ -13,11 +13,12 @@ import { ImageModule } from 'primeng/image';
 import { Subscription } from 'rxjs';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
+import { CommentComponent } from '../comment/comment.component';
 
 @Component({
   selector: 'app-book-details',
   standalone: true,
-  imports: [CommonModule, DividerModule, ButtonModule, ImageModule, RatingModule, FormsModule],
+  imports: [CommonModule, DividerModule, ButtonModule, ImageModule, CommentComponent],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css'
 })

@@ -11,6 +11,7 @@ namespace Bookshop.Application.Profiles.Books
             //Comment profile
             CreateMap<Comment, CommentResponseDto>()
                 .ForPath(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FirstName))
+                .ForPath(dest => dest.UserName, opt => opt.MapFrom(src => src.Customer.IdentityData.UserName))
                 .ForMember(dest => dest.DateComment, opt => opt.MapFrom(src => src.DateComment.ToShortDateString()));
             // Book profile
             CreateMap<Book, BookResponseDto>()

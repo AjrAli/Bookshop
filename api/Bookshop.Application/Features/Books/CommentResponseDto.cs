@@ -8,5 +8,6 @@
         public int Rating { get; set; }
         public string? DateComment { get; set; }
         public string? CustomerName { get; set; }
+        public string? UserName { get; set; }
     }
 }

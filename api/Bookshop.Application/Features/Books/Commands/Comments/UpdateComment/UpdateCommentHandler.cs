@@ -36,7 +36,7 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
         }
         private async Task<Comment> EditCommentFromDto(CommentRequestDto commentDto)
         {
-            var commentExisting = await _dbContext.Comments.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Customer.IdentityUserDataId == commentDto.UserId &&
+            var commentExisting = await _dbContext.Comments.Include(x => x.Customer).ThenInclude(x => x.IdentityData).FirstOrDefaultAsync(x => x.Customer.IdentityUserDataId == commentDto.UserId &&
                                                                                                               x.Id == commentDto.Id);
             commentExisting.Title = commentDto.Title;
             commentExisting.Content = commentDto.Content;
