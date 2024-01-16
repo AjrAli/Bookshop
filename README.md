@@ -21,6 +21,12 @@ Book Queries:
     Find books by author: GET /api/book/author/{id}
     Filter books by category: GET /api/book/category/{id}
 
+Book Commands:
+
+    Create a new comment for specific book with bookId: POST /api/book/add-comment-book
+    Delete a comment: POST /api/book/delete-comment-book
+    Update a comment: POST /api/book/update-comment-book
+
 Category Queries:
 
     Retrieve category details by ID: GET /api/category/{id}
