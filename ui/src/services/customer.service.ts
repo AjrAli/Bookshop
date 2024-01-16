@@ -35,13 +35,16 @@ export class CustomerService {
 
   // Load customer information from local storage
   private loadCustomer() {
+    const token = this.tokenService.getToken();
     const customer = this.customerLocalStorageService.getCustomerInfo();
-    if (customer) {
+    if (!token || this.tokenService.isTokenExpired(token) || !customer) {
+      this.resetFullyCustomer();
+    } else {
+      this.userInfo = this.tokenService.decodeToken(token);
       this.customerDataService.setCustomer(customer);
       this.setCustomerShoppingCart(customer);
     }
   }
-
   // Authenticate user with provided credentials
   authenticate(username: string, password: string): Observable<boolean> {
     return this.customerApiService.authenticate(username, password).pipe(
@@ -92,12 +95,8 @@ export class CustomerService {
 
   // Handle response from customer command (create, edit profile, edit password)
   private handleCustomerCommandResponse(response: CustomerCommandResponse): void {
-    if (response.token) {
-      this.tokenService.setToken(response.token);
-      if (response.customer) {
-        this.setAllCustomerData(response.customer);
-      }
-      this.toastService.showSuccess(response.message);
+    if (response.token && response.customer) {
+      this.setDataReceivedFromApi(response.customer, response.token, response.message);
     } else {
       this.toastService.showValidationError(response);
     }
@@ -105,15 +104,17 @@ export class CustomerService {
 
   // Handle authentication response
   private handleAuthenticationResponse(response: AuthenticateResponse): void {
-    if (response.token) {
-      this.tokenService.setToken(response.token);
-      if (response.customer) {
-        this.setAllCustomerData(response.customer);
-      }
-      this.toastService.showSuccess(response.message);
+    if (response.token && response.customer) {
+      this.setDataReceivedFromApi(response.customer, response.token, response.message);
     } else {
       this.toastService.showSimpleError('Invalid credentials');
     }
+  }
+  setDataReceivedFromApi(customer: CustomerResponseDto,
+    token: string, message: string) {
+    this.tokenService.setToken(token);
+    this.setAllCustomerData(customer);
+    this.toastService.showSuccess(message);
   }
 
   // Handle authentication error
@@ -121,7 +122,12 @@ export class CustomerService {
     this.toastService.showError(error.error);
     this.toastService.showError(error);
   }
-
+  // Set All data related to customer with his shopping cart details
+  setAllCustomerData(customer: CustomerResponseDto) {
+    this.setCustomerShoppingCart(customer);
+    this.customerDataService.setCustomer(customer);
+    this.customerLocalStorageService.setCustomerInfo(customer);
+  }
   // Set customer shopping cart details
   private setCustomerShoppingCart(customerResponseDto: CustomerResponseDto) {
     if (customerResponseDto.shoppingCart) {
@@ -132,26 +138,16 @@ export class CustomerService {
 
   // Check if the user is logged in
   isLoggedIn(): boolean {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      this.resetFullyCustomer();
-      return false;
-    }
-    this.userInfo = this.tokenService.decodeToken(token);
-    if (this.tokenService.isTokenExpired(token)) {
-      this.resetFullyCustomer();
-      return false;
-    }
-    if (!this.customerDataService.getCustomer()) {
-      this.loadCustomer();
-    }
-    return true;
+    // If userInfo is not available, load customer information
+    if (!this.userInfo) this.loadCustomer();
+    // Return true if userInfo is available, otherwise return false
+    return !!this.userInfo;
   }
 
   // Check if the logged-in user is an administrator
   isAdmin(): boolean {
-    if (this.isLoggedIn() && this.userInfo) {
-      return this.userInfo.role === Role.Administrator;
+    if (this.isLoggedIn()) {
+      return this.userInfo?.role === Role.Administrator;
     }
     return false;
   }
@@ -210,6 +206,7 @@ export class CustomerService {
     this.customerDataService.resetCustomer();
     this.customerLocalStorageService.removeCustomerDataStored();
     this.tokenService.removeTokenStored();
+    this.userInfo = undefined;
   }
 
   // Reset local shopping cart data
@@ -221,11 +218,6 @@ export class CustomerService {
       this.setAllCustomerData(customer);
     }
   }
-  setAllCustomerData(customer: CustomerResponseDto) {
-    this.setCustomerShoppingCart(customer);
-    this.customerDataService.setCustomer(customer);
-    this.customerLocalStorageService.setCustomerInfo(customer);
-  }
   // Logout the user
   logout() {
     this.syncShoppingCartWithCustomer()?.subscribe({
@@ -233,7 +225,6 @@ export class CustomerService {
         if (response) {
           this.shoppingCartService.resetLocalShoppingCart();
           this.resetFullyCustomer();
-          this.userInfo = undefined;
         }
       }
     });

@@ -43,10 +43,11 @@
                             <span class="">{{comment.content}}</span>
                         </div>
                         <div class="pb-4 pt-4 text-sm">
+                            <p-button *ngIf="customer?.userName === comment.userName" (click)="showUpdateForm(comment)"
+                                [rounded]="true" styleClass="justify-content-center">Edit</p-button>
                             <p-button *ngIf="customer?.userName === comment.userName"
                                 (click)="removeComment(comment.id)" [rounded]="true" severity="danger"
-                                styleClass="justify-content-center">Delete my
-                                comment</p-button>
+                                styleClass="justify-content-center">Delete</p-button>
                         </div>
                     </div>
                 </div>

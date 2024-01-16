@@ -16,7 +16,9 @@
         <app-form-validation-error [control]="commentForm.get('content')"></app-form-validation-error>
     </div>
     <div class="row mb-3 justify-content-center">
-        <p-button [rounded]="true" styleClass="mt-2 justify-content-center w-100" type="submit"
+        <p-button *ngIf="!comment" [rounded]="true" styleClass="mt-2 justify-content-center w-100" type="submit"
             [disabled]="!commentForm.valid">Add a comment</p-button>
+        <p-button *ngIf="comment" [rounded]="true" styleClass="mt-2 justify-content-center w-100" type="submit"
+            [disabled]="!commentForm.valid">Update comment</p-button>
     </div>
 </form>

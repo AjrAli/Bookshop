@@ -48,6 +48,7 @@ export const appConfig: ApplicationConfig = {
     IdleTimeoutService,
     ScrollToTopService,
     MessageService,
-    ToastService, BookService
+    ToastService, 
+    BookService
   ]
 };

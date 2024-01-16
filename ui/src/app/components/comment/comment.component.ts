@@ -11,16 +11,19 @@ import { CommentResponseDto } from '../../dto/book/comment/comment-response-dto'
 import { CustomerDataService } from '../../../services/customer/customer-data.service';
 import { CommentFormComponent } from '../../forms/login-form/comment-form/comment-form.component';
 import { CustomerResponseDto } from '../../dto/customer/customer-response-dto';
+import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-comment',
   standalone: true,
-  imports: [CommonModule, ButtonModule, RatingModule, FormsModule, CommentFormComponent],
+  imports: [CommonModule, ButtonModule, RatingModule, FormsModule, CommentFormComponent, DynamicDialogModule],
+  providers: [DialogService],
   templateUrl: './comment.component.html',
   styleUrl: './comment.component.css'
 })
 export class CommentComponent implements OnInit, OnDestroy {
   showComments = 5;
+  modalRef: DynamicDialogRef | undefined;
   @Input() comments: CommentResponseDto[] | undefined;
   @Input() bookId: number | undefined;
   showForm: boolean | null = null;
@@ -30,17 +33,20 @@ export class CommentComponent implements OnInit, OnDestroy {
   private commentSubscription: Subscription | undefined;
   private commentApiSubscription: Subscription | undefined;
   private urlSubscription: Subscription | undefined;
+  private modalSubscription: Subscription | undefined;
 
   constructor(private router: Router,
     private bookService: BookService,
     private route: ActivatedRoute,
     private customerDataService: CustomerDataService,
-    private toastService: ToastService) { }
+    private toastService: ToastService,
+    private dialogService: DialogService) { }
   ngOnDestroy(): void {
     this.commentSubscription?.unsubscribe();
     this.urlSubscription?.unsubscribe();
     this.customerSubscription?.unsubscribe();
     this.commentApiSubscription?.unsubscribe();
+    this.modalSubscription?.unsubscribe();
   }
   ngOnInit(): void {
     this.customerSubscription = this.customerDataService.getCustomerObservable().subscribe({
@@ -80,13 +86,33 @@ export class CommentComponent implements OnInit, OnDestroy {
       this.showForm = false;
     }
   }
+  showUpdateForm(comment: CommentResponseDto) {
+    if (comment) {
+      this.modalRef = this.dialogService?.open(CommentFormComponent, {
+        data: comment,
+        header: 'Update Comment Form'
+      });
+      if (this.modalRef) {
+        this.modalSubscription = this.modalRef.onClose.subscribe((data: CommentResponseDto) => {
+          if (data) {
+            let commentToUpdate = this.comments?.find(x => x.id === data.id);
+            if (commentToUpdate) {
+              commentToUpdate.title = data.title;
+              commentToUpdate.rating = data.rating;
+              commentToUpdate.content = data.content;
+            }
+          }
+        });
+      }
+    }
+  }
   removeComment(id: number) {
     if (id) {
       this.bookService.deleteComment(id).subscribe({
         next: (response) => {
           if (response && this.comments && this.comments.length > 0) {
             const commentIndexToDelete = this.comments.findIndex(x => x.id === id);
-            this.comments.splice(commentIndexToDelete, 1)
+            this.comments.splice(commentIndexToDelete, 1);
             this.showForm = true;
           }
         }
