@@ -38,13 +38,16 @@ export class PaymentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.shoppingCartSubscription = this.shoppingCartApiService.getShoppingCartDetails().subscribe({
       next: (response: ShoppingCartDetailsResponse | null) => {
-        if (!response || !response.shoppingCartDetails) {
+        if (!response || !response.shoppingCartDetails || response.shoppingCartDetails?.items?.length === 0) {
           this.shoppingcartDetails = null;
           this.router.navigate(['']);
           return;
         }
         this.shoppingcartDetails = response.shoppingCartDetails;
         this.shoppingCartDataService.setShoppingCartDetails(response.shoppingCartDetails);
+      },
+      error: (e) => {
+        this.router.navigate(['']);
       }
     });
   }

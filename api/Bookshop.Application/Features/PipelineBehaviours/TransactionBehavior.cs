@@ -18,6 +18,7 @@ namespace Bookshop.Application.Features.PipelineBehaviours
     {
         private readonly BookshopDbContext _context;
         private readonly ILogger<TransactionBehavior<TCommand, TResponse>> _logger;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         /// <summary>
         /// Initializes a new instance of the TransactionBehavior class.
@@ -40,6 +41,9 @@ namespace Bookshop.Application.Features.PipelineBehaviours
         public async Task<TResponse> Handle(TCommand request, RequestHandlerDelegate<TResponse> next,
             CancellationToken cancellationToken)
         {
+            //SemaphoreSlim limits the number of threads that can access a resource or pool of resources concurrently
+            //In this case is to ensure that only one transaction is processed at a time per thread
+            await _semaphore.WaitAsync(cancellationToken);
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
@@ -73,7 +77,11 @@ namespace Bookshop.Application.Features.PipelineBehaviours
             finally
             {
                 // Dispose of the transaction
-                await transaction.DisposeAsync();
+                if (transaction != null)
+                {
+                    await transaction.DisposeAsync();
+                }
+                _semaphore.Release();
             }
         }
     }
