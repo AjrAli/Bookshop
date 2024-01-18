@@ -86,10 +86,14 @@ body {
 }
 
 @media screen and (max-width: 960px) {
-    .p-menuitem-content .p-menuitem-link .p-menuitem-text,.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
+
+    .p-menuitem-content .p-menuitem-link .p-menuitem-text,
+    .p-menuitem-content .p-menuitem-link .p-menuitem-icon {
         color: black;
     }
 }
-.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
-    width: 10px;
+
+.p-rating-icon,
+.p-icon-wrapper {
+    width: 12px;
 }
