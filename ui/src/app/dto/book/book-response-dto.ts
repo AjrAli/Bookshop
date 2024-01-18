@@ -40,9 +40,9 @@ export class BookResponseDto {
     get status(): string {
         if (this.quantity > 50)
             return 'INSTOCK';
-        else if (this.quantity < 50)
+        else if (this.quantity > 0 && this.quantity < 50)
             return 'LOWSTOCK';
-        else if (this.quantity === 0)
+        else if (this.quantity <= 0)
             return 'OUTOFSTOCK';
         return '';
     }

@@ -13,6 +13,7 @@ import { CustomerDataService } from '../../../../services/customer/customer-data
 import { ShoppingCartDataService } from '../../../../services/shoppingcart/shoppingcart-data.service';
 import { ShoppingCartApiService } from '../../../../services/shoppingcart/shoppingcart-api.service';
 import { Subscription } from 'rxjs';
+import { ErrorResponse } from '../../../dto/response/error/error-response';
 
 @Component({
   selector: 'app-payment',
@@ -46,7 +47,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
         this.shoppingcartDetails = response.shoppingCartDetails;
         this.shoppingCartDataService.setShoppingCartDetails(response.shoppingCartDetails);
       },
-      error: (e) => {
+      error: (e: ErrorResponse) => {
+        this.toastService.showError(e);
         this.router.navigate(['']);
       }
     });
