@@ -126,7 +126,7 @@ Open the launchSettings.json file and add the following configuration:
 Frontend Setup:
 a. Navigate to the Client Directory:
 
-    cd Bookshop\app
+    cd Bookshop\ui
 
 b. Install Dependencies:
 
