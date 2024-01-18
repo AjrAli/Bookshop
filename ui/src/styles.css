@@ -90,3 +90,6 @@ body {
         color: black;
     }
 }
+.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
+    width: 10px;
+}
