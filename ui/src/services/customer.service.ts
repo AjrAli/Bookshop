@@ -42,7 +42,6 @@ export class CustomerService {
     } else {
       this.userInfo = this.tokenService.decodeToken(token);
       this.customerDataService.setCustomer(customer);
-      this.setCustomerShoppingCart(customer);
     }
   }
   // Authenticate user with provided credentials
@@ -114,6 +113,7 @@ export class CustomerService {
     token: string, message: string) {
     this.tokenService.setToken(token);
     this.setAllCustomerData(customer);
+    this.shoppingCartService.updateFullyShoppingCart(new ShoppingCartResponseDto(customer.shoppingCart));
     this.toastService.showSuccess(message);
   }
 
@@ -124,18 +124,9 @@ export class CustomerService {
   }
   // Set All data related to customer with his shopping cart details
   setAllCustomerData(customer: CustomerResponseDto) {
-    this.setCustomerShoppingCart(customer);
     this.customerDataService.setCustomer(customer);
     this.customerLocalStorageService.setCustomerInfo(customer);
   }
-  // Set customer shopping cart details
-  private setCustomerShoppingCart(customerResponseDto: CustomerResponseDto) {
-    if (customerResponseDto.shoppingCart) {
-      customerResponseDto.shoppingCart = new ShoppingCartResponseDto(customerResponseDto.shoppingCart);
-      this.shoppingCartService.updateFullyShoppingCart(customerResponseDto.shoppingCart);
-    }
-  }
-
   // Check if the user is logged in
   isLoggedIn(): boolean {
     // If userInfo is not available, load customer information
@@ -186,16 +177,15 @@ export class CustomerService {
       const shoppingCart = new ShoppingCartDto(shoppingCartResponseDto);
       const getCustomerPreviousShoppingCart = this.customerDataService.getCustomer()?.shoppingCart;
       const isShoppingCartOfCustomerNotDifferent = shoppingCartResponseDto.equals(getCustomerPreviousShoppingCart);
-      if (getCustomerPreviousShoppingCart && !isShoppingCartOfCustomerNotDifferent) {
-        if (shoppingCart.items.length > 0) {
-          return this.shoppingCartService.updateShoppingCartFromApi(shoppingCart);
-        } else {
+      if (getCustomerPreviousShoppingCart?.id !== 0) {
+        if (shoppingCart.items.length === 0)
           return this.shoppingCartService.resetShoppingCartFromApi();
-        }
+        else
+          if (!isShoppingCartOfCustomerNotDifferent)
+            return this.shoppingCartService.updateShoppingCartFromApi(shoppingCart);
       } else {
-        if (!isShoppingCartOfCustomerNotDifferent && shoppingCart.items.length > 0) {
+        if (shoppingCart.items.length > 0)
           return this.shoppingCartService.createShoppingCartFromApi(shoppingCart);
-        }
       }
     }
     return of(true);
@@ -214,7 +204,7 @@ export class CustomerService {
     this.shoppingCartService.resetLocalShoppingCart();
     const customer = this.customerDataService.getCustomer();
     if (customer) {
-      customer.shoppingCart = new ShoppingCartResponseDto();
+      customer.shoppingCart = new ShoppingCartResponseDto({ id: customer.shoppingCart?.id });
       this.setAllCustomerData(customer);
     }
   }

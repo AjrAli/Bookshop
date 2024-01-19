@@ -2,10 +2,12 @@ import { ShopItemResponseDto } from "./shopitem-response-dto";
 
 export class ShoppingCartResponseDto {
 
+    id: number;
     total: number;
     items: ShopItemResponseDto[]
 
     constructor(data?: Partial<ShoppingCartResponseDto>) {
+        this.id = data?.id ?? 0;
         this.total = data?.total ?? 0;
         this.items = data?.items?.map(item => new ShopItemResponseDto(item)) ?? [];
     }
@@ -27,7 +29,7 @@ export class ShoppingCartResponseDto {
         for (const newItem of newItems) {
             const existingItem = this.items.find(x => x.bookId === newItem.bookId);
             if (!existingItem) {
-                this.items.push(newItem);
+                this.items.push(new ShopItemResponseDto(newItem));
             }
         }
     }

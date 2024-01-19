@@ -36,6 +36,7 @@ export class ShoppingCartDataService {
         }
         if (!this.shoppingCart)
             this.shoppingCart = new ShoppingCartResponseDto();
+        this.shoppingCart.id = shoppingCart.id;
         this.shoppingCart.updateItems(shoppingCart.items);
         this.shoppingCart.updateTotal();
         this.shoppingCartSubject.next(this.shoppingCart);

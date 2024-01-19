@@ -17,14 +17,10 @@ namespace Bookshop.Application.Profiles.ShoppingCarts
                 .ForPath(dest => dest.CategoryTitle, opt => opt.MapFrom(source => source.Book.Category.Title))
                 .ForPath(dest => dest.BookPrice, opt => opt.MapFrom(source => source.Book.Price))
                 .ForPath(dest => dest.ImageUrl, opt => opt.MapFrom(source => source.Book.ImageUrl));
-            CreateMap<ShopItemResponseDto, LineItem>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.BookId, opt => opt.MapFrom(source => source.BookId))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(source => source.Quantity));
+            CreateMap<ShopItemResponseDto, LineItem>();
             // ShoppingCart Response profile
             CreateMap<ShoppingCart, ShoppingCartResponseDto>()
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(source => source.LineItems))
-                .ForMember(dest => dest.Total, opt => opt.MapFrom(source => source.Total));
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(source => source.LineItems));
             CreateMap<ShoppingCartResponseDto, ShoppingCart>()
                 .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items));
 
@@ -35,15 +31,11 @@ namespace Bookshop.Application.Profiles.ShoppingCarts
                 .ForPath(dest => dest.VatRate, opt => opt.MapFrom(source => source.Customer.ShippingAddress.LocationPricing.VatRate))
                 .ForPath(dest => dest.ShippingFee, opt => opt.MapFrom(source => source.Customer.ShippingAddress.LocationPricing.ShippingFee));
             CreateMap<GetShoppingCartDetailsResponseDto, ShoppingCart>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
                 .ForMember(dest => dest.LineItems, opt => opt.MapFrom(source => source.Items));
 
             // LineItem Request profile
             CreateMap<LineItem, ShopItemRequestDto>();
-            CreateMap<ShopItemRequestDto, LineItem>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Id))
-                .ForMember(dest => dest.BookId, opt => opt.MapFrom(source => source.BookId))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(source => source.Quantity));
+            CreateMap<ShopItemRequestDto, LineItem>();
 
             // ShoppingCart Request profile
             CreateMap<ShoppingCart, ShoppingCartRequestDto>()

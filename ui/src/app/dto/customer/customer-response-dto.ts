@@ -16,6 +16,6 @@ export class CustomerResponseDto {
     this.lastName = data?.lastName ?? this.lastName;
     this.shippingAddress = data?.shippingAddress ?? this.shippingAddress;
     this.billingAddress = data?.billingAddress ?? this.billingAddress;
-    this.shoppingCart = data?.shoppingCart ?? this.shoppingCart;
+    this.shoppingCart = new ShoppingCartResponseDto(data?.shoppingCart) ?? this.shoppingCart;
   }
 }

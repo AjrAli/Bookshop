@@ -7,7 +7,7 @@ import { ShoppingCartDto } from "../app/dto/shoppingcart/shoppingcart-dto";
 import { ShoppingCartApiService } from "./shoppingcart/shoppingcart-api.service";
 import { ShoppingCartLocalStorageService } from "./shoppingcart/shoppingcart-local-storage.service";
 import { ShoppingCartDataService } from "./shoppingcart/shoppingcart-data.service";
-import { Observable, map, tap } from "rxjs";
+import { Observable, Subscription, map, tap } from "rxjs";
 import { ShoppingCartCommandResponse } from "../app/dto/handler-response/shoppingcart/shoppingcart-command-response";
 
 @Injectable()
@@ -29,17 +29,20 @@ export class ShoppingCartService {
     }
   }
   // Set an available shoppingcart as default
-  setAvailableShoppingCartFromApi() {
-    this.shoppingCartApiService.getShoppingCart().subscribe({
-      next: (shopResponse) => {
-        if (shopResponse && shopResponse.shoppingCart?.items.length > 0) {
-          this.updateFullyShoppingCart(new ShoppingCartResponseDto(shopResponse.shoppingCart));
+  setAvailableShoppingCartFromApi(): Observable<ShoppingCartResponseDto> {
+    return this.shoppingCartApiService.getShoppingCart().pipe(
+      tap({
+        next: (shopResponse) => {
+          if (shopResponse && shopResponse.shoppingCart?.items.length > 0) {
+            this.updateFullyShoppingCart(new ShoppingCartResponseDto(shopResponse.shoppingCart));
+          }
+        },
+        error: (e) => {
+          this.toastService.showError(e);
         }
-      },
-      error: (e) => {
-        this.toastService.showError(e);
-      }
-    });
+      }),
+      map(shopResponse => shopResponse.shoppingCart)
+    );
   }
   // Create a new shopping cart on the server
   createShoppingCartFromApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
@@ -93,7 +96,7 @@ export class ShoppingCartService {
   }
 
   // Update local and server shopping cart details
-  updateFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
+  updateFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | undefined, message?: string) {
     if (shoppingCart) {
       this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
       this.shoppingCartDataService.updateShoppingCart(shoppingCart);
@@ -104,7 +107,7 @@ export class ShoppingCartService {
   }
 
   // Save fully updated shopping cart details locally and on the server
-  private saveFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | null, message?: string) {
+  private saveFullyShoppingCart(shoppingCart: ShoppingCartResponseDto | undefined, message?: string) {
     if (shoppingCart) {
       this.shoppingCartLocalStorageService.storeShoppingCart(shoppingCart);
       this.shoppingCartDataService.setShoppingCart(shoppingCart);

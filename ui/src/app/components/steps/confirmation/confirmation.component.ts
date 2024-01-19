@@ -15,10 +15,7 @@ import { OrderService } from '../../../../services/order.service';
 import { CustomerService } from '../../../../services/customer.service';
 import { OrderDetailsComponent } from '../../order-details/order-details.component';
 import { Subscription } from 'rxjs';
-import { ShoppingCartApiService } from '../../../../services/shoppingcart/shoppingcart-api.service';
-import { ShoppingCartResponseDto } from '../../../dto/shoppingcart/shoppingcart-response-dto';
 import { ShoppingCartService } from '../../../../services/shoppingcart.service';
-import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -36,6 +33,7 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
   paymentInfo: PaymentInformation | null = null;
   order: OrderResponseDto | null = null;
   private orderSubscription: Subscription | undefined;
+  private shoppingCartSubscription: Subscription | undefined;
   constructor(private router: Router,
     private customerDataService: CustomerDataService,
     private customerService: CustomerService,
@@ -45,6 +43,7 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.orderSubscription?.unsubscribe();
+    this.shoppingCartSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -76,7 +75,18 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
           error: () => {
             //As error occured we set an available shoppingcart as default back after calling create order to api
             this.resetAllDataRelatedToPreviousOrder();
-            this.shoppingCartService.setAvailableShoppingCartFromApi();
+            this.shoppingCartSubscription = this.shoppingCartService.setAvailableShoppingCartFromApi().subscribe({
+              next: (response) => {
+                if (response) {
+                  this.router.navigate(['/steps/my-shoppingcart']);
+                } else {
+                  this.router.navigate(['']);
+                }
+              },
+              error: () => {
+                this.router.navigate(['']);
+              }
+            });
           }
         })
       }
