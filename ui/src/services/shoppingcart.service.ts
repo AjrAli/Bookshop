@@ -13,7 +13,7 @@ import { ShoppingCartCommandResponse } from "../app/dto/handler-response/shoppin
 @Injectable()
 export class ShoppingCartService {
   constructor(
-    private shoppingcartApiService: ShoppingCartApiService,
+    private shoppingCartApiService: ShoppingCartApiService,
     private shoppingCartLocalStorageService: ShoppingCartLocalStorageService,
     private shoppingCartDataService: ShoppingCartDataService,
     private toastService: ToastService,
@@ -28,10 +28,22 @@ export class ShoppingCartService {
       this.shoppingCartDataService.setShoppingCart(shoppingCart);
     }
   }
-
+  // Set an available shoppingcart as default
+  setAvailableShoppingCartFromApi() {
+    this.shoppingCartApiService.getShoppingCart().subscribe({
+      next: (shopResponse) => {
+        if (shopResponse && shopResponse.shoppingCart?.items.length > 0) {
+          this.updateFullyShoppingCart(new ShoppingCartResponseDto(shopResponse.shoppingCart));
+        }
+      },
+      error: (e) => {
+        this.toastService.showError(e);
+      }
+    });
+  }
   // Create a new shopping cart on the server
   createShoppingCartFromApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
-    return this.shoppingcartApiService.createShoppingCart(shoppingCart).pipe(
+    return this.shoppingCartApiService.createShoppingCart(shoppingCart).pipe(
       tap({
         next: (response) => this.handleShoppingCartResponse(response),
         error: (error) => this.handleShoppingCartError(error),
@@ -43,7 +55,7 @@ export class ShoppingCartService {
 
   // Update an existing shopping cart on the server
   updateShoppingCartFromApi(shoppingCart: ShoppingCartDto): Observable<ShoppingCartResponseDto> {
-    return this.shoppingcartApiService.updateShoppingCart(shoppingCart).pipe(
+    return this.shoppingCartApiService.updateShoppingCart(shoppingCart).pipe(
       tap({
         next: (response) => this.handleShoppingCartResponse(response),
         error: (error) => this.handleShoppingCartError(error),
@@ -55,7 +67,7 @@ export class ShoppingCartService {
 
   // Reset the shopping cart on the server
   resetShoppingCartFromApi(): Observable<boolean> {
-    return this.shoppingcartApiService.resetShoppingCart().pipe(
+    return this.shoppingCartApiService.resetShoppingCart().pipe(
       tap({
         next: (response) => this.toastService.showSuccess(response.message),
         error: (error) => this.handleShoppingCartError(error),
@@ -64,7 +76,6 @@ export class ShoppingCartService {
       map(response => !!response.success)
     );
   }
-
   // Handle response from shopping cart command (create, update, reset)
   private handleShoppingCartResponse(response: ShoppingCartCommandResponse): void {
     if (response.shoppingCart) {

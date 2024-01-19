@@ -6,12 +6,18 @@ import { BaseResponse } from "../../app/dto/response/base-response";
 import { ShoppingCartDetailsResponse } from "../../app/dto/handler-response/shoppingcart/shoppingcart-details-response";
 import { ShoppingCartCommandResponse } from "../../app/dto/handler-response/shoppingcart/shoppingcart-command-response";
 import { environment } from "../../app/environments/environment";
+import { ShoppingCartResponse } from "../../app/dto/handler-response/shoppingcart/shoppingcart-response";
 
 @Injectable()
 export class ShoppingCartApiService {
     protected apiUrl: string = environment.apiUrl + '/shopcart';
 
     constructor(private http: HttpClient) { }
+
+    getShoppingCart(): Observable<ShoppingCartResponse> {
+        // API call to get a full details of shopping cart
+        return this.http.get<ShoppingCartResponse>(`${this.apiUrl}/get-user-shopcart`);
+    }
 
     getShoppingCartDetails(): Observable<ShoppingCartDetailsResponse> {
         // API call to get a full details of shopping cart

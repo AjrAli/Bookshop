@@ -11,7 +11,7 @@ import { ShoppingCartDataService } from "./shoppingcart/shoppingcart-data.servic
 import { CustomerApiService } from "./customer/customer-api.service";
 import { CustomerLocalStorageService } from "./customer/customer-local-storage.service";
 import { DecodedToken, TokenService } from "./token.service";
-import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap } from "rxjs";
+import { Observable, catchError, map, of, switchMap, tap } from "rxjs";
 import { CustomerDataService } from "./customer/customer-data.service";
 import { CustomerCommandResponse } from "../app/dto/handler-response/customer/customer-command.response";
 import { EditProfileDto } from "../app/dto/customer/edit-profile-dto";

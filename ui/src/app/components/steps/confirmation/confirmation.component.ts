@@ -15,6 +15,10 @@ import { OrderService } from '../../../../services/order.service';
 import { CustomerService } from '../../../../services/customer.service';
 import { OrderDetailsComponent } from '../../order-details/order-details.component';
 import { Subscription } from 'rxjs';
+import { ShoppingCartApiService } from '../../../../services/shoppingcart/shoppingcart-api.service';
+import { ShoppingCartResponseDto } from '../../../dto/shoppingcart/shoppingcart-response-dto';
+import { ShoppingCartService } from '../../../../services/shoppingcart.service';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -36,6 +40,7 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
     private customerDataService: CustomerDataService,
     private customerService: CustomerService,
     private shoppingCartDataService: ShoppingCartDataService,
+    private shoppingCartService: ShoppingCartService,
     private orderService: OrderService) { }
 
   ngOnDestroy(): void {
@@ -67,6 +72,11 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
               this.order = r;
               this.resetAllDataRelatedToPreviousOrder();
             }
+          },
+          error: () => {
+            //As error occured we set an available shoppingcart as default back after calling create order to api
+            this.resetAllDataRelatedToPreviousOrder();
+            this.shoppingCartService.setAvailableShoppingCartFromApi();
           }
         })
       }
@@ -78,4 +88,5 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
     this.paymentInfo = null;
     this.shoppingcartDetails = null;
   }
+
 }
