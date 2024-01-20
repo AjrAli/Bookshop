@@ -29,7 +29,7 @@ export class SearchComponent implements OnInit {
     private searchService: SearchService,
     private searchStateService: SearchStateService,
     private toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initializeSearchStateService();
