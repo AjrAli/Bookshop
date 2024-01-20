@@ -29,11 +29,13 @@ export class IdleTimeoutService implements OnDestroy {
 
     // Observables for mouse move, click, and key down events with debounce
     const mouseMove$ = fromEvent(document, 'mousemove').pipe(debounceTime(500));
+    const touchstart$ = fromEvent(document, 'touchstart').pipe(debounceTime(500));
+    const touchmove$ = fromEvent(document, 'touchmove').pipe(debounceTime(500));
     const click$ = fromEvent(document, 'click').pipe(debounceTime(500));
     const keyDown$ = fromEvent(document, 'keydown').pipe(debounceTime(500));
 
     // Merge user activity events
-    this.userActivitySubscription = merge(click$, mouseMove$, keyDown$).subscribe({
+    this.userActivitySubscription = merge(click$, mouseMove$, touchstart$, touchmove$, keyDown$).subscribe({
       next: (event) => {
         if (event) {
           // Notify subscribers with the user activity event

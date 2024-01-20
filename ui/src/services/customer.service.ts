@@ -129,8 +129,10 @@ export class CustomerService {
   }
   // Check if the user is logged in
   isLoggedIn(): boolean {
-    // If userInfo is not available, load customer information
-    if (!this.userInfo) this.loadCustomer();
+    const token = this.tokenService.getToken();
+    // If userInfo is not available or token not valid, load customer information
+    if (!this.userInfo || !token || this.tokenService.isTokenExpired(token))
+      this.loadCustomer();
     // Return true if userInfo is available, otherwise return false
     return !!this.userInfo;
   }
