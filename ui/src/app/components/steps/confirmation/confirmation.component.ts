@@ -73,24 +73,28 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
             }
           },
           error: () => {
-            //As error occured we set an available shoppingcart as default back after calling create order to api
+            //As an error occured we reset all shoppingcart local data then we set the available shoppingcart updated from API as default
+            //Then we redirect to my-shoppingcart if it still items on the shoppingcart received if not it's back to index page
             this.resetAllDataRelatedToPreviousOrder();
-            this.shoppingCartSubscription = this.shoppingCartService.setAvailableShoppingCartFromApi().subscribe({
-              next: (response) => {
-                if (response) {
-                  this.router.navigate(['/steps/my-shoppingcart']);
-                } else {
-                  this.router.navigate(['']);
-                }
-              },
-              error: () => {
-                this.router.navigate(['']);
-              }
-            });
+            this.redirectOnSetAvailableShoppingCartFromApi();
           }
         })
       }
     }
+  }
+  redirectOnSetAvailableShoppingCartFromApi() {
+    this.shoppingCartSubscription = this.shoppingCartService.setAvailableShoppingCartFromApi().subscribe({
+      next: (response) => {
+        if (response) {
+          this.router.navigate(['/steps/my-shoppingcart']);
+        } else {
+          this.router.navigate(['']);
+        }
+      },
+      error: () => {
+        this.router.navigate(['']);
+      }
+    });
   }
   resetAllDataRelatedToPreviousOrder() {
     this.customerService.resetFullyLocalShoppingCart();
