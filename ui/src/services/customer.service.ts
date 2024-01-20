@@ -158,12 +158,7 @@ export class CustomerService {
               return of(true);
             }
           }
-          // Case no change because the same shopping cart detected
-          if (response === true) {
-            return of(true);
-          } else {
-            return of(false);
-          }
+          return of(!!response);
         }),
         catchError(() => of(false))
       ) || of(false)

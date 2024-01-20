@@ -124,10 +124,9 @@ export class ShoppingCartService {
   // Add a new item to the shopping cart
   addItem(newItem: BookResponseDto) {
     let shopitem = new ShopItemResponseDto({
-      id: 0,
       quantity: 1,
       bookId: newItem.id,
-      price: newItem.price * 1,
+      price: newItem.price,
       bookPrice: newItem.price,
       title: newItem.title,
       imageUrl: newItem.imageUrl,
