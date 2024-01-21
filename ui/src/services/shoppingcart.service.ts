@@ -49,8 +49,7 @@ export class ShoppingCartService {
     return this.shoppingCartApiService.createShoppingCart(shoppingCart).pipe(
       tap({
         next: (response) => this.handleShoppingCartResponse(response),
-        error: (error) => this.handleShoppingCartError(error),
-        complete: () => console.info('Shopping cart creation complete')
+        error: (error) => this.handleShoppingCartError(error)
       }),
       map(response => response.shoppingCart)
     );
@@ -61,8 +60,7 @@ export class ShoppingCartService {
     return this.shoppingCartApiService.updateShoppingCart(shoppingCart).pipe(
       tap({
         next: (response) => this.handleShoppingCartResponse(response),
-        error: (error) => this.handleShoppingCartError(error),
-        complete: () => console.info('Shopping cart update complete')
+        error: (error) => this.handleShoppingCartError(error)
       }),
       map(response => response.shoppingCart)
     );
@@ -73,8 +71,7 @@ export class ShoppingCartService {
     return this.shoppingCartApiService.resetShoppingCart().pipe(
       tap({
         next: (response) => this.toastService.showSuccess(response.message),
-        error: (error) => this.handleShoppingCartError(error),
-        complete: () => console.info('Shopping cart reset complete')
+        error: (error) => this.handleShoppingCartError(error)
       }),
       map(response => !!response.success)
     );

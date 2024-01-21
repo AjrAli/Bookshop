@@ -66,8 +66,7 @@ export class SearchComponent implements OnInit {
             },
             error: (error: any) => {
               this.toastService.showSimpleError(error.toString());
-            },
-            complete: () => console.info('Search keyword subscription complete')
+            }
           });
 
         // Use the startWith operator to trigger the initial search
@@ -85,14 +84,12 @@ export class SearchComponent implements OnInit {
             },
             error: (error: any) => {
               this.toastService.showSimpleError(error.toString());
-            },
-            complete: () => console.info('Search keyword subscription complete')
+            }
           });
       },
       error: (error: any) => {
         this.toastService.showSimpleError(error.toString());
-      },
-      complete: () => console.info('QueryParams subscription complete')
+      }
     });
   }
 
@@ -120,8 +117,7 @@ export class SearchComponent implements OnInit {
         },
         error: (error: any) => {
           this.toastService.showSimpleError(error.toString());
-        },
-        complete: () => console.info('Search request complete')
+        }
       });
   }
 }

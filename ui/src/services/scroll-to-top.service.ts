@@ -1,27 +1,44 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
-import { filter } from "rxjs";
+import { Subscription, filter } from "rxjs";
 
 @Injectable()
-export class ScrollToTopService {
-    constructor(router: Router) {
-        router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe({
+export class ScrollToTopService implements OnDestroy {
+    private routerSubscription: Subscription | undefined;
+    constructor(private router: Router) { }
+    doScrollUpByNavigation() {
+        this.routerSubscription = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe({
             next: (r) => {
                 if (r instanceof NavigationEnd) {
                     if (!r.url.includes("search")) {
-                        const targetElement = document.querySelector('#targetRootOutlet');
-                        if (targetElement) {
-                            targetElement.scrollIntoView({ behavior: 'smooth' });
-                        }
+                        this.scrollToRootOutlet();
                     } else {
-                        const targetSearch = document.querySelector('#targetSearch');
-                        if (targetSearch) {
-                            targetSearch.scrollIntoView({ behavior: 'smooth' });
-                        }
+                        this.scrollToSearch();
                     }
                 }
-                //window.scrollTo(0, 0);
             }
         });
+    }
+    ngOnDestroy(): void {
+        this.routerSubscription?.unsubscribe();
+    }
+
+    scrollToRootOutlet() {
+        this.scrollToContentById('#targetRootOutlet');
+    }
+    scrollToSearch() {
+        this.scrollToContentById('#targetSearch');
+    }
+    scrollToBookItems() {
+        this.scrollToContentById('#book-items');
+    }
+    scrollToOrderItems() {
+        this.scrollToContentById('#order-items');
+    }
+    scrollToContentById(divId: string) {
+        const targetElement = document.querySelector(divId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 }

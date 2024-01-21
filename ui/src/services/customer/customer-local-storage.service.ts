@@ -12,10 +12,7 @@ export class CustomerLocalStorageService {
         const storedData = localStorage.getItem('customerData');
         if (storedData) {
             const deserializedCustomer = new CustomerResponseDto(JSON.parse(storedData));
-            //console.log(deserializedCustomer);
             return deserializedCustomer;
-        } else {
-            console.log('No data found in localStorage');
         }
         return null;
     }

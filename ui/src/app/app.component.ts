@@ -15,5 +15,7 @@ import { ScrollToTopService } from '../services/scroll-to-top.service';
 })
 
 export class AppComponent {
-    constructor(private scrollToTopService: ScrollToTopService) { }
+    constructor(private scrollToTopService: ScrollToTopService) {
+        this.scrollToTopService.doScrollUpByNavigation();
+    }
 }

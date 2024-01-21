@@ -65,8 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       error: (error: ErrorResponse) => {
         this.books = undefined;
         this.toastService.showError(error);
-      },
-      complete: () => console.info('complete')
+      }
     })
   }
   ngOnInit(): void {

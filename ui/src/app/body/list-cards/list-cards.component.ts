@@ -5,6 +5,7 @@ import { CardComponent } from '../../body/card/card.component';
 import { BookResponseDto } from '../../dto/book/book-response-dto';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PageEvent } from './page-event';
+import { ScrollToTopService } from '../../../services/scroll-to-top.service';
 
 @Component({
   selector: 'app-list-cards',
@@ -19,6 +20,9 @@ export class ListCardsComponent implements OnChanges {
   totalRecords: number = 0;
   rows: number = 10; // Number of items per page
   first: number = 0; // Initial page index
+
+  constructor(private scrollToTopService: ScrollToTopService) { }
+
   ngOnChanges(): void {
     if (this.books && this.books.length > 0) {
       this.totalRecords = this.books.length;
@@ -29,6 +33,7 @@ export class ListCardsComponent implements OnChanges {
     if (eventOfPageEvent) {
       this.first = eventOfPageEvent.first;
       this.rows = eventOfPageEvent.rows;
+      this.scrollToTopService.scrollToBookItems();
     }
   }
 }

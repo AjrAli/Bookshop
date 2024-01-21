@@ -49,8 +49,7 @@ export class CustomerService {
     return this.customerApiService.authenticate(username, password).pipe(
       tap({
         next: (response) => this.handleAuthenticationResponse(response),
-        error: (error) => this.handleAuthenticationError(error),
-        complete: () => console.info('Authentication complete')
+        error: (error) => this.handleAuthenticationError(error)
       }),
       map(response => !!response.token)
     );
@@ -61,8 +60,7 @@ export class CustomerService {
     return this.customerApiService.createCustomer(customer).pipe(
       tap({
         next: (response) => this.handleCustomerCommandResponse(response),
-        error: (error) => this.handleAuthenticationError(error),
-        complete: () => console.info('Customer creation complete')
+        error: (error) => this.handleAuthenticationError(error)
       }),
       map(response => !!response.token)
     );
@@ -73,8 +71,7 @@ export class CustomerService {
     return this.customerApiService.editProfile(editProfile).pipe(
       tap({
         next: (response) => this.handleCustomerCommandResponse(response),
-        error: (error) => this.handleAuthenticationError(error),
-        complete: () => console.info('Profile editing complete')
+        error: (error) => this.handleAuthenticationError(error)
       }),
       map(response => !!response.token)
     );
@@ -85,8 +82,7 @@ export class CustomerService {
     return this.customerApiService.editPassword(editPassword).pipe(
       tap({
         next: (response) => this.handleCustomerCommandResponse(response),
-        error: (error) => this.handleAuthenticationError(error),
-        complete: () => console.info('Password editing complete')
+        error: (error) => this.handleAuthenticationError(error)
       }),
       map(response => !!response.token)
     );

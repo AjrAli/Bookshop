@@ -18,22 +18,19 @@ export class OrderService {
     createOrderFromApi(order: OrderDto): Observable<OrderResponseDto> {
         return this.orderApiService.createOrder(order).pipe(tap({
             next: (r) => this.handleOrderResponse(r),
-            error: (e) => this.handleOrderError(e),
-            complete: () => console.info('complete')
+            error: (e) => this.handleOrderError(e)
         }), map(response => response.order));
     }
     updateOrderFromApi(updateOrder: UpdateOrderDto): Observable<OrderResponseDto> {
         return this.orderApiService.updateOrder(updateOrder).pipe(tap({
             next: (r) => this.handleOrderResponse(r),
-            error: (e) => this.handleOrderError(e),
-            complete: () => console.info('complete')
+            error: (e) => this.handleOrderError(e)
         }), map(response => response.order));
     }
     cancelOrderFromApi(id: number): Observable<boolean> {
         return this.orderApiService.cancelOrder(id).pipe(tap({
             next: (r) => this.toastService.showSuccess(r.message),
-            error: (e) => this.handleOrderError(e),
-            complete: () => console.info('complete')
+            error: (e) => this.handleOrderError(e)
         }), map(response => response.success));
     }
 

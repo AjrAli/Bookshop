@@ -1,4 +1,4 @@
-<div *ngIf="books else notfound" class="container text-center">
+<div id="book-items" *ngIf="books else notfound" class="container text-center">
     <div *ngIf="books.length > 0; else loading">
         <div *ngFor="let book of books!.slice(first, first + rows)" style="display: inline-block; vertical-align: top ">
             <app-card [searchEngine]="searchEngine" [book]="book"></app-card>

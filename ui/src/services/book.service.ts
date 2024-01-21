@@ -25,22 +25,19 @@ export class BookService extends CommonApiService {
     addComment(comment: CommentDto): Observable<CommentResponseDto> {
         return this.http.post<CommentCommandResponse>(`${this.apiUrl}/add-comment-book`, comment).pipe(tap({
             next: (r) => this.handleCommentResponse(r),
-            error: (e) => this.handleCommentError(e),
-            complete: () => console.info('complete')
+            error: (e) => this.handleCommentError(e)
         }), map(response => response.comment));
     }
     updateComment(comment: CommentDto): Observable<CommentResponseDto> {
         return this.http.post<CommentCommandResponse>(`${this.apiUrl}/update-comment-book`, comment).pipe(tap({
             next: (r) => this.handleCommentResponse(r),
-            error: (e) => this.handleCommentError(e),
-            complete: () => console.info('complete')
+            error: (e) => this.handleCommentError(e)
         }), map(response => response.comment));
     }
     deleteComment(id: number): Observable<boolean> {
         return this.http.post<CommentCommandResponse>(`${this.apiUrl}/delete-comment-book`, id).pipe(tap({
             next: (r) => this.toastService.showSuccess(r.message),
-            error: (e) => this.handleCommentError(e),
-            complete: () => console.info('complete')
+            error: (e) => this.handleCommentError(e)
         }), map(response => response.success));
     }
 

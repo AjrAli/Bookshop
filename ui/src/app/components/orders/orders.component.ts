@@ -9,6 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PageEvent } from '../../body/list-cards/page-event';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ScrollToTopService } from '../../../services/scroll-to-top.service';
 
 @Component({
   selector: 'app-orders',
@@ -24,7 +25,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   first: number = 0; // Initial page index
   private orderSubscription: Subscription | undefined;
   private orderUpdateSubscription: Subscription | undefined;
-  constructor(private OrderService: OrderService, private orderApiService: OrderApiService, private router: Router) { }
+  constructor(private OrderService: OrderService, private orderApiService: OrderApiService, private router: Router, private scrollToTopService: ScrollToTopService) { }
   ngOnDestroy(): void {
     this.orderSubscription?.unsubscribe();
     this.orderUpdateSubscription?.unsubscribe();
@@ -53,6 +54,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
     if (eventOfPageEvent) {
       this.first = eventOfPageEvent.first;
       this.rows = eventOfPageEvent.rows;
+      this.scrollToTopService.scrollToOrderItems();
     }
   }
   navigateToOrder(id: number) {
