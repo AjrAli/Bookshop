@@ -346,3 +346,25 @@ School.Management.Api/Logs/log-20220206.txt
 #Sonarqube
 .sonarqube/
 Sonar.bat
+
+# Include images types
+Bookshop.Api/Client/img/*.png
+Bookshop.Api/Client/img/*.jpg
+Bookshop.Api/Client/img/*.jpeg
+Bookshop.Api/Client/img/*.gif
+Bookshop.Api/Client/img/*.svg
+Bookshop.Api/Client/img/*.bmp
+
+# Exclude specific images
+!Bookshop.Api/Client/img/9780385534260.jpg
+!Bookshop.Api/Client/img/9780440414803.jpg
+!Bookshop.Api/Client/img/9781250826978.jpg
+!Bookshop.Api/Client/img/9781338832686.jpg
+!Bookshop.Api/Client/img/9781368057134.jpg
+!Bookshop.Api/Client/img/9781484782316.jpg
+!Bookshop.Api/Client/img/9781535317634.jpg
+!Bookshop.Api/Client/img/9781649374172.jpg
+
+!Bookshop.Api/Client/img/image-book1.jpg
+!Bookshop.Api/Client/img/image-book2.jpg
+!Bookshop.Api/Client/img/image-book3.jpg
