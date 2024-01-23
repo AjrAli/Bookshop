@@ -106,6 +106,11 @@ namespace Bookshop.Api
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, @"Client")),
                 RequestPath = "/client"
             });
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, @"Client", "img")),
+                RequestPath = "/client/img"
+            });
             // Configure Serilog request logging
             app.UseSerilogRequestLogging();
             // Configure routing, CORS, authentication, and authorization

@@ -25,7 +25,7 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.AddComment
             var customerRetrieved = await _dbContext.Customers.Include(x => x.IdentityData).FirstOrDefaultAsync(x => x.IdentityUserDataId == request.Comment.UserId);
             var bookRetrieved = await _dbContext.Books.Include(x => x.Comments).FirstOrDefaultAsync(x => x.Id == request.Comment.BookId);
             var newComment = CreateNewCommentFromDto(request.Comment, customerRetrieved, bookRetrieved);
-            await StoreCommentInDatabase(newComment, bookRetrieved, cancellationToken);
+            await StoreCommentInDatabase(newComment, cancellationToken);
             var newCommentCreated = _mapper.Map<CommentResponseDto>(newComment);
             return new CommentCommandResponse()
             {
@@ -35,7 +35,7 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.AddComment
             };
         }
 
-        private async Task StoreCommentInDatabase(Comment comment, Book book, CancellationToken cancellationToken)
+        private async Task StoreCommentInDatabase(Comment comment, CancellationToken cancellationToken)
         {
             await _dbContext.Comments.AddAsync(comment, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
