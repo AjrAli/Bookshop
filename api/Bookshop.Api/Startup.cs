@@ -1,5 +1,6 @@
 using Bookshop.Api.Middleware;
 using Bookshop.Api.Services;
+using Bookshop.Api.Utility.Service;
 using Bookshop.Application;
 using Bookshop.Application.Settings;
 using Bookshop.Identity;
@@ -32,6 +33,7 @@ namespace Bookshop.Api
             services.AddPersistenceServices(Configuration);
             services.AddIdentityServices(Configuration);
             services.AddScoped<ILoggedInUserService, LoggedInUserService>();
+            services.AddScoped<IFileService, FileService>();
             // Configure JSON options to ignore reference cycles
             services.AddControllers().AddJsonOptions(options =>
             {

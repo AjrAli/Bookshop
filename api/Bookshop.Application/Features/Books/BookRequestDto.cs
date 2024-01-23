@@ -25,8 +25,6 @@ namespace Bookshop.Application.Features.Books
         public long AuthorId { get; set; }
         public long CategoryId { get; set; }
         [JsonIgnore]
-        public string? UserId { get; set; }
-        [JsonIgnore]
         public byte[]? Image { get; set; }
         [JsonIgnore]
         public string? UploadImageDirectory { get; set; }
