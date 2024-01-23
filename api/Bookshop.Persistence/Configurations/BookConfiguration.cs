@@ -21,6 +21,7 @@ namespace Bookshop.Persistence.Configurations
             builder.Property(e => e.PageCount).IsRequired();
             builder.Property(e => e.Dimensions).IsRequired();
             builder.Property(e => e.ImageUrl).IsRequired();
+            builder.Property(e => e.ImageName).IsRequired();
             builder.Property(e => e.Language).IsRequired().HasConversion<string>();
             builder.Property(e => e.PublishDate).IsRequired().HasColumnType("datetime2");
 

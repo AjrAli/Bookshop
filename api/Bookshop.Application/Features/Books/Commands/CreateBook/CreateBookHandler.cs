@@ -62,6 +62,7 @@ namespace Bookshop.Application.Features.Books.Commands.CreateBook
                 bookDto.PageCount,
                 bookDto.Dimensions,
                 $"{bookDto.ImageUrl}.{bookDto.ImageExtension}",
+                $"{bookDto.Isbn}.{bookDto.ImageExtension}",
                 Enum.Parse<Languages>(bookDto.Language),
                 DateTime.Parse(bookDto.PublishDate),
                 author,

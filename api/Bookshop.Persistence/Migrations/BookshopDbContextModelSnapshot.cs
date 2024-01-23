@@ -135,8 +135,7 @@ namespace Bookshop.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<long?>("AuthorId")
-                        .IsRequired()
+                    b.Property<long>("AuthorId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("CategoryId")
@@ -157,6 +156,10 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Dimensions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -267,7 +270,7 @@ namespace Bookshop.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<long?>("BookId")
+                    b.Property<long>("BookId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Content")
@@ -285,7 +288,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
-                    b.Property<long?>("CustomerId")
+                    b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("DateComment")
@@ -330,7 +333,7 @@ namespace Bookshop.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<long?>("BillingAddressId")
+                    b.Property<long>("BillingAddressId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("CreatedBy")
@@ -367,7 +370,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<long?>("ShippingAddressId")
+                    b.Property<long>("ShippingAddressId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("ShoppingCartId")
@@ -572,8 +575,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
-                    b.Property<long?>("CustomerId")
-                        .IsRequired()
+                    b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("DateOrder")
@@ -628,7 +630,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
-                    b.Property<long?>("CustomerId")
+                    b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("LastModifiedBy")
@@ -647,8 +649,7 @@ namespace Bookshop.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId")
-                        .IsUnique()
-                        .HasFilter("[CustomerId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("ShoppingCarts", (string)null);
                 });
@@ -820,12 +821,14 @@ namespace Bookshop.Persistence.Migrations
                     b.HasOne("Bookshop.Domain.Entities.Book", "Book")
                         .WithMany("Comments")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Bookshop.Domain.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Book");
 
@@ -837,7 +840,8 @@ namespace Bookshop.Persistence.Migrations
                     b.HasOne("Bookshop.Domain.Entities.Address", "BillingAddress")
                         .WithMany()
                         .HasForeignKey("BillingAddressId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Bookshop.Domain.Entities.Customer+IdentityUserData", "IdentityData")
                         .WithOne()
@@ -848,7 +852,8 @@ namespace Bookshop.Persistence.Migrations
                     b.HasOne("Bookshop.Domain.Entities.Address", "ShippingAddress")
                         .WithMany()
                         .HasForeignKey("ShippingAddressId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Bookshop.Domain.Entities.ShoppingCart", "ShoppingCart")
                         .WithOne()
@@ -905,7 +910,8 @@ namespace Bookshop.Persistence.Migrations
                     b.HasOne("Bookshop.Domain.Entities.Customer", "Customer")
                         .WithOne()
                         .HasForeignKey("Bookshop.Domain.Entities.ShoppingCart", "CustomerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Customer");
                 });

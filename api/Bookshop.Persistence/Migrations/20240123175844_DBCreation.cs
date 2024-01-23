@@ -225,6 +225,7 @@ namespace Bookshop.Persistence.Migrations
                     PageCount = table.Column<int>(type: "int", nullable: false),
                     Dimensions = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AuthorId = table.Column<long>(type: "bigint", nullable: false),
@@ -279,6 +280,36 @@ namespace Bookshop.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    DateComment = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CustomerId = table.Column<long>(type: "bigint", nullable: false),
+                    BookId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.CheckConstraint("CK_Rating_MaxValue", "[Rating] <= 5");
+                    table.CheckConstraint("CK_Rating_MinValue", "[Rating] > 0");
+                    table.ForeignKey(
+                        name: "FK_Comments_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
@@ -286,8 +317,8 @@ namespace Bookshop.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ShippingAddressId = table.Column<long>(type: "bigint", nullable: true),
-                    BillingAddressId = table.Column<long>(type: "bigint", nullable: true),
+                    ShippingAddressId = table.Column<long>(type: "bigint", nullable: false),
+                    BillingAddressId = table.Column<long>(type: "bigint", nullable: false),
                     IdentityUserDataId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ShoppingCartId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -323,6 +354,7 @@ namespace Bookshop.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MethodOfPayment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateOrder = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StatusOrder = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -350,7 +382,7 @@ namespace Bookshop.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CustomerId = table.Column<long>(type: "bigint", nullable: true),
+                    CustomerId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -460,6 +492,16 @@ namespace Bookshop.Persistence.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_BookId",
+                table: "Comments",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_CustomerId",
+                table: "Comments",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Customers_BillingAddressId",
                 table: "Customers",
                 column: "BillingAddressId");
@@ -506,8 +548,14 @@ namespace Bookshop.Persistence.Migrations
                 name: "IX_ShoppingCarts_CustomerId",
                 table: "ShoppingCarts",
                 column: "CustomerId",
-                unique: true,
-                filter: "[CustomerId] IS NOT NULL");
+                unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Comments_Customers_CustomerId",
+                table: "Comments",
+                column: "CustomerId",
+                principalTable: "Customers",
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Customers_ShoppingCarts_ShoppingCartId",
@@ -528,16 +576,8 @@ namespace Bookshop.Persistence.Migrations
                 table: "Customers");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Customers_Addresses_BillingAddressId",
-                table: "Customers");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Customers_Addresses_ShippingAddressId",
-                table: "Customers");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Customers_ShoppingCarts_ShoppingCartId",
-                table: "Customers");
+                name: "FK_ShoppingCarts_Customers_CustomerId",
+                table: "ShoppingCarts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -553,6 +593,9 @@ namespace Bookshop.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "LineItems");
@@ -579,13 +622,13 @@ namespace Bookshop.Persistence.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
                 name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "ShoppingCarts");
-
-            migrationBuilder.DropTable(
-                name: "Customers");
         }
     }
 }
