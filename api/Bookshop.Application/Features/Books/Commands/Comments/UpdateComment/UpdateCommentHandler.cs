@@ -3,7 +3,6 @@ using Bookshop.Application.Contracts.MediatR.Command;
 using Bookshop.Application.Exceptions;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment

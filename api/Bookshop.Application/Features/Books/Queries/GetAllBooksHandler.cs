@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Query;
 using Bookshop.Application.Exceptions;
-using Bookshop.Application.Features.Books;
+using Bookshop.Application.Features.Common.Responses;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookshop.Application.Features.Common.Queries.Books
+namespace Bookshop.Application.Features.Books.Queries
 {
     public class GetAllBooksHandler : IQueryHandler<GetAllBooks, GetAllResponse>
     {

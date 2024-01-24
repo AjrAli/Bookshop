@@ -2,11 +2,12 @@
 using Bookshop.Application.Contracts.MediatR.Query;
 using Bookshop.Application.Exceptions;
 using Bookshop.Application.Features.Authors;
+using Bookshop.Application.Features.Common.Responses;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookshop.Application.Features.Common.Queries.Authors
+namespace Bookshop.Application.Features.Authors.Queries
 {
     public class GetAllAuthorsHandler : IQueryHandler<GetAllAuthors, GetAllResponse>
     {

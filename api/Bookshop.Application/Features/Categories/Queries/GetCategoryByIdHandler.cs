@@ -1,36 +1,36 @@
 ﻿using AutoMapper;
 using Bookshop.Application.Contracts.MediatR.Query;
 using Bookshop.Application.Exceptions;
-using Bookshop.Application.Features.Authors;
+using Bookshop.Application.Features.Common.Responses;
 using Bookshop.Domain.Entities;
 using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookshop.Application.Features.Common.Queries.Authors
+namespace Bookshop.Application.Features.Categories.Queries
 {
-    public class GetAuthorByIdHandler : IQueryHandler<GetAuthorById, GetByIdResponse>
+    public class GetCategoryByIdHandler : IQueryHandler<GetCategoryById, GetByIdResponse>
     {
         private readonly BookshopDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetAuthorByIdHandler(IMapper mapper, BookshopDbContext dbContext)
+        public GetCategoryByIdHandler(IMapper mapper, BookshopDbContext dbContext)
         {
             _mapper = mapper;
             _dbContext = dbContext;
         }
 
-        public async Task<GetByIdResponse> Handle(GetAuthorById request, CancellationToken cancellationToken)
+        public async Task<GetByIdResponse> Handle(GetCategoryById request, CancellationToken cancellationToken)
         {
-            var query = _dbContext.Authors.AsQueryable();
+            var query = _dbContext.Categories.AsQueryable();
             query = query.Include(x => x.Books);
             var entity = await query.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             if (entity == null)
             {
-                throw new NotFoundException($"No {typeof(Author)} with Id : {request.Id} not found");
+                throw new NotFoundException($"No {typeof(Category)} with Id : {request.Id} not found");
             }
 
-            var sourceType = typeof(Author);
-            var targetType = typeof(AuthorResponseDto);
+            var sourceType = typeof(Category);
+            var targetType = typeof(CategoryResponseDto);
 
             var dto = _mapper.Map(entity, sourceType, targetType);
 

@@ -1,6 +1,6 @@
 ﻿using Bookshop.Application.Features.Response;
 
-namespace Bookshop.Application.Features.Customers
+namespace Bookshop.Application.Features.Customers.Commands
 {
     public class CustomerCommandResponse : CommandResponse
     {

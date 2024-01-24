@@ -1,4 +1,4 @@
-﻿using Bookshop.Application.Features.Common.Queries.Authors;
+﻿using Bookshop.Application.Features.Authors.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

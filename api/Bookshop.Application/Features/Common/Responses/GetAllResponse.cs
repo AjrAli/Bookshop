@@ -1,6 +1,6 @@
 ﻿using Bookshop.Application.Features.Response;
 
-namespace Bookshop.Application.Features.Common.Queries
+namespace Bookshop.Application.Features.Common.Responses
 {
     public class GetAllResponse : BaseResponse
     {
