@@ -15,19 +15,15 @@ namespace Bookshop.Persistence.Configurations
 
             // CreatedBy
             builder.Property(e => e.CreatedBy).IsRequired().HasMaxLength(100);
-            builder.Property(e => e.CreatedBy).Metadata.GetBeforeSaveBehavior();
 
             // CreatedDate
             builder.Property(e => e.CreatedDate).IsRequired().ValueGeneratedOnAdd().HasDefaultValueSql("SYSDATETIMEOFFSET()");
-            builder.Property(e => e.CreatedDate).Metadata.GetBeforeSaveBehavior();
 
             // LastModifiedBy
             builder.Property(e => e.LastModifiedBy).IsRequired().HasMaxLength(100);
-            builder.Property(e => e.LastModifiedBy).Metadata.GetBeforeSaveBehavior();
 
             // LastModifiedDate
-            builder.Property(e => e.LastModifiedDate).IsRequired().ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("SYSDATETIMEOFFSET()");
-            builder.Property(e => e.LastModifiedDate).Metadata.GetBeforeSaveBehavior();
+            builder.Property(e => e.LastModifiedDate).IsRequired();
         }
     }
 }

@@ -56,9 +56,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<long?>("LocationPricingId")
                         .HasColumnType("bigint");
@@ -113,9 +111,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -181,9 +177,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("PageCount")
                         .HasColumnType("int");
@@ -248,9 +242,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -300,9 +292,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
@@ -361,9 +351,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -484,9 +472,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<long?>("OrderId")
                         .HasColumnType("bigint");
@@ -542,9 +528,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("ShippingFee")
                         .HasColumnType("decimal(18,2)");
@@ -587,9 +571,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MethodOfPayment")
                         .IsRequired()
@@ -639,9 +621,7 @@ namespace Bookshop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");

@@ -75,6 +75,7 @@ namespace Bookshop.Persistence.Context
                         break;
                     case EntityState.Modified:
                         entry.Entity.LastModifiedBy = _loggedInUserService?.GetUserId() ?? "";
+                        entry.Entity.LastModifiedDate = DateTimeOffset.Now;
                         break;
                 }
             }
