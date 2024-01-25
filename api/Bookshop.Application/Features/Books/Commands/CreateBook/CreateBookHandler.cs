@@ -27,16 +27,8 @@ namespace Bookshop.Application.Features.Books.Commands.CreateBook
             var categoryRetrieved = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == request.Book.CategoryId);
             var newBook = CreateNewBookFromDto(request.Book, authorRetrieved, categoryRetrieved);
             await StoreBookInDatabase(newBook, cancellationToken);
+            await CreateImageOfBook(request, newBook);
             var newBookCreated = _mapper.Map<BookResponseDto>(newBook);
-            // Transform the byte[] to a new image
-            var fileName = $"{newBookCreated.Isbn}.{request.Book.ImageExtension}";
-            var filePath = Path.Combine(request.Book.UploadImageDirectory, fileName);
-
-            using (var stream = new MemoryStream(request.Book.Image))
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await stream.CopyToAsync(fileStream);
-            }
             return new BookCommandResponse()
             {
                 Book = newBookCreated,
@@ -44,7 +36,18 @@ namespace Bookshop.Application.Features.Books.Commands.CreateBook
                 IsSaveChangesAsyncCalled = true
             };
         }
+        private async Task CreateImageOfBook(CreateBook request, Book book)
+        {
+            // Transform the byte[] to a new image
+            var fileName = $"{book.Isbn}.{request.Book.ImageExtension}";
+            var filePath = Path.Combine(request.Book.UploadImageDirectory, fileName);
 
+            using (var stream = new MemoryStream(request.Book.Image))
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await stream.CopyToAsync(fileStream);
+            }
+        }
         private async Task StoreBookInDatabase(Book book, CancellationToken cancellationToken)
         {
             await _dbContext.Books.AddAsync(book, cancellationToken);

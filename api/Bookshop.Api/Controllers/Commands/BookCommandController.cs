@@ -6,6 +6,7 @@ using Bookshop.Application.Features.Books.Commands.Comments.AddComment;
 using Bookshop.Application.Features.Books.Commands.Comments.DeleteComment;
 using Bookshop.Application.Features.Books.Commands.Comments.UpdateComment;
 using Bookshop.Application.Features.Books.Commands.CreateBook;
+using Bookshop.Application.Features.Books.Commands.DeleteBook;
 using Bookshop.Persistence.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -83,6 +84,17 @@ namespace Bookshop.Api.Controllers.Commands
             var dataCommandReponse = await _mediator.Send(new CreateBook
             {
                 Book = bookFileDto.Book
+            });
+            return Ok(dataCommandReponse);
+        }
+        [Authorize(Roles = RoleNames.Administrator)]
+        [HttpPost("delete-book")]
+        public async Task<IActionResult> DeleteBook([FromBody] long id)
+        {
+            var dataCommandReponse = await _mediator.Send(new DeleteBook
+            {
+                Id = id,
+                UploadImageDirectory = Path.Combine(_environment.ContentRootPath, @"Client", "img")
             });
             return Ok(dataCommandReponse);
         }

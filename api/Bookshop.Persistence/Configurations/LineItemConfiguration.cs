@@ -16,6 +16,11 @@ namespace Bookshop.Persistence.Configurations
 
             // Add check constraint using raw SQL
             builder.HasCheckConstraint("CK_Quantity_MaxValue", "[Quantity] <= 100");
+            // Relationships
+            builder.HasOne(e => e.Book)
+                   .WithMany()
+                   .HasForeignKey(e => e.BookId)
+                   .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

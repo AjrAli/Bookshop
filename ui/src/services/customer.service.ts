@@ -209,6 +209,10 @@ export class CustomerService {
           this.shoppingCartService.resetLocalShoppingCart();
           this.resetFullyCustomer();
         }
+      },
+      error: () => {
+        this.shoppingCartService.resetLocalShoppingCart();
+        this.resetFullyCustomer();
       }
     });
   }

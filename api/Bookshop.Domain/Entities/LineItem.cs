@@ -26,6 +26,7 @@ namespace Bookshop.Domain.Entities
         {
             Book = book;
             Quantity = quantity;
+            BookId = book?.Id;
         }
 
         private void CalculatePrice()
@@ -39,8 +40,8 @@ namespace Bookshop.Domain.Entities
         // Relationships
         public long? OrderId { get; set; }
         public Order? Order { get; set; }
-        public long BookId { get; set; }
-        public Book Book { get; set; }
+        public long? BookId { get; set; }
+        public Book? Book { get; set; }
         public long? ShoppingCartId { get; set; }
         public ShoppingCart? ShoppingCart { get; set; }
     }
