@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SearchStateService } from '../../../services/search/search-state.service';
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast.service';
-import { Subject, Subscription, catchError, debounceTime, distinctUntilChanged, of, startWith, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, catchError, debounceTime, distinctUntilChanged, of, startWith, takeUntil } from 'rxjs';
 import { ErrorResponse } from '../../dto/response/error/error-response';
 
 @Component({
@@ -19,9 +19,8 @@ import { ErrorResponse } from '../../dto/response/error/error-response';
 export class SearchComponent implements OnInit {
   books: BookResponseDto[] | undefined;
   keyword: string = '';
-  private destroy$: Subject<void> = new Subject<void>();
-  private searchKeyword$ = new Subject<string>();
-  private searchSubscription: Subscription | undefined;
+  private componentDestroyed$: Subject<void> = new Subject<void>();
+  private searchKeyword$ = new BehaviorSubject<string>('');
 
   constructor(
     private router: Router,
@@ -37,13 +36,12 @@ export class SearchComponent implements OnInit {
 
   ngOnDestroy(): void {
     // Unsubscribe from observables to prevent memory leaks
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.searchSubscription?.unsubscribe();
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
   }
 
   private initializeSearchStateService(): void {
-    this.searchSubscription = this.route.queryParams.subscribe({
+    this.route.queryParams.subscribe({
       next: (params: any) => {
         if (params?.keyword) {
           this.keyword = decodeURIComponent(params.keyword ?? '');
@@ -52,14 +50,15 @@ export class SearchComponent implements OnInit {
 
         // Subscribe to changes in the search keyword in the SearchStateService
         this.searchStateService.searchKeyword$
-          .pipe(takeUntil(this.destroy$))
+          .pipe(takeUntil(this.componentDestroyed$))
           .subscribe({
             next: (keyword: string) => {
               keyword = keyword.trim();
               if (!keyword) {
                 this.router.navigate(['/home']);
               }
-              this.books = [];
+              if (this.searchKeyword$.value !== keyword)
+                this.books = [];
               // Emit the new search keyword to the searchKeyword$ Subject
               // whenever it changes in the SearchStateService
               this.searchKeyword$.next(keyword);
@@ -73,10 +72,9 @@ export class SearchComponent implements OnInit {
         // when the component is initialized with a search keyword
         this.searchKeyword$
           .pipe(
-            startWith(this.keyword), // Use an initial empty string to trigger the search on component load
             debounceTime(500), // Wait for 500ms between consecutive requests
             distinctUntilChanged(), // Ignore consecutive identical requests
-            takeUntil(this.destroy$) // Unsubscribe from the observable when the component is destroyed
+            takeUntil(this.componentDestroyed$) // Unsubscribe from the observable when the component is destroyed
           )
           .subscribe({
             next: (keyword: string) => {
@@ -97,7 +95,7 @@ export class SearchComponent implements OnInit {
     this.searchService
       .getSearchResults(keyword)
       ?.pipe(
-        takeUntil(this.destroy$),
+        takeUntil(this.componentDestroyed$),
         catchError((error) => {
           this.toastService.showError(error as ErrorResponse);
           return of(null); // Return a new observable with null value to continue the observable chain
