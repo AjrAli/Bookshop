@@ -2,12 +2,15 @@
 using FluentValidation;
 using static Bookshop.Domain.Entities.Book;
 
-namespace Bookshop.Application.Features.Books.Commands.CreateBook
+namespace Bookshop.Application.Features.Books.Commands.UpdateBook
 {
-    public class CreateBookValidator : AbstractValidator<CreateBook>
+    public class UpdateBookValidator : AbstractValidator<UpdateBook>
     {
-        public CreateBookValidator()
+        public UpdateBookValidator()
         {
+            RuleFor(p => p.Book.Id)
+                .NotEmpty().WithMessage("{PropertyName} is required.")
+                .GreaterThan(0).WithMessage("{PropertyName} not found");
             RuleFor(p => p.Book.Title)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");

@@ -7,6 +7,7 @@ using Bookshop.Application.Features.Books.Commands.Comments.DeleteComment;
 using Bookshop.Application.Features.Books.Commands.Comments.UpdateComment;
 using Bookshop.Application.Features.Books.Commands.CreateBook;
 using Bookshop.Application.Features.Books.Commands.DeleteBook;
+using Bookshop.Application.Features.Books.Commands.UpdateBook;
 using Bookshop.Persistence.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -70,18 +71,27 @@ namespace Bookshop.Api.Controllers.Commands
         [HttpPost("create-book")]
         public async Task<IActionResult> CreateBook([FromForm] BookFileRequestDto bookFileDto)
         {
-            if (bookFileDto.Book == null)
-                return BadRequest("BookDto is null.");
-            // Check if the uploaded file is an image with valid size
-            if (!_fileService.IsFileValid(bookFileDto.File))
-                return BadRequest("Invalid file type/length. Please upload an image with valid type.");
+            var resultValidation = await ValidateRequest(bookFileDto);
+            if (resultValidation != null)
+                return resultValidation;
 
-            bookFileDto.Book.Image = await _fileService.GetFileContent(bookFileDto.File);
-            if (bookFileDto.Book.Image == null || bookFileDto.Book.Image.Length == 0)
-                return BadRequest("Image is empty/invalid");
-            bookFileDto.Book.UploadImageDirectory = Path.Combine(_environment.ContentRootPath, @"Client", "img");
-            bookFileDto.Book.ImageExtension = GetExtension(bookFileDto.File.ContentType);
+            await AssignImage(bookFileDto);
             var dataCommandReponse = await _mediator.Send(new CreateBook
+            {
+                Book = bookFileDto.Book
+            });
+            return Ok(dataCommandReponse);
+        }
+        [Authorize(Roles = RoleNames.Administrator)]
+        [HttpPost("update-book")]
+        public async Task<IActionResult> UpdateBook([FromForm] BookFileRequestDto bookFileDto)
+        {
+            var resultValidation = await ValidateRequest(bookFileDto);
+            if (resultValidation != null)
+                return resultValidation;
+
+            await AssignImage(bookFileDto);
+            var dataCommandReponse = await _mediator.Send(new UpdateBook
             {
                 Book = bookFileDto.Book
             });
@@ -97,6 +107,24 @@ namespace Bookshop.Api.Controllers.Commands
                 UploadImageDirectory = Path.Combine(_environment.ContentRootPath, @"Client", "img")
             });
             return Ok(dataCommandReponse);
+        }
+        private async Task AssignImage(BookFileRequestDto bookFileDto)
+        {
+            bookFileDto.Book.Image = await _fileService.GetFileContent(bookFileDto.File);
+            bookFileDto.Book.UploadImageDirectory = Path.Combine(_environment.ContentRootPath, @"Client", "img");
+            bookFileDto.Book.ImageExtension = GetExtension(bookFileDto.File.ContentType);
+        }
+
+        private async Task<IActionResult?> ValidateRequest(BookFileRequestDto bookFileDto)
+        {
+            // Check if the uploaded file is an image with valid size
+            if (!_fileService.IsFileValid(bookFileDto.File))
+                return BadRequest("Invalid file type/length. Please upload an image with valid type.");
+
+            var image = await _fileService.GetFileContent(bookFileDto.File);
+            if (image == null || image.Length == 0)
+                return BadRequest("Image is empty/invalid");
+            return null;
         }
     }
 }
