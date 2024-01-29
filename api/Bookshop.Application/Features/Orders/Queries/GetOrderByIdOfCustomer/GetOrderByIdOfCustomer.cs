@@ -1,9 +1,9 @@
 ﻿using Bookshop.Application.Contracts.MediatR.Query;
 using System.Text.Json.Serialization;
 
-namespace Bookshop.Application.Features.Orders.Queries.GetOrderById
+namespace Bookshop.Application.Features.Orders.Queries.GetOrderByIdOfCustomer
 {
-    public class GetOrderById : IQuery<GetOrderByIdResponse>
+    public class GetOrderByIdOfCustomer : IQuery<GetOrderByIdOfCustomerResponse>
     {
         [JsonIgnore]
         public string? UserId { get; set; }

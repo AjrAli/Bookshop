@@ -5,20 +5,20 @@ using Bookshop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using static Bookshop.Domain.Entities.Order;
 
-namespace Bookshop.Application.Features.Orders.Queries.GetOrderById
+namespace Bookshop.Application.Features.Orders.Queries.GetOrderByIdOfCustomer
 {
-    public class GetOrderByIdHandler : IQueryHandler<GetOrderById, GetOrderByIdResponse>
+    public class GetOrderByIdOfCustomerHandler : IQueryHandler<GetOrderByIdOfCustomer, GetOrderByIdOfCustomerResponse>
     {
         private readonly BookshopDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetOrderByIdHandler(BookshopDbContext dbContext, IMapper mapper)
+        public GetOrderByIdOfCustomerHandler(BookshopDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
 
-        public async Task<GetOrderByIdResponse> Handle(GetOrderById request, CancellationToken cancellationToken)
+        public async Task<GetOrderByIdOfCustomerResponse> Handle(GetOrderByIdOfCustomer request, CancellationToken cancellationToken)
         {
             var order = await _dbContext.Orders
                                                .Include(x => x.Customer)
