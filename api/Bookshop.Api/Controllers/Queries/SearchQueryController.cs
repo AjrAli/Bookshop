@@ -14,8 +14,8 @@ namespace Bookshop.Api.Controllers.Queries
             _mediator = mediator;
         }
 
-        [HttpGet("book/{keyword}")]
-        public async Task<IActionResult> GetSearchResults(string keyword)
+        [HttpGet("book")]
+        public async Task<IActionResult> GetSearchResults([FromQuery] string keyword)
         {
             var dataReponse = await _mediator.Send(new GetSearchResults
             {

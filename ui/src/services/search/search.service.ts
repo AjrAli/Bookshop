@@ -11,6 +11,7 @@ export class SearchService {
     constructor(private http: HttpClient) { }
 
     getSearchResults(keyword: string): Observable<BookResponseDto[]> {
-        return this.http.get<BookResponseDto[]>(`${this.apiUrl}/search/book/${keyword}`);
+        const url = `${this.apiUrl}/search/book?keyword=${keyword}`
+        return this.http.get<BookResponseDto[]>(`${url}`);
     }
 }

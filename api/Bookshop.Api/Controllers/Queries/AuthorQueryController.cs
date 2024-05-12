@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
-    [Route("api/author")]
+    [Route("api/authors")]
     public class AuthorQueryController : ControllerBase
     {
         private readonly IMediator _mediator;

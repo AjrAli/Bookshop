@@ -57,8 +57,8 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
   }
   removeItemsSelectedToApi() {
     const listIds = this.listItems?.shopIds;
-    if (this.manage === 'order' && listIds && listIds.length > 0) {
-      this.orderUpdateSubscription = this.orderService.updateOrderFromApi(new UpdateOrderDto({ id: this.order?.id, itemsId: listIds })).subscribe({
+    if (this.order && this.manage === 'order' && listIds && listIds.length > 0) {
+      this.orderUpdateSubscription = this.orderService.updateOrderFromApi(new UpdateOrderDto({itemsId: listIds }), this.order.id).subscribe({
         next: (r) => {
           if (r) {
             this.listItems!.shopIds = [];

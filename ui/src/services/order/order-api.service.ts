@@ -11,26 +11,26 @@ import { OrderResponse } from "../../app/dto/handler-response/order/order-respon
 
 @Injectable()
 export class OrderApiService {
-    protected apiUrl: string = environment.apiUrl + '/order';
+    protected apiUrl: string = environment.apiUrl + '/orders';
 
     constructor(private http: HttpClient) { }
 
     getOrders(): Observable<OrdersResponse> {
-        return this.http.get<OrdersResponse>(`${this.apiUrl}/get-user-orders`);
+        return this.http.get<OrdersResponse>(`${this.apiUrl}`);
     }
     getOrderById(id: number): Observable<OrderResponse> {
-        return this.http.get<OrderResponse>(`${this.apiUrl}/get-user-order/${id}`);
+        return this.http.get<OrderResponse>(`${this.apiUrl}/${id}`);
     }
     createOrder(order: OrderDto): Observable<OrderCommandResponse> {
-        return this.http.post<OrderCommandResponse>(`${this.apiUrl}/create-user-order`, order);
+        return this.http.post<OrderCommandResponse>(`${this.apiUrl}`, order);
     }
 
     cancelOrder(id: number): Observable<BaseResponse> {
-        return this.http.post<BaseResponse>(`${this.apiUrl}/cancel-user-order`, id);
+        return this.http.put<BaseResponse>(`${this.apiUrl}/${id}/cancel`, {});
     }
 
-    updateOrder(updateOrder: UpdateOrderDto): Observable<OrderCommandResponse> {
-        return this.http.post<OrderCommandResponse>(`${this.apiUrl}/update-user-order`, updateOrder);
+    updateOrder(updateOrder: UpdateOrderDto, id:number): Observable<OrderCommandResponse> {
+        return this.http.put<OrderCommandResponse>(`${this.apiUrl}/${id}`, updateOrder);
     }
 
 }

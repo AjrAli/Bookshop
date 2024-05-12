@@ -5,5 +5,6 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.AddComment
     public class AddComment : ICommand<CommentCommandResponse>
     {
         public CommentRequestDto? Comment { get; set; }
+        public long BookId { get; set; }
     }
 }

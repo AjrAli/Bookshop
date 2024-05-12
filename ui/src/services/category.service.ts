@@ -7,6 +7,6 @@ export class CategoryService extends CommonApiService {
 
     constructor(http: HttpClient) {
         super(http);
-        this.apiUrl += '/category';
+        this.apiUrl += '/categories';
     }
 }

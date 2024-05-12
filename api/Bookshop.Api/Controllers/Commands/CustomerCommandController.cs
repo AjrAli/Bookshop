@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
-    [Route("api/customer")]
+    [Route("api/customers")]
     public class CustomerCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -22,7 +22,7 @@ namespace Bookshop.Api.Controllers.Commands
             _loggedInUserService = loggedInUserService;
         }
 
-        [HttpPost("create-customer")]
+        [HttpPost("")]
         public async Task<IActionResult> CreateCustomer([FromBody] CustomerRequestDto customerDto)
         {
             var dataCommandReponse = await _mediator.Send(new CreateCustomer
@@ -32,7 +32,7 @@ namespace Bookshop.Api.Controllers.Commands
             return Ok(dataCommandReponse);
         }
         [Authorize]
-        [HttpPost("edit-profile-customer")]
+        [HttpPut("")]
         public async Task<IActionResult> EditProfile([FromBody] EditProfileDto customerDto)
         {
             customerDto.UserId = _loggedInUserService?.GetUserId();
@@ -43,7 +43,7 @@ namespace Bookshop.Api.Controllers.Commands
             return Ok(dataCommandReponse);
         }
         [Authorize]
-        [HttpPost("edit-password-customer")]
+        [HttpPut("password")]
         public async Task<IActionResult> EditPassword([FromBody] EditPasswordDto customerDto)
         {
             customerDto.UserId = _loggedInUserService?.GetUserId();

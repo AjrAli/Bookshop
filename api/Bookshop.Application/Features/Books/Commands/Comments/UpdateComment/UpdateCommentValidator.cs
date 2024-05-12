@@ -6,7 +6,7 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
     {
         public UpdateCommentValidator()
         {
-            RuleFor(p => p.Comment.Id)
+            RuleFor(p => p.Id)
                 .GreaterThan(0)
                 .WithMessage("{PropertyName} not found");
             RuleFor(p => p.Comment.Title)

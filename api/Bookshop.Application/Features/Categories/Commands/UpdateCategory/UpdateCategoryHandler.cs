@@ -22,7 +22,7 @@ namespace Bookshop.Application.Features.Categories.Commands.UpdateCategory
         {
             // Validate the request
             await ValidateRequest(request);
-            var editedCategory = await EditCategoryFromDto(request.Category);
+            var editedCategory = await EditCategoryFromDto(request.Category, request.Id);
             EditCategoryInDatabase(editedCategory);
             await SaveChangesAsync(cancellationToken);
             var editedCategoryDto = _mapper.Map<CategoryResponseDto>(editedCategory);
@@ -33,9 +33,9 @@ namespace Bookshop.Application.Features.Categories.Commands.UpdateCategory
                 IsSaveChangesAsyncCalled = true
             };
         }
-        private async Task<Category> EditCategoryFromDto(CategoryRequestDto categoryDto)
+        private async Task<Category> EditCategoryFromDto(CategoryRequestDto categoryDto, long id)
         {
-            var categoryExisting = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == categoryDto.Id);
+            var categoryExisting = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
             categoryExisting.Title = categoryDto.Title;
             categoryExisting.Description = categoryDto.Description;
             return categoryExisting;
@@ -51,8 +51,8 @@ namespace Bookshop.Application.Features.Categories.Commands.UpdateCategory
 
         public async Task ValidateRequest(UpdateCategory request)
         {
-            if (!await _dbContext.Categories.AnyAsync(x => x.Id == request.Category.Id))
-                throw new BadRequestException($"Category: {request.Category.Id} not found in the database.");
+            if (!await _dbContext.Categories.AnyAsync(x => x.Id == request.Id))
+                throw new BadRequestException($"Category: {request.Id} not found in the database.");
         }
     }
 }

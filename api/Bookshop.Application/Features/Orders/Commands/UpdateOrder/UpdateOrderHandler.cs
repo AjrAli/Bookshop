@@ -82,7 +82,7 @@ namespace Bookshop.Application.Features.Orders.Commands.UpdateOrder
         {
             if (orderToUpdate == null || !AreAllItemsValidForOrder(request?.Order?.ItemsId, orderToUpdate.LineItems))
             {
-                throw new NotFoundException($"No valid {nameof(Order)} found for order ID {request?.Order?.Id} or the selected items are not valid for the current user's order.");
+                throw new NotFoundException($"No valid {nameof(Order)} found for order ID {request?.Id} or the selected items are not valid for the current user's order.");
             }
         }
 
@@ -117,7 +117,7 @@ namespace Bookshop.Application.Features.Orders.Commands.UpdateOrder
                 .Include(x => x.LineItems)
                 .ThenInclude(x => x.Book)
                 .FirstOrDefaultAsync(x => x.Customer.IdentityUserDataId == request.Order.UserId &&
-                                           x.Id == request.Order.Id &&
+                                           x.Id == request.Id &&
                                            x.StatusOrder == Status.Pending, cancellationToken);
         }
 

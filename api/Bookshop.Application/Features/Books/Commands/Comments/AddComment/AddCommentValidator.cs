@@ -15,7 +15,7 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.AddComment
             RuleFor(p => p.Comment.Rating)
                 .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0")
                 .LessThanOrEqualTo(5).WithMessage("{PropertyName} must be less or equal to 5");
-            RuleFor(p => p.Comment.BookId)
+            RuleFor(p => p.BookId)
                 .GreaterThan(0)
                 .WithMessage("{PropertyName} not found");
         }

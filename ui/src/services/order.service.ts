@@ -21,8 +21,8 @@ export class OrderService {
             error: (e) => this.handleOrderError(e)
         }), map(response => response.order));
     }
-    updateOrderFromApi(updateOrder: UpdateOrderDto): Observable<OrderResponseDto> {
-        return this.orderApiService.updateOrder(updateOrder).pipe(tap({
+    updateOrderFromApi(updateOrder: UpdateOrderDto, id:number): Observable<OrderResponseDto> {
+        return this.orderApiService.updateOrder(updateOrder, id).pipe(tap({
             next: (r) => this.handleOrderResponse(r),
             error: (e) => this.handleOrderError(e)
         }), map(response => response.order));

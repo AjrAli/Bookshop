@@ -7,6 +7,6 @@ export class AuthorService extends CommonApiService {
 
     constructor(http: HttpClient) {
         super(http);
-        this.apiUrl += '/author';
+        this.apiUrl += '/authors';
     }
 }

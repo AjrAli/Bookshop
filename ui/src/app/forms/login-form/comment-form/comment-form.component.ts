@@ -51,8 +51,8 @@ export class CommentFormComponent implements OnInit {
   }
   addComment(bookId: number | undefined, title: string, rating: number, content: string) {
     if (bookId && title && rating && content) {
-      const commentDto = new CommentDto({ title: title, rating: rating, content: content, bookId: bookId });
-      this.bookService.addComment(commentDto).subscribe({
+      const commentDto = new CommentDto({ title: title, rating: rating, content: content});
+      this.bookService.addComment(commentDto, bookId).subscribe({
         next: (response) => {
           this.newCommentCreated.emit(response);
         }
@@ -63,8 +63,8 @@ export class CommentFormComponent implements OnInit {
     comment.title = title;
     comment.rating = rating;
     comment.content = content;
-    const commentDto = new CommentDto({ id: comment.id, title: comment.title, rating: comment.rating, content: comment.content });
-    this.bookService.updateComment(commentDto).subscribe({
+    const commentDto = new CommentDto({ title: comment.title, rating: comment.rating, content: comment.content });
+    this.bookService.updateComment(commentDto, comment.id).subscribe({
       next: (response) => {
         this.modalRefPassed?.close(new CommentResponseDto(response));
       }

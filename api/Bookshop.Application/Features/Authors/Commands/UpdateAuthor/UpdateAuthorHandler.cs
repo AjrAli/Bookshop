@@ -22,7 +22,7 @@ namespace Bookshop.Application.Features.Authors.Commands.UpdateAuthor
         {
             // Validate the request
             await ValidateRequest(request);
-            var editedAuthor = await EditAuthorFromDto(request.Author);
+            var editedAuthor = await EditAuthorFromDto(request.Author, request.Id);
             EditAuthorInDatabase(editedAuthor);
             await SaveChangesAsync(cancellationToken);
             var editedAuthorDto = _mapper.Map<AuthorResponseDto>(editedAuthor);
@@ -33,9 +33,9 @@ namespace Bookshop.Application.Features.Authors.Commands.UpdateAuthor
                 IsSaveChangesAsyncCalled = true
             };
         }
-        private async Task<Author> EditAuthorFromDto(AuthorRequestDto authorDto)
+        private async Task<Author> EditAuthorFromDto(AuthorRequestDto authorDto, long id)
         {
-            var authorExisting = await _dbContext.Authors.FirstOrDefaultAsync(x => x.Id == authorDto.Id);
+            var authorExisting = await _dbContext.Authors.FirstOrDefaultAsync(x => x.Id == id);
             authorExisting.Name = authorDto.Name;
             authorExisting.About = authorDto.About;
             return authorExisting;
@@ -51,8 +51,8 @@ namespace Bookshop.Application.Features.Authors.Commands.UpdateAuthor
 
         public async Task ValidateRequest(UpdateAuthor request)
         {
-            if (!await _dbContext.Authors.AnyAsync(x => x.Id == request.Author.Id))
-                throw new BadRequestException($"Author: {request.Author.Id} not found in the database.");
+            if (!await _dbContext.Authors.AnyAsync(x => x.Id == request.Id))
+                throw new BadRequestException($"Author: {request.Id} not found in the database.");
         }
     }
 }

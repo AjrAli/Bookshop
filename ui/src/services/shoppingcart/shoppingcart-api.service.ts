@@ -10,32 +10,32 @@ import { ShoppingCartResponse } from "../../app/dto/handler-response/shoppingcar
 
 @Injectable()
 export class ShoppingCartApiService {
-    protected apiUrl: string = environment.apiUrl + '/shopcart';
+    protected apiUrl: string = environment.apiUrl + '/shopcarts';
 
     constructor(private http: HttpClient) { }
 
     getShoppingCart(): Observable<ShoppingCartResponse> {
         // API call to get a full details of shopping cart
-        return this.http.get<ShoppingCartResponse>(`${this.apiUrl}/get-user-shopcart`);
+        return this.http.get<ShoppingCartResponse>(`${this.apiUrl}/current`);
     }
 
     getShoppingCartDetails(): Observable<ShoppingCartDetailsResponse> {
         // API call to get a full details of shopping cart
-        return this.http.get<ShoppingCartDetailsResponse>(`${this.apiUrl}/get-user-shopcart-details-review`);
+        return this.http.get<ShoppingCartDetailsResponse>(`${this.apiUrl}/current/reviews`);
     }
 
     createShoppingCart(shoppingCart: ShoppingCartDto): Observable<ShoppingCartCommandResponse> {
         // API call to create a new shopping cart
-        return this.http.post<ShoppingCartCommandResponse>(`${this.apiUrl}/create-user-shopcart`, shoppingCart);
+        return this.http.post<ShoppingCartCommandResponse>(`${this.apiUrl}`, shoppingCart);
     }
 
     updateShoppingCart(shoppingCart: ShoppingCartDto): Observable<ShoppingCartCommandResponse> {
         // API call to update an existing shopping cart
-        return this.http.post<ShoppingCartCommandResponse>(`${this.apiUrl}/update-user-shopcart`, shoppingCart);
+        return this.http.put<ShoppingCartCommandResponse>(`${this.apiUrl}`, shoppingCart);
     }
 
     resetShoppingCart(): Observable<BaseResponse> {
-        return this.http.post<BaseResponse>(`${this.apiUrl}/reset-user-shopcart`, {});
+        return this.http.put<BaseResponse>(`${this.apiUrl}/reset`, {});
     }
 
 }

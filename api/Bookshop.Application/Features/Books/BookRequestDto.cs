@@ -4,7 +4,6 @@ namespace Bookshop.Application.Features.Books
 {
     public class BookRequestDto
     {
-        public long? Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Publisher { get; set; }

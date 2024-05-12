@@ -8,7 +8,7 @@ namespace Bookshop.Application.Features.Books.Commands.UpdateBook
     {
         public UpdateBookValidator()
         {
-            RuleFor(p => p.Book.Id)
+            RuleFor(p => p.Id)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .GreaterThan(0).WithMessage("{PropertyName} not found");
             RuleFor(p => p.Book.Title)

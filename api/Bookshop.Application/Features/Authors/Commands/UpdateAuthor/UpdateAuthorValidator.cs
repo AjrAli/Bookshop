@@ -6,7 +6,7 @@ namespace Bookshop.Application.Features.Authors.Commands.UpdateAuthor
     {
         public UpdateAuthorValidator()
         {
-            RuleFor(p => p.Author.Id)
+            RuleFor(p => p.Id)
                 .GreaterThan(0)
                 .WithMessage("{PropertyName} not found");
             RuleFor(p => p.Author.Name)

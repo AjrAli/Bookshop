@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
-    [Route("api/book")]
+    [Route("api/books")]
     public class BookQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -29,23 +29,24 @@ namespace Bookshop.Api.Controllers.Queries
             var dataReponse = await _mediator.Send(new GetAllBooks());
             return Ok(dataReponse);
         }
-        [HttpGet("author/{id}")]
-        public async Task<IActionResult> GetBooksByAuthorId(long id)
+        [HttpGet("by-author/{authorId}")]
+        public async Task<IActionResult> GetBooksByAuthorId(long authorId)
         {
-            var dataReponse = await _mediator.Send(new GetBooksByAuthor
+            var dataResponse = await _mediator.Send(new GetBooksByAuthor
             {
-                AuthorId = id,
+                AuthorId = authorId
             });
-            return Ok(dataReponse);
+            return Ok(dataResponse);
         }
-        [HttpGet("category/{id}")]
-        public async Task<IActionResult> GetBooksByCategoryId(long id)
+
+        [HttpGet("by-category/{categoryId}")]
+        public async Task<IActionResult> GetBooksByCategoryId(long categoryId)
         {
-            var dataReponse = await _mediator.Send(new GetBooksByCategory
+            var dataResponse = await _mediator.Send(new GetBooksByCategory
             {
-                CategoryId = id,
+                CategoryId = categoryId
             });
-            return Ok(dataReponse);
+            return Ok(dataResponse);
         }
     }
 }

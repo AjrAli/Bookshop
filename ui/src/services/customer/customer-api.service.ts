@@ -9,7 +9,7 @@ import { EditPasswordDto } from "../../app/dto/customer/edit-password-dto";
 
 @Injectable()
 export class CustomerApiService {
-    private readonly apiUrl = environment.apiUrl + '/customer';
+    private readonly apiUrl = environment.apiUrl + '/customers';
 
     constructor(private http: HttpClient) { }
 
@@ -19,12 +19,12 @@ export class CustomerApiService {
     }
 
     createCustomer(customer: CustomerDto) {
-        return this.http.post<CustomerCommandResponse>(`${this.apiUrl}/create-customer`, customer);
+        return this.http.post<CustomerCommandResponse>(`${this.apiUrl}`, customer);
     }
     editProfile(editProfile: EditProfileDto) {
-        return this.http.post<CustomerCommandResponse>(`${this.apiUrl}/edit-profile-customer`, editProfile);
+        return this.http.put<CustomerCommandResponse>(`${this.apiUrl}`, editProfile);
     }
     editPassword(editPassword: EditPasswordDto) {
-        return this.http.post<CustomerCommandResponse>(`${this.apiUrl}/edit-password-customer`, editPassword);
+        return this.http.put<CustomerCommandResponse>(`${this.apiUrl}/password`, editPassword);
     }
 }

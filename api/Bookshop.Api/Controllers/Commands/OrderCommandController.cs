@@ -11,7 +11,7 @@ namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
     [Authorize]
-    [Route("api/order")]
+    [Route("api/orders")]
     public class OrderCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,7 +23,7 @@ namespace Bookshop.Api.Controllers.Commands
             _loggedInUserService = loggedInUserService;
         }
 
-        [HttpPost("create-user-order")]
+        [HttpPost("")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderRequestDto orderDto)
         {
             orderDto.UserId = _loggedInUserService?.GetUserId();
@@ -33,8 +33,8 @@ namespace Bookshop.Api.Controllers.Commands
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("cancel-user-order")]
-        public async Task<IActionResult> CancelOrder([FromBody] long? id)
+        [HttpPut("{id}/cancel")]
+        public async Task<IActionResult> CancelOrder(long? id)
         {
             var dataCommandReponse = await _mediator.Send(new CancelOrder
             {
@@ -44,13 +44,14 @@ namespace Bookshop.Api.Controllers.Commands
 
             return Ok(dataCommandReponse);
         }
-        [HttpPost("update-user-order")]
-        public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderRequestDto orderDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderRequestDto orderDto, long id)
         {
             orderDto.UserId = _loggedInUserService?.GetUserId();
             var dataCommandReponse = await _mediator.Send(new UpdateOrder
             {
-                Order = orderDto
+                Order = orderDto,
+                Id = id
             });
             return Ok(dataCommandReponse);
         }

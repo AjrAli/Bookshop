@@ -9,7 +9,7 @@ namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
     [Authorize]
-    [Route("api/shopcart")]
+    [Route("api/shopcarts")]
     public class ShoppingCartQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -21,8 +21,8 @@ namespace Bookshop.Api.Controllers.Queries
             _loggedInUserService = loggedInUserService;
         }
 
-        [HttpGet("get-user-shopcart")]
-        public async Task<IActionResult> GetShoppingCart()
+        [HttpGet("current")]
+        public async Task<IActionResult> RetrieveUserShoppingCartDetails()
         {
             var dataReponse = await _mediator.Send(new GetShoppingCart
             {
@@ -31,8 +31,8 @@ namespace Bookshop.Api.Controllers.Queries
             return Ok(dataReponse);
         }
 
-        [HttpGet("get-user-shopcart-details-review")]
-        public async Task<IActionResult> GetShoppingCartDetails()
+        [HttpGet("current/reviews")]
+        public async Task<IActionResult> GetUserShoppingCartDetailsWithReviews()
         {
             var dataReponse = await _mediator.Send(new GetShoppingCartDetails
             {

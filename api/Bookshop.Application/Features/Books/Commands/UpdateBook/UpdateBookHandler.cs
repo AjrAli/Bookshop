@@ -25,7 +25,7 @@ namespace Bookshop.Application.Features.Books.Commands.UpdateBook
             await ValidateRequest(request);
             var authorRetrieved = await _dbContext.Authors.FirstOrDefaultAsync(x => x.Id == request.Book.AuthorId);
             var categoryRetrieved = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == request.Book.CategoryId);
-            var bookExistingRetrieved = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == request.Book.Id);
+            var bookExistingRetrieved = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == request.Id);
             DeletePreviousImageOfBook(request, bookExistingRetrieved);
             var editedBook = EditBookFromDto(request.Book, bookExistingRetrieved, authorRetrieved, categoryRetrieved);
             await CreateImageOfBook(request, editedBook);
@@ -86,8 +86,8 @@ namespace Bookshop.Application.Features.Books.Commands.UpdateBook
 
         public async Task ValidateRequest(UpdateBook request)
         {
-            if (!await _dbContext.Books.AnyAsync(x => x.Id == request.Book.Id))
-                throw new BadRequestException($"Book: {request.Book.Id} not found in the database.");
+            if (!await _dbContext.Books.AnyAsync(x => x.Id == request.Id))
+                throw new BadRequestException($"Book: {request.Id} not found in the database.");
             if (!await _dbContext.Authors.AnyAsync(x => x.Id == request.Book.AuthorId))
                 throw new BadRequestException($"AuthorId: {request.Book.AuthorId} not found in the database.");
             if (!await _dbContext.Categories.AnyAsync(x => x.Id == request.Book.CategoryId))

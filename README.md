@@ -9,64 +9,83 @@ Swagger Documentation:
 
     Bookshop Swagger
 
-Author Queries:
+Author Commands
 
-    Retrieve author details by ID: GET /api/author/{id}
-    Browse all authors: GET /api/author
+    POST /api/authors: Creates a new author resource.
+    PUT /api/authors/{id}: Updates an existing author resource.
+    DELETE /api/authors/{id}: Deletes an existing author resource.
 
-Book Queries:
+Author Queries
 
-    Access book details by ID: GET /api/book/{id}
-    Explore the book catalog: GET /api/book
-    Find books by author: GET /api/book/author/{id}
-    Filter books by category: GET /api/book/category/{id}
+    GET /api/authors: Retrieves a collection of authors.
+    GET /api/authors/{id}: Retrieves a specific author resource.
 
-Book Commands:
+Book Commands
 
-    Create a new comment for specific book with bookId: POST /api/book/add-comment-book
-    Delete a comment: POST /api/book/delete-comment-book
-    Update a comment: POST /api/book/update-comment-book
+    POST /api/books/{bookId}/comments: Adds a new comment to a specific book.
+    DELETE /api/books/comments/{commentId}: Deletes a specific comment on a book.
+    PUT /api/books/comments/{commentId}: Updates a specific comment on a book.
+    POST /api/books: Creates a new book resource.
+    PUT /api/books/{id}: Updates an existing book resource.
+    DELETE /api/books/{id}: Deletes an existing book resource.
 
-Category Queries:
+Book Queries
 
-    Retrieve category details by ID: GET /api/category/{id}
-    Browse all categories: GET /api/category
+    GET /api/books: Retrieves a collection of books.
+    GET /api/books/{id}: Retrieves a specific book resource.
+    GET /api/books/by-author/{authorId}: Retrieves books written by a specific author.
+    GET /api/books/by-category/{categoryId}: Retrieves books belonging to a specific category.
 
-Customer Commands:
+Category Commands
 
-    Create a new customer profile: POST /api/customer/create-customer
-    Edit customer profile details: POST /api/customer/edit-profile-customer
-    Change customer password: POST /api/customer/edit-password-customer
+    POST /api/categories: Creates a new category resource.
+    PUT /api/categories/{id}: Updates an existing category resource.
+    DELETE /api/categories/{id}: Deletes an existing category resource.
 
-Customer Queries:
+Category Queries
 
-    Authenticate and obtain customer details: POST /api/customer/authenticate
+    GET /api/categories: Retrieves a collection of categories.
+    GET /api/categories/{id}: Retrieves a specific category resource.
 
-Order Commands:
+Customer Commands
 
-    Create a new user order: POST /api/order/create-user-order
-    Cancel a user order: POST /api/order/cancel-user-order
-    Update a user order: POST /api/order/update-user-order
+    POST /api/customers: Creates a new customer resource.
+    PUT /api/customers: Updates an existing customer resource.
+    PUT /api/customers/password: Updates a customer's password.
 
-Order Queries:
+Customer Queries
 
-    Retrieve all user orders: GET /api/order/get-user-orders
-    Get details of a specific user order by ID: GET /api/order/get-user-order/{id}
+    GET /api/customers: Retrieves a collection of customers.
+    POST /api/customers/authenticate: Authenticates a customer.
+    GET /api/customers/{id}: Retrieves a specific customer resource.
 
-Search Queries:
+Order Commands
 
-    Find books using keywords: GET /api/search/book/{keyword}
+    POST /api/orders: Creates a new order resource.
+    PUT /api/orders/{id}/cancel: Cancels an existing order.
+    PUT /api/orders/{id}: Updates an existing order resource.
 
-Shopping Cart Commands:
+Order Queries
 
-    Create a user shopping cart: POST /api/shopcart/create-user-shopcart
-    Update a user shopping cart: POST /api/shopcart/update-user-shopcart
-    Reset a user shopping cart: POST /api/shopcart/reset-user-shopcart
+    GET /api/orders: Retrieves a collection of orders.
+    GET /api/orders/{id}: Retrieves a specific order resource.
+    GET /api/admin/orders/{id}: Retrieves a specific order resource for admin purposes.
+    GET /api/admin/orders: Retrieves a collection of orders for admin purposes.
 
-Shopping Cart Queries:
+Search Queries
 
-    Retrieve user shopping cart details: GET /api/shopcart/get-user-shopcart
-    Get user shopping cart details with reviews: GET /api/shopcart/get-user-shopcart-details-review
+    GET /api/search/book?keyword={keyword}: Retrieves books based on a keyword search.
+
+ShoppingCart Commands
+
+    POST /api/shopcarts: Creates a new shopping cart resource.
+    PUT /api/shopcarts: Updates an existing shopping cart resource.
+    PUT /api/shopcarts/reset: Resets a shopping cart.
+
+ShoppingCart Queries
+
+    GET /api/shopcarts/current: Retrieves the current shopping cart.
+    GET /api/shopcarts/current/reviews: Retrieves the current shopping cart with reviews.
 
 
 Prerequisites:

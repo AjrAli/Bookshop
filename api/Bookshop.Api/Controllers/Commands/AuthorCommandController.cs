@@ -11,7 +11,7 @@ namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
     [Authorize(Roles = RoleNames.Administrator)]
-    [Route("api/author")]
+    [Route("api/authors")]
     public class AuthorCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -20,7 +20,7 @@ namespace Bookshop.Api.Controllers.Commands
             _mediator = mediator;
         }
 
-        [HttpPost("create-author")]
+        [HttpPost("")]
         public async Task<IActionResult> CreateAuthor([FromBody] AuthorRequestDto authorDto)
         {
             var dataCommandReponse = await _mediator.Send(new CreateAuthor
@@ -29,17 +29,18 @@ namespace Bookshop.Api.Controllers.Commands
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("update-author")]
-        public async Task<IActionResult> UpdateAuthor([FromBody] AuthorRequestDto authorDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAuthor([FromBody] AuthorRequestDto authorDto, long id)
         {
             var dataCommandReponse = await _mediator.Send(new UpdateAuthor
             {
-                Author = authorDto
+                Author = authorDto,
+                Id = id
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("delete-author")]
-        public async Task<IActionResult> DeleteAuthor([FromBody] long id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAuthor(long id)
         {
             var dataCommandReponse = await _mediator.Send(new DeleteAuthor
             {

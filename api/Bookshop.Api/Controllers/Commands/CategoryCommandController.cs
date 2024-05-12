@@ -11,7 +11,7 @@ namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
     [Authorize(Roles = RoleNames.Administrator)]
-    [Route("api/category")]
+    [Route("api/categories")]
     public class CategoryCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -20,7 +20,7 @@ namespace Bookshop.Api.Controllers.Commands
             _mediator = mediator;
         }
 
-        [HttpPost("create-category")]
+        [HttpPost("")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryRequestDto categoryDto)
         {
             var dataCommandReponse = await _mediator.Send(new CreateCategory
@@ -29,17 +29,18 @@ namespace Bookshop.Api.Controllers.Commands
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("update-category")]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequestDto categoryDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequestDto categoryDto, long id)
         {
             var dataCommandReponse = await _mediator.Send(new UpdateCategory
             {
-                Category = categoryDto
+                Category = categoryDto,
+                Id = id
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("delete-category")]
-        public async Task<IActionResult> DeleteCategory([FromBody] long id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory(long id)
         {
             var dataCommandReponse = await _mediator.Send(new DeleteCategory
             {

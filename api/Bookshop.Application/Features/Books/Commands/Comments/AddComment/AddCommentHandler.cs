@@ -23,7 +23,7 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.AddComment
             // Validate the request
             await ValidateRequest(request);
             var customerRetrieved = await _dbContext.Customers.Include(x => x.IdentityData).FirstOrDefaultAsync(x => x.IdentityUserDataId == request.Comment.UserId);
-            var bookRetrieved = await _dbContext.Books.Include(x => x.Comments).FirstOrDefaultAsync(x => x.Id == request.Comment.BookId);
+            var bookRetrieved = await _dbContext.Books.Include(x => x.Comments).FirstOrDefaultAsync(x => x.Id == request.BookId);
             var newComment = CreateNewCommentFromDto(request.Comment, customerRetrieved, bookRetrieved);
             await StoreCommentInDatabase(newComment, cancellationToken);
             var newCommentCreated = _mapper.Map<CommentResponseDto>(newComment);
@@ -48,12 +48,12 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.AddComment
 
         public async Task ValidateRequest(AddComment request)
         {
-            if (!await _dbContext.Books.AnyAsync(x => x.Id == request.Comment.BookId))
-                throw new BadRequestException($"BookId: {request.Comment.BookId} not found in the database.");
+            if (!await _dbContext.Books.AnyAsync(x => x.Id == request.BookId))
+                throw new BadRequestException($"BookId: {request.BookId} not found in the database.");
             if (await _dbContext.Books.Include(x => x.Comments)
                                       .ThenInclude(x => x.Customer)
-                                      .AnyAsync(x => x.Id == request.Comment.BookId && x.Comments.Any(y => y.Customer.IdentityUserDataId == request.Comment.UserId)))
-                throw new BadRequestException($"User already posted a comment for this book {request.Comment.BookId}!");
+                                      .AnyAsync(x => x.Id == request.BookId && x.Comments.Any(y => y.Customer.IdentityUserDataId == request.Comment.UserId)))
+                throw new BadRequestException($"User already posted a comment for this book {request.BookId}!");
         }
     }
 }

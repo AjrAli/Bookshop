@@ -22,7 +22,7 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
         {
             // Validate the request
             await ValidateRequest(request);
-            var editedComment = await EditCommentFromDto(request.Comment);
+            var editedComment = await EditCommentFromDto(request.Comment, request.Id);
             EditCommentInDatabase(editedComment);
             await SaveChangesAsync(cancellationToken);
             var editedCommentDto = _mapper.Map<CommentResponseDto>(editedComment);
@@ -33,10 +33,10 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
                 IsSaveChangesAsyncCalled = true
             };
         }
-        private async Task<Comment> EditCommentFromDto(CommentRequestDto commentDto)
+        private async Task<Comment> EditCommentFromDto(CommentRequestDto commentDto, long id)
         {
             var commentExisting = await _dbContext.Comments.Include(x => x.Customer).ThenInclude(x => x.IdentityData).FirstOrDefaultAsync(x => x.Customer.IdentityUserDataId == commentDto.UserId &&
-                                                                                                              x.Id == commentDto.Id);
+                                                                                                              x.Id == id);
             commentExisting.Title = commentDto.Title;
             commentExisting.Content = commentDto.Content;
             commentExisting.Rating = commentDto.Rating;
@@ -54,8 +54,8 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
         public async Task ValidateRequest(UpdateComment request)
         {
             if (!await _dbContext.Comments.Include(x => x.Customer).AnyAsync(x => x.Customer.IdentityUserDataId == request.Comment.UserId &&
-                                                                                  x.Id == request.Comment.Id))
-                throw new BadRequestException($"Comment: {request.Comment.Id} not found in the database.");
+                                                                                  x.Id == request.Id))
+                throw new BadRequestException($"Comment: {request.Id} not found in the database.");
         }
     }
 }

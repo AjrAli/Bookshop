@@ -5,5 +5,6 @@ namespace Bookshop.Application.Features.Books.Commands.Comments.UpdateComment
     public class UpdateComment : ICommand<CommentCommandResponse>
     {
         public CommentRequestDto? Comment { get; set; }
+        public long Id { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Bookshop.Api.Controllers.Commands
 {
     [ApiController]
     [Authorize]
-    [Route("api/book")]
+    [Route("api/books")]
     public class BookCommandController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -36,39 +36,42 @@ namespace Bookshop.Api.Controllers.Commands
             _environment = environment;
         }
 
-        [HttpPost("add-comment-book")]
-        public async Task<IActionResult> AddComment([FromBody] CommentRequestDto commentDto)
+        [HttpPost("{bookId}/comments")]
+        public async Task<IActionResult> AddComment([FromBody] CommentRequestDto commentDto, long bookId)
         {
             commentDto.UserId = _loggedInUserService?.GetUserId();
             var dataCommandReponse = await _mediator.Send(new AddComment
             {
-                Comment = commentDto
+                Comment = commentDto,
+                BookId = bookId
             });
             return Ok(dataCommandReponse);
         }
-        [HttpPost("delete-comment-book")]
-        public async Task<IActionResult> DeleteComment([FromBody] long id)
+        [HttpDelete("comments/{commentId}")]
+        public async Task<IActionResult> DeleteComment(long commentId)
         {
             var dataCommandReponse = await _mediator.Send(new DeleteComment
             {
                 UserId = _loggedInUserService?.GetUserId(),
-                Id = id
+                Id = commentId
             });
 
             return Ok(dataCommandReponse);
         }
-        [HttpPost("update-comment-book")]
-        public async Task<IActionResult> UpdateComment([FromBody] CommentRequestDto commentDto)
+        [HttpPut("comments/{commentId}")]
+        public async Task<IActionResult> UpdateComment([FromBody] CommentRequestDto commentDto, long commentId)
         {
             commentDto.UserId = _loggedInUserService?.GetUserId();
             var dataCommandReponse = await _mediator.Send(new UpdateComment
             {
-                Comment = commentDto
+                Comment = commentDto,
+                Id = commentId
+                
             });
             return Ok(dataCommandReponse);
         }
         [Authorize(Roles = RoleNames.Administrator)]
-        [HttpPost("create-book")]
+        [HttpPost("")]
         public async Task<IActionResult> CreateBook([FromForm] BookFileRequestDto bookFileDto)
         {
             var resultValidation = await ValidateRequest(bookFileDto);
@@ -83,8 +86,8 @@ namespace Bookshop.Api.Controllers.Commands
             return Ok(dataCommandReponse);
         }
         [Authorize(Roles = RoleNames.Administrator)]
-        [HttpPost("update-book")]
-        public async Task<IActionResult> UpdateBook([FromForm] BookFileRequestDto bookFileDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBook([FromForm] BookFileRequestDto bookFileDto, long id)
         {
             var resultValidation = await ValidateRequest(bookFileDto);
             if (resultValidation != null)
@@ -93,13 +96,14 @@ namespace Bookshop.Api.Controllers.Commands
             await AssignImage(bookFileDto);
             var dataCommandReponse = await _mediator.Send(new UpdateBook
             {
-                Book = bookFileDto.Book
+                Book = bookFileDto.Book,
+                Id = id
             });
             return Ok(dataCommandReponse);
         }
         [Authorize(Roles = RoleNames.Administrator)]
-        [HttpPost("delete-book")]
-        public async Task<IActionResult> DeleteBook([FromBody] long id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(long id)
         {
             var dataCommandReponse = await _mediator.Send(new DeleteBook
             {

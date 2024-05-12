@@ -11,7 +11,6 @@ namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
     [Authorize]
-    [Route("api/order")]
     public class OrderQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -22,8 +21,8 @@ namespace Bookshop.Api.Controllers.Queries
             _mediator = mediator;
             _loggedInUserService = loggedInUserService;
         }
-        [HttpGet("get-user-orders")]
-        public async Task<IActionResult> GetOrders()
+        [HttpGet("api/orders")]
+        public async Task<IActionResult> GetAllUserOrders()
         {
             var dataReponse = await _mediator.Send(new GetOrdersOfCustomer
             {
@@ -31,8 +30,8 @@ namespace Bookshop.Api.Controllers.Queries
             });
             return Ok(dataReponse);
         }
-        [HttpGet("get-user-order/{id}")]
-        public async Task<IActionResult> GetOrderById(long? id)
+        [HttpGet("api/orders/{id}")]
+        public async Task<IActionResult> GetUserOrderById(long? id)
         {
             var dataReponse = await _mediator.Send(new GetOrderByIdOfCustomer
             {
@@ -43,7 +42,7 @@ namespace Bookshop.Api.Controllers.Queries
         }
 
         [Authorize(Roles = RoleNames.Administrator)]
-        [HttpGet("{id}")]
+        [HttpGet("api/admin/orders/{id}")]
         public async Task<IActionResult> GetById(long id)
         {
             var dataReponse = await _mediator.Send(new GetOrderById
@@ -53,7 +52,7 @@ namespace Bookshop.Api.Controllers.Queries
             return Ok(dataReponse);
         }
         [Authorize(Roles = RoleNames.Administrator)]
-        [HttpGet]
+        [HttpGet("api/admin/orders")]
         public async Task<IActionResult> GetAll()
         {
             var dataReponse = await _mediator.Send(new GetAllOrders());

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookshop.Api.Controllers.Queries
 {
     [ApiController]
-    [Route("api/customer")]
+    [Route("api/customers")]
     public class CustomerQueryController : ControllerBase
     {
         private readonly IMediator _mediator;
