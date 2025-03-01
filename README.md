@@ -1,6 +1,6 @@
 Welcome to the Bookshop Project!
 
-This project is an e-shop (Bookshop) developed using .NET 6 for the backend and Angular 17 for the frontend. This project use modern and clean architecture using .NET 6 RESTful Web API with various modern libraries such as MediatR, Swagger, Microsoft.AspNetCore.Identity, System.IdentityModel.Tokens.Jwt, Serilog, FluentValidation, and more. The frontend is built using Angular 17, incorporating tools like PrimeNG, PrimeFlex, angular-fontawesome, Bootstrap(for Grid only), rxjs, Ngx-toastr, jwt-decode, and HttpInterceptor for JWT token handling.
+This project is an e-shop (Bookshop) developed using .NET 9 for the backend and Angular 17 for the frontend. This project use modern and clean architecture using .NET 9 RESTful Web API with various modern libraries such as MediatR, Swagger, Microsoft.AspNetCore.Identity, System.IdentityModel.Tokens.Jwt, Serilog, FluentValidation, and more. The frontend is built using Angular 17, incorporating tools like PrimeNG, PrimeFlex, angular-fontawesome, Bootstrap(for Grid only), rxjs, Ngx-toastr, jwt-decode, and HttpInterceptor for JWT token handling.
 
 For a quick demo, visit Bookshop Demo : https://mementocoding.be/
 
@@ -93,7 +93,7 @@ Prerequisites:
     Operating System: Ensure that you have a compatible operating system (e.g., Windows, macOS, or Linux) installed on your machine.
 
     Software Requirements: Make sure you have the following software installed:
-        .NET 6 SDK (6.0.400)
+        .NET 9 SDK (9.0.200)
         Node: 18.15.0
         Angular CLI: 17.0.7 (install using npm: npm install -g @angular/cli)
         Database: You'll need a database server such as SQL Server installed and running.
@@ -169,7 +169,7 @@ Enjoy using the Bookshop Project!
 Technologies used on the project :
 
     .Back-end app using :
-        .Net 6.0
+        .Net 9.0
         ASP.NET RESTful Web API
         Serilog
         FluentValidation
