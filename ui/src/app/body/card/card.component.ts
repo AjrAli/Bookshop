@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [ButtonModule, TagModule, ImageModule, BoldTextPipe, CommonModule],
+  imports: [ButtonModule, TagModule, ImageModule, CommonModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })

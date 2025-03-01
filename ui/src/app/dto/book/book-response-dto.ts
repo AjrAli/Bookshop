@@ -46,7 +46,7 @@ export class BookResponseDto {
             return 'OUTOFSTOCK';
         return '';
     }
-    get statusColor(): string {
+    get statusColor(): "success" | "secondary" | "info" | "warning" | "danger" | "contrast" | undefined {
         switch (this.status) {
             case 'INSTOCK':
                 return 'success';
@@ -55,6 +55,6 @@ export class BookResponseDto {
             case 'OUTOFSTOCK':
                 return 'danger';
         }
-        return '';
+        return undefined;
     }
 }
