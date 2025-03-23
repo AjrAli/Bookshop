@@ -42,6 +42,8 @@ export class CustomerService {
     } else {
       this.userInfo = this.tokenService.decodeToken(token);
       this.customerDataService.setCustomer(customer);
+      this.setAllCustomerData(customer);
+      this.shoppingCartService.updateFullyShoppingCart(new ShoppingCartResponseDto(customer.shoppingCart));
     }
   }
   // Authenticate user with provided credentials
